@@ -48,29 +48,205 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 /* ── SIDEBAR ── */
-:root{--sidebar-w:200px}
-.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar-w);background:rgba(6,9,13,0.98);backdrop-filter:blur(24px);border-right:0.5px solid var(--border);z-index:200;display:flex;flex-direction:column;transition:transform .28s cubic-bezier(.4,0,.2,1)}
-.sidebar-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);letter-spacing:3px;padding:1.25rem 1.25rem .75rem;border-bottom:0.5px solid var(--border);flex-shrink:0}
-.sidebar-logo span{color:var(--fire)}
-.sidebar-nav{flex:1;padding:.625rem 0;overflow-y:auto}
+:root{
+  --sidebar-collapsed:52px;
+  --sidebar-expanded:220px;
+  --sidebar-w:var(--sidebar-collapsed);
+  --sidebar-transition:.26s cubic-bezier(.4,0,.2,1);
+}
+
+/* Desktop sidebar */
+.sidebar{
+  position:fixed;top:0;left:0;height:100vh;
+  width:var(--sidebar-collapsed);
+  background:rgba(7,10,15,0.97);
+  backdrop-filter:blur(28px);
+  border-right:1px solid rgba(255,255,255,0.055);
+  z-index:200;display:flex;flex-direction:column;
+  transition:width var(--sidebar-transition);
+  overflow:hidden;
+}
+.sidebar.expanded{ width:var(--sidebar-expanded); }
+
+/* App name header at top of sidebar */
+.sidebar-header{
+  display:flex;align-items:center;justify-content:space-between;
+  height:52px;padding:0 13px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;overflow:hidden;
+}
+.sidebar-appname{
+  font-family:'Bebas Neue',sans-serif;font-size:17px;
+  color:var(--gold);letter-spacing:2px;
+  white-space:nowrap;opacity:0;
+  transition:opacity .18s;pointer-events:none;
+  flex:1;
+}
+.sidebar.expanded .sidebar-appname{opacity:1;}
+.sidebar-close-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:28px;height:28px;
+  background:none;border:none;cursor:pointer;
+  color:var(--muted2);border-radius:6px;
+  transition:color .15s,background .15s;flex-shrink:0;
+}
+.sidebar-close-btn:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+/* Collapsed state: close btn is the only thing visible at top */
+.sidebar:not(.expanded) .sidebar-header{justify-content:center;padding:0;}
+.sidebar:not(.expanded) .sidebar-appname{display:none;}
+.sidebar:not(.expanded) .sidebar-close-btn{color:var(--muted2);}
+/* Expanded state: close btn becomes X */
+
+/* (sidebar-toggle removed — replaced by sidebar-close-btn) */
+
+/* Nav items */
+.sidebar-nav{flex:1;padding:4px 0;overflow-y:auto;overflow-x:hidden;}
 .sidebar-nav::-webkit-scrollbar{display:none}
-.sidebar-item{display:flex;align-items:center;gap:.75rem;padding:.625rem 1.25rem;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:color .15s,background .15s;border-left:2px solid transparent;white-space:nowrap}
-.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
-.sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(245,200,66,0.04)}
-.sidebar-item .si-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:199;backdrop-filter:blur(2px)}
-.sidebar-overlay.show{display:block}
-.hamburger{display:none;position:fixed;top:.75rem;left:.75rem;z-index:201;background:rgba(6,9,13,0.9);border:0.5px solid var(--border);border-radius:8px;padding:6px 9px;cursor:pointer;font-size:18px;line-height:1;color:var(--text)}
+.sidebar-item{
+  display:flex;align-items:center;gap:.65rem;
+  height:40px;padding:0 14px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.8px;
+  color:var(--muted);cursor:pointer;border:none;background:none;
+  width:100%;text-align:left;
+  transition:color .14s,background .14s;
+  border-radius:0;position:relative;
+  white-space:nowrap;overflow:hidden;
+}
+.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.sidebar-item.active{
+  color:var(--gold);
+  background:rgba(245,200,66,0.06);
+}
+.sidebar-item.active::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:2.5px;background:var(--gold);border-radius:0 2px 2px 0;
+}
+.sidebar-item .si-icon{
+  font-size:16px;width:22px;text-align:center;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.sidebar-item .si-label{
+  opacity:0;white-space:nowrap;
+  transition:opacity .16s;
+  font-size:11px;letter-spacing:.8px;
+}
+.sidebar.expanded .sidebar-item .si-label{opacity:1;}
+
+/* Divider */
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.05);margin:4px 10px;}
+
+/* Auth / Profile panel at bottom */
+.auth-panel{
+  padding:10px;border-top:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;overflow:hidden;
+}
+/* Collapsed: just the avatar circle */
+.auth-collapsed{
+  display:flex;align-items:center;justify-content:center;
+  height:40px;
+}
+/* Expanded: avatar + name row */
+.auth-expanded{
+  display:none;
+}
+.sidebar.expanded .auth-collapsed{display:none;}
+.sidebar.expanded .auth-expanded{display:flex;flex-direction:column;gap:0;}
+
+/* Profile row button */
+.profile-row-btn{
+  display:flex;align-items:center;gap:.625rem;
+  width:100%;padding:6px 4px;border:none;background:none;
+  cursor:pointer;border-radius:8px;
+  transition:background .14s;text-align:left;
+}
+.profile-row-btn:hover{background:rgba(255,255,255,0.04);}
+
+/* Avatar circle */
+.auth-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(245,200,66,0.12);
+  border:1.5px solid rgba(245,200,66,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--gold);
+  flex-shrink:0;overflow:hidden;
+  transition:border-color .15s;
+}
+.auth-avatar:hover{border-color:rgba(245,200,66,0.55);}
+.auth-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.auth-user-name{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--text);letter-spacing:.4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:130px;
+}
+.auth-user-sub{
+  font-family:'DM Mono',monospace;font-size:8px;
+  color:var(--muted2);letter-spacing:.5px;margin-top:1px;
+}
+
+/* Overlay */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:199;backdrop-filter:blur(3px);}
+.sidebar-overlay.show{display:block;}
+
+/* Mobile top bar + hamburger */
+.top-bar{
+  display:none;position:fixed;top:0;left:0;right:0;height:48px;
+  background:rgba(6,9,13,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.055);
+  z-index:201;align-items:center;padding:0 14px;gap:10px;
+}
+.hamburger{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;
+  background:none;border:none;cursor:pointer;
+  color:var(--muted);border-radius:8px;
+  transition:color .15s,background .15s;flex-shrink:0;
+}
+.hamburger:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.top-bar-title{
+  font-family:'DM Mono',monospace;font-size:13px;
+  color:var(--text);letter-spacing:.5px;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* Mobile profile avatar button */
+.top-bar-profile-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(245,200,66,0.12);
+  border:1.5px solid rgba(245,200,66,0.3);
+  flex-shrink:0;cursor:pointer;
+  font-size:16px;color:var(--gold);
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.top-bar-profile-btn:hover{border-color:rgba(245,200,66,0.55);}
+.top-bar-profile-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 
 /* ── MAIN LAYOUT ── */
-.main-wrap{margin-left:var(--sidebar-w);min-height:100vh}
+.main-wrap{margin-left:var(--sidebar-collapsed);min-height:100vh;transition:margin-left var(--sidebar-transition);}
+.sidebar.expanded ~ .main-wrap{margin-left:var(--sidebar-expanded);}
+
+/* Tooltip for icon-only mode */
+@media(min-width:701px){
+  .sidebar:not(.expanded) .sidebar-item{position:relative;}
+  .sidebar:not(.expanded) .sidebar-item:hover::after{
+    content:attr(data-tooltip);
+    position:absolute;left:calc(var(--sidebar-collapsed) + 8px);top:50%;
+    transform:translateY(-50%);
+    background:var(--card2);border:0.5px solid var(--border2);
+    border-radius:6px;padding:4px 10px;
+    font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;
+    color:var(--text);white-space:nowrap;pointer-events:none;z-index:500;
+    box-shadow:0 4px 16px rgba(0,0,0,.4);
+  }
+}
 
 /* NAV — hidden, sidebar replaces it */
 .nav{display:none}
 .nav-fade{display:none}
 
 /* PAGES */
-.page{display:none;max-width:980px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+.page{display:none;max-width:980px;margin:0 auto;padding:1.5rem 1.5rem 2.5rem}
 .page.active{display:block}
 
 /* ── PILL TOGGLE ── */
@@ -86,8 +262,9 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .graph-svg{width:100%;overflow:visible;display:block}
 .graph-no-data{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-align:center;padding:2rem 0;letter-spacing:1px}
 
-/* ── BOTTOM TAB BAR ── */
-.bottom-tabs{position:fixed;bottom:0;left:var(--sidebar-w);right:0;z-index:200;background:rgba(6,9,13,0.98);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;align-items:stretch;height:58px}
+/* ── BOTTOM TAB BAR — mobile only ── */
+.bottom-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(6,9,13,0.98);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);align-items:stretch;height:56px}
+@media(max-width:700px){.bottom-tabs{display:flex;}}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--muted2);transition:color .15s,background .15s;border-top:2px solid transparent;padding:0;font-family:'DM Mono',monospace}
 .tab-btn.active{color:var(--gold);border-top-color:var(--gold);background:rgba(245,200,66,0.03)}
 .tab-btn:hover:not(.active){color:var(--muted);background:rgba(255,255,255,0.02)}
@@ -100,15 +277,17 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){
-  :root{--sidebar-w:0px}
-  .sidebar{transform:translateX(-200px);width:200px}
-  .sidebar.open{transform:translateX(0)}
-  .main-wrap{margin-left:0}
-  .hamburger{display:flex;align-items:center}
-  .backup-bar{left:0}
-  .page{padding:1rem 1rem 5rem;padding-top:3.5rem}
-  .bottom-tabs{left:0}
-} /* ── END @media(max-width:700px) MOBILE LAYOUT ── FIXED: was missing, causing all styles below to be mobile-only */
+  .sidebar{transform:translateX(calc(-1 * var(--sidebar-expanded)));width:var(--sidebar-expanded);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar.expanded{width:var(--sidebar-expanded);}
+  .sidebar-toggle{display:none;}
+  .main-wrap{margin-left:0 !important;}
+  .top-bar{display:flex;}
+  .page{padding:1rem 1rem 5rem;padding-top:4rem;}
+  .bottom-tabs{left:0;}
+  /* Hide desktop sidebar items label on mobile (they're always visible in drawer) */
+  .sidebar-item .si-label{opacity:1 !important;}
+}
 
 /* SCOREBOARD */
 .scoreboard{background:linear-gradient(135deg,#080f1a 0%,#0c1a30 60%,#08101a 100%);border:0.5px solid var(--border2);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
@@ -127,12 +306,14 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .form-dot.X{background:rgba(224,80,80,0.12);color:var(--red);border:0.5px solid var(--red)}
 .form-dot.L{background:rgba(168,85,247,0.15);color:var(--purple);border:0.5px solid var(--purple)}
 .form-dot.D{background:rgba(6,182,212,0.12);color:var(--cyan);border:0.5px solid var(--cyan)}
+.form-dot.B{background:rgba(99,210,255,0.1);color:rgba(99,210,255,1);border:0.5px solid rgba(99,210,255,0.6)}
 .runs-display{text-align:center;margin:.5rem 0 1rem}
 .runs-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,14vw,120px);line-height:1;letter-spacing:4px;color:var(--gold);transition:color .3s;text-shadow:0 0 60px rgba(245,200,66,0.15)}
 .runs-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-top:2px}
 .grade-badge{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;padding:4px 16px;border-radius:20px;margin-top:.5rem}
 .grade-legendary{background:rgba(168,85,247,0.15);border:1px solid var(--purple);color:var(--purple)}
 .grade-double{background:rgba(6,182,212,0.12);border:1px solid var(--cyan);color:var(--cyan)}
+.grade-bigknock{background:rgba(99,210,255,0.1);border:1px solid rgba(99,210,255,0.6);color:rgba(99,210,255,1)}
 .grade-century{background:rgba(245,200,66,0.12);border:1px solid var(--gold);color:var(--gold)}
 .grade-half{background:rgba(46,204,138,0.1);border:1px solid var(--green);color:var(--green)}
 .grade-average{background:rgba(74,158,255,0.1);border:1px solid var(--blue);color:var(--blue)}
@@ -237,6 +418,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .badge{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border-radius:8px;letter-spacing:1px}
 .badge-legendary{background:rgba(168,85,247,0.15);border:0.5px solid var(--purple);color:var(--purple)}
 .badge-double{background:rgba(6,182,212,0.12);border:0.5px solid var(--cyan);color:var(--cyan)}
+.badge-bigknock{background:rgba(99,210,255,0.1);border:0.5px solid rgba(99,210,255,0.6);color:rgba(99,210,255,1)}
 .badge-century{background:rgba(245,200,66,0.12);border:0.5px solid var(--gold);color:var(--gold)}
 .badge-half{background:rgba(46,204,138,0.1);border:0.5px solid var(--green);color:var(--green)}
 .badge-average{background:rgba(74,158,255,0.08);border:0.5px solid var(--blue);color:var(--blue)}
@@ -261,7 +443,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .week-bar-col{flex:1;width:100%;display:flex;align-items:flex-end}
 .week-bar{width:100%;border-radius:3px 3px 0 0;transition:height .5s cubic-bezier(.4,0,.2,1);min-height:2px;cursor:pointer;position:relative}
 .week-bar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--card2);border:0.5px solid var(--border2);border-radius:6px;padding:3px 8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text);white-space:nowrap;pointer-events:none;z-index:10}
-.week-bar.legendary{background:linear-gradient(180deg,var(--purple),var(--fire))}.week-bar.double{background:linear-gradient(180deg,var(--cyan),var(--blue))}
+.week-bar.legendary{background:linear-gradient(180deg,var(--purple),var(--fire))}.week-bar.double{background:linear-gradient(180deg,var(--cyan),var(--blue))}.week-bar.bigknock{background:linear-gradient(180deg,rgba(99,210,255,1),var(--blue))}
 .week-bar.century{background:linear-gradient(180deg,var(--gold),var(--fire))}.week-bar.half{background:var(--green)}
 .week-bar.average{background:var(--blue)}.week-bar.poor{background:var(--muted2)}.week-bar.lost{background:var(--red)}
 .week-day{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px}
@@ -296,6 +478,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .month-cell.today{border-color:var(--fire)!important;color:var(--fire)!important}
 .mc-legendary{background:rgba(168,85,247,0.2);border-color:var(--purple)!important;color:var(--purple)!important}
 .mc-double{background:rgba(6,182,212,0.15);border-color:var(--cyan)!important;color:var(--cyan)!important}
+.mc-bigknock{background:rgba(99,210,255,0.1);border-color:rgba(99,210,255,0.6)!important;color:rgba(99,210,255,1)!important}
 .mc-century{background:rgba(245,200,66,0.15);border-color:var(--gold)!important;color:var(--gold)!important}
 .mc-half{background:rgba(46,204,138,0.12);border-color:var(--green)!important;color:var(--green)!important}
 .mc-average{background:rgba(74,158,255,0.1);border-color:var(--blue)!important;color:var(--blue)!important}
@@ -421,10 +604,212 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .dr-stat-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase;margin-bottom:3px}
 .dr-stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px}
 
-/* ACHIEVEMENTS */
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.75rem}
-.ach-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.875rem;text-align:center;transition:border-color .15s;position:relative;overflow:hidden}
-.ach-card.unlocked{border-color:var(--gold);background:rgba(245,200,66,0.03)}
+/* LEGEND PILLS */
+.legend-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;cursor:pointer;border:0.5px solid var(--border2);background:none;color:var(--muted);transition:all .18s;white-space:nowrap}
+.legend-pill:hover{border-color:var(--border);color:var(--text);background:rgba(255,255,255,0.03)}
+.legend-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,0.06)}
+.comp-card-anim{animation:slideDown .22s cubic-bezier(.4,0,.2,1)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* RIVAL CARD */
+.rival-section{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem}
+.rival-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.rival-section-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--text)}
+.rival-pick-btn{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 12px;border:0.5px solid var(--border2);border-radius:6px;background:none;color:var(--muted);cursor:pointer;transition:all .15s}
+.rival-pick-btn:hover{border-color:var(--gold);color:var(--gold)}
+.rival-empty{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-align:center;padding:1.5rem 0;letter-spacing:.5px}
+.rival-display{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center}
+.rival-you,.rival-them{text-align:center}
+.rival-name-big{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--text);margin-bottom:2px}
+.rival-name-big.you{color:var(--gold)}
+.rival-vs-mid{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted2);text-align:center}
+.rival-stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.rival-stat-row:last-child{border-bottom:none}
+.rival-stat-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:.5px;text-align:center;padding:0 4px}
+.rival-stat-val{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.5px}
+.rival-stat-val.winning{color:var(--green)}.rival-stat-val.losing{color:var(--red)}.rival-stat-val.tie{color:var(--gold)}
+.rival-result-badge{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:10px;margin-top:.75rem;display:inline-block;letter-spacing:.5px}
+.rival-result-badge.winning{background:rgba(46,204,138,0.1);border:0.5px solid var(--green);color:var(--green)}
+.rival-result-badge.losing{background:rgba(224,80,80,0.1);border:0.5px solid var(--red);color:var(--red)}
+.rival-result-badge.tie{background:rgba(245,200,66,0.1);border:0.5px solid var(--gold);color:var(--gold)}
+
+/* RIVAL PICKER MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;padding:1rem}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-box{background:var(--card2);border:0.5px solid var(--border2);border-radius:16px;padding:1.5rem;width:100%;max-width:420px;max-height:80vh;display:flex;flex-direction:column;transform:scale(.93);transition:transform .22s cubic-bezier(.34,1.4,.64,1)}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:.25rem}
+.modal-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.5px;margin-bottom:1rem}
+.modal-search{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text);outline:none;margin-bottom:.875rem;transition:border-color .15s}
+.modal-search:focus{border-color:var(--gold)}
+.modal-search::placeholder{color:var(--muted2)}
+.modal-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.modal-list::-webkit-scrollbar{width:2px}.modal-list::-webkit-scrollbar-thumb{background:var(--border2)}
+.modal-item{display:flex;align-items:center;gap:.75rem;padding:.625rem .875rem;border-radius:8px;cursor:pointer;transition:background .12s;border:0.5px solid transparent}
+.modal-item:hover{background:rgba(255,255,255,0.04);border-color:var(--border)}
+.modal-item.selected{background:rgba(245,200,66,0.06);border-color:var(--gold)}
+.modal-item-flag{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.modal-item-name{font-family:'DM Mono',monospace;font-size:11px;color:var(--text);flex:1}
+.modal-item-avg{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);letter-spacing:.5px}
+.modal-item-stats{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;max-width:160px}
+.modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted2);cursor:pointer;font-size:18px;line-height:1;padding:4px;border-radius:6px;transition:color .15s}
+.modal-close:hover{color:var(--text)}
+
+/* PROFILE MODAL */
+.profile-modal-box{max-width:360px}
+.profile-avatar-big{width:64px;height:64px;border-radius:50%;background:rgba(245,200,66,0.12);border:2px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin:0 auto 1rem;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s}
+.profile-avatar-big:hover{border-color:rgba(245,200,66,0.6)}
+.profile-avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.profile-avatar-emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:.75rem}
+.profile-emoji-opt{width:36px;height:36px;border-radius:8px;border:0.5px solid var(--border);background:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.profile-emoji-opt:hover{border-color:var(--gold);background:rgba(245,200,66,0.08)}
+.profile-emoji-opt.selected{border-color:var(--gold);background:rgba(245,200,66,0.15)}
+.profile-field{margin-bottom:.875rem}
+.profile-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:4px}
+.profile-input{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+.profile-input:focus{border-color:var(--gold)}
+.profile-save-btn{width:100%;padding:9px;background:transparent;border:0.5px solid var(--gold);border-radius:7px;color:var(--gold);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;margin-top:.5rem}
+.profile-save-btn:hover{background:var(--gold);color:#06090d}
+.profile-divider{height:0.5px;background:var(--border);margin:.875rem 0}
+.profile-signout-btn{width:100%;padding:7px;background:transparent;border:0.5px solid rgba(255,255,255,0.08);border-radius:7px;color:var(--muted2);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.profile-signout-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ── PROFILE PAGE (full page, not modal) ── */
+.profile-page-card{
+  background:linear-gradient(160deg,#0d1525,#0a1020,#060c18);
+  border:0.5px solid var(--border2);border-radius:18px;
+  padding:0;overflow:hidden;margin-bottom:1.25rem;
+}
+.profile-page-header{
+  background:linear-gradient(135deg,#0d1930,#141c2e,#0a1020);
+  padding:2rem 1.5rem 1.5rem;text-align:center;position:relative;
+  border-bottom:0.5px solid var(--border);
+}
+.profile-page-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(245,200,66,0.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+.profile-page-avatar-wrap{
+  position:relative;display:inline-block;margin-bottom:1rem;
+}
+.profile-page-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(245,200,66,0.1);
+  border:2px solid rgba(245,200,66,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;color:var(--gold);
+  cursor:pointer;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+  position:relative;
+}
+.profile-page-avatar:hover{border-color:rgba(245,200,66,0.7);transform:scale(1.04);}
+.profile-page-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.profile-page-avatar-edit{
+  position:absolute;bottom:0;right:0;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--gold);color:#06090d;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;pointer-events:none;
+  border:2px solid var(--bg);
+}
+.profile-page-name{
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;
+  color:var(--text);margin-bottom:2px;
+}
+.profile-page-email{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--muted);letter-spacing:.5px;
+}
+.profile-page-body{padding:1.25rem 1.5rem;}
+.profile-page-section-label{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;
+  color:var(--muted2);text-transform:uppercase;margin-bottom:.75rem;
+  display:flex;align-items:center;gap:6px;
+}
+.profile-page-section-label::after{
+  content:'';flex:1;height:0.5px;background:var(--border);
+}
+.profile-page-field{margin-bottom:1rem;}
+.profile-page-field-label{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  color:var(--muted2);text-transform:uppercase;margin-bottom:5px;
+}
+.profile-page-input{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:0.5px solid var(--border);border-radius:8px;
+  padding:10px 14px;font-family:'DM Mono',monospace;
+  font-size:13px;color:var(--text);outline:none;
+  transition:border-color .15s,background .15s;
+}
+.profile-page-input:focus{border-color:var(--gold);background:rgba(245,200,66,0.03);}
+.profile-page-save-btn{
+  width:100%;padding:11px;
+  background:rgba(245,200,66,0.08);
+  border:0.5px solid var(--gold);border-radius:8px;
+  color:var(--gold);font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:2px;cursor:pointer;
+  transition:all .2s;margin-bottom:1rem;
+}
+.profile-page-save-btn:hover{background:var(--gold);color:#06090d;}
+.profile-page-avatar-options{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:6px;
+  margin-top:.875rem;
+  padding:1rem;background:rgba(255,255,255,0.02);
+  border:0.5px solid var(--border);border-radius:8px;
+}
+.profile-page-avatar-opt{
+  width:36px;height:36px;border-radius:8px;
+  border:0.5px solid var(--border);background:none;
+  font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.profile-page-avatar-opt:hover{border-color:var(--gold);background:rgba(245,200,66,0.08);}
+.profile-page-avatar-opt.selected{border-color:var(--gold);background:rgba(245,200,66,0.15);}
+.profile-page-upload-btn{
+  width:100%;padding:9px;
+  background:rgba(74,158,255,0.06);
+  border:0.5px solid rgba(74,158,255,0.3);border-radius:8px;
+  color:var(--blue);font-family:'DM Mono',monospace;
+  font-size:10px;letter-spacing:1px;cursor:pointer;
+  transition:all .2s;margin-bottom:.625rem;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.profile-page-upload-btn:hover{background:rgba(74,158,255,0.12);border-color:var(--blue);}
+.profile-page-logout-btn{
+  width:100%;padding:11px;
+  background:rgba(224,80,80,0.06);
+  border:0.5px solid rgba(224,80,80,0.3);border-radius:8px;
+  color:var(--red);font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:2px;cursor:pointer;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.profile-page-logout-btn:hover{background:var(--red);color:#fff;}
+.profile-page-login-section{
+  text-align:center;padding:2rem 1.5rem;
+}
+.profile-page-login-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;background:rgba(245,200,66,0.1);
+  border:0.5px solid var(--gold);border-radius:8px;
+  color:var(--gold);font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:1px;cursor:pointer;
+  transition:all .2s;
+}
+.profile-page-login-btn:hover{background:var(--gold);color:#06090d;}
+
+/* ACHIEVEMENTS v2 */
+.ach-unlocked-section{margin-bottom:1rem}
+.ach-locked-toggle{width:100%;background:none;border:0.5px solid var(--border);border-radius:8px;padding:10px 16px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
+.ach-locked-toggle:hover{border-color:var(--border2);color:var(--text)}
+.ach-locked-section{display:none;margin-top:.75rem}
+.ach-locked-section.open{display:block}
+.ach-progress{height:2px;background:var(--border);border-radius:1px;margin-top:4px;overflow:hidden}
+.ach-progress-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--gold));border-radius:1px}
+.ach-card{position:relative;overflow:hidden}
+.ach-card.near{border-color:rgba(245,200,66,0.25);background:rgba(245,200,66,0.02)}
 .ach-card.locked{opacity:.4;filter:saturate(.2)}
 .ach-icon{font-size:24px;display:block;margin-bottom:.375rem}
 .ach-name{font-family:'DM Mono',monospace;font-size:10px;color:var(--text);letter-spacing:.5px;margin-bottom:3px}
@@ -469,6 +854,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .heatmap-cell.hm-half{background:rgba(46,204,138,0.6)}
 .heatmap-cell.hm-century{background:rgba(245,200,66,0.75)}
 .heatmap-cell.hm-double{background:rgba(6,182,212,0.85)}
+.heatmap-cell.hm-bigknock{background:rgba(99,210,255,0.7)}
 .heatmap-cell.hm-legendary{background:rgba(168,85,247,1);box-shadow:0 0 6px rgba(168,85,247,.5)}
 .heatmap-month-labels{display:flex;gap:3px;margin-bottom:4px}
 .hm-month-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:.5px;min-width:12px;white-space:nowrap}
@@ -490,16 +876,6 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 /* AI WEEKLY COMMENTARY (kept for .weekly-ai-btn class in case cached) */
 .weekly-ai-btn{display:none}
 
-/* ── AUTH UI ── */
-.auth-panel{padding:.75rem 1.25rem;border-top:0.5px solid var(--border);margin-top:auto;flex-shrink:0}
-.auth-user-name{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.auth-btn{width:100%;padding:7px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;border:0.5px solid;text-align:center}
-.auth-btn-login{background:transparent;border-color:var(--gold);color:var(--gold)}
-.auth-btn-login:hover{background:var(--gold);color:#06090d}
-.auth-btn-logout{background:transparent;border-color:var(--muted2);color:var(--muted2);margin-top:4px}
-.auth-btn-logout:hover{border-color:var(--red);color:var(--red)}
-.auth-loading{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px}
-
 /* ── LOGIN GATE ── */
 .login-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:2rem}
 .login-gate-icon{font-size:48px;margin-bottom:1rem}
@@ -508,6 +884,68 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .login-gate-btn{padding:12px 32px;background:transparent;border:1px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;cursor:pointer;transition:all .2s}
 .login-gate-btn:hover{background:var(--gold);color:#06090d}
 .sync-indicator{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px;padding:.25rem .75rem;background:rgba(255,255,255,0.03);border-radius:4px;display:inline-block;margin-top:.5rem}
+
+/* ── GLOBAL LEADERBOARD ── */
+.lb-header{background:linear-gradient(135deg,#07111f,#0d1e35,#07111f);border:0.5px solid var(--border2);border-radius:16px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.lb-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.lb-header::after{content:'';position:absolute;top:-40%;right:-5%;width:400px;height:400px;background:radial-gradient(ellipse,rgba(245,200,66,0.06) 0%,transparent 65%);pointer-events:none}
+.lb-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--text);margin-bottom:.25rem}
+.lb-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:1rem}
+.lb-meta{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.lb-meta-pill{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:10px;letter-spacing:1px}
+.lb-meta-users{background:rgba(74,158,255,0.1);border:0.5px solid var(--blue);color:var(--blue)}
+.lb-meta-legends{background:rgba(168,85,247,0.1);border:0.5px solid var(--purple);color:var(--purple)}
+.lb-refresh-btn{margin-left:auto;padding:5px 14px;background:transparent;border:0.5px solid var(--border2);border-radius:6px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);cursor:pointer;transition:all .15s}
+.lb-refresh-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Leaderboard table */
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:9px 12px;text-align:left;border-bottom:0.5px solid var(--border)}
+.lb-table td{padding:10px 12px;border-bottom:0.5px solid rgba(255,255,255,0.03);vertical-align:middle;transition:background .12s}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:rgba(255,255,255,0.018)}
+.lb-table tr.lb-you td{background:rgba(245,200,66,0.04);border-left:2px solid var(--gold)}
+.lb-table tr.lb-legend td{background:rgba(168,85,247,0.02)}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted2);min-width:30px}
+.lb-rank.top1{color:#ffd700}.lb-rank.top2{color:#c0c0c0}.lb-rank.top3{color:#cd7f32}
+.lb-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0}
+.lb-avatar.user-avatar{background:rgba(74,158,255,0.15);border:1px solid rgba(74,158,255,0.3);color:var(--blue)}
+.lb-avatar.legend-avatar{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);font-size:16px}
+.lb-avatar.you-avatar{background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.4);color:var(--gold)}
+.lb-name-wrap{display:flex;flex-direction:column;gap:2px}
+.lb-name{font-family:'DM Mono',monospace;font-size:11px;color:var(--text);white-space:nowrap}
+.lb-name.you{color:var(--gold);font-weight:500}
+.lb-name.legend{color:var(--purple)}
+.lb-type-tag{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;opacity:.6}
+.lb-runs{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--text)}
+.lb-runs.you{color:var(--gold)}
+.lb-runs.legend{color:var(--purple)}
+.lb-stat{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);letter-spacing:.5px}
+.lb-stat.good{color:var(--green)}
+.lb-bar-wrap{min-width:80px}
+.lb-bar-bg{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.lb-bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.lb-bar-fill.you{background:linear-gradient(90deg,var(--fire),var(--gold))}
+.lb-bar-fill.legend{background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.lb-bar-fill.user{background:var(--blue)}
+.lb-loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:1px}
+.lb-spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lb-section-divider{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted2);text-transform:uppercase;padding:6px 12px;background:rgba(255,255,255,0.02);border-bottom:0.5px solid var(--border)}
+.lb-expand-btn{background:none;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);padding:0;letter-spacing:1px;transition:color .15s}
+.lb-expand-btn:hover{color:var(--gold)}
+.lb-detail{display:none;padding:.75rem 12px 1rem;background:rgba(255,255,255,0.015);border-bottom:0.5px solid var(--border)}
+.lb-detail.open{display:block}
+.lb-detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.lb-detail-stat{background:rgba(255,255,255,0.03);border-radius:8px;padding:.5rem .75rem;text-align:center}
+.lb-detail-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px}
+.lb-detail-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:1px;margin-top:2px}
+@media(max-width:700px){
+  .lb-detail-grid{grid-template-columns:repeat(2,1fr)}
+  .lb-table th:nth-child(4),.lb-table td:nth-child(4),
+  .lb-table th:nth-child(5),.lb-table td:nth-child(5),
+  .lb-table th:nth-child(6),.lb-table td:nth-child(6){display:none}
+}
 
 @media(max-width:700px){
   .stats-grid,.career-stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -525,28 +963,90 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 </head>
 <body>
 
-<!-- ══ HAMBURGER ══ -->
-<button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<!-- ══ MOBILE TOP BAR ══ -->
+<div class="top-bar" id="top-bar">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <rect x="2" y="4" width="14" height="1.5" rx=".75" fill="currentColor"/>
+      <rect x="2" y="8.25" width="14" height="1.5" rx=".75" fill="currentColor"/>
+      <rect x="2" y="12.5" width="14" height="1.5" rx=".75" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="top-bar-title" id="top-bar-player-name">GOAL264</div>
+  <div class="top-bar-profile-btn" id="top-bar-avatar" onclick="openProfileModal()" title="Profile">🏏</div>
+</div>
+
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <!-- ══ SIDEBAR ══ -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">SHIVA<span>45</span></div>
+  <!-- App name header -->
+  <div class="sidebar-header">
+    <span class="sidebar-appname">GOAL<span style="color:var(--fire)">264</span></span>
+    <button class="sidebar-close-btn" id="sidebar-toggle-btn" onclick="toggleExpand()" title="Toggle sidebar">
+      <!-- icon swaps via JS -->
+      <svg id="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
   <nav class="sidebar-nav">
-    <button class="sidebar-item" id="si-career" onclick="showPage('career',this)"><span class="si-icon">🌟</span>Career</button>
-    <button class="sidebar-item" id="si-race" onclick="showPage('race',this)"><span class="si-icon">🏁</span>Race Board</button>
-    <button class="sidebar-item" id="si-best" onclick="showPage('best',this)"><span class="si-icon">🏆</span>Records</button>
-    <button class="sidebar-item" id="si-tracker" onclick="showPage('tracker',this)"><span class="si-icon">📋</span>Tracker</button>
+    <button class="sidebar-item active" id="si-scoreboard" onclick="goHome()" data-tooltip="Home">
+      <span class="si-icon">🏏</span><span class="si-label">Home</span>
+    </button>
+    <button class="sidebar-item" id="si-entry" onclick="showTab('entry',null);closeSidebar()" data-tooltip="Log Match">
+      <span class="si-icon">✏️</span><span class="si-label">Log Match</span>
+    </button>
+    <button class="sidebar-item" id="si-weekly" onclick="showTab('weekly',null);closeSidebar()" data-tooltip="Weekly">
+      <span class="si-icon">📅</span><span class="si-label">Weekly</span>
+    </button>
+    <button class="sidebar-item" id="si-monthly" onclick="showTab('monthly',null);closeSidebar()" data-tooltip="Monthly">
+      <span class="si-icon">📆</span><span class="si-label">Monthly</span>
+    </button>
+    <button class="sidebar-item" id="si-graphs" onclick="showTab('graphs',null);closeSidebar()" data-tooltip="Graphs">
+      <span class="si-icon">📈</span><span class="si-label">Graphs</span>
+    </button>
+
+    <div class="sidebar-divider" style="margin:6px 10px;"></div>
+
+    <button class="sidebar-item" id="si-career" onclick="showPage('career',this)" data-tooltip="Career">
+      <span class="si-icon">🌟</span><span class="si-label">Career</span>
+    </button>
+    <button class="sidebar-item" id="si-race" onclick="showPage('race',this)" data-tooltip="Race Board">
+      <span class="si-icon">🏁</span><span class="si-label">Race Board</span>
+    </button>
+    <button class="sidebar-item" id="si-leaderboard" onclick="showPage('leaderboard',this)" data-tooltip="Leaderboard">
+      <span class="si-icon">🌍</span><span class="si-label">Leaderboard</span>
+    </button>
+    <button class="sidebar-item" id="si-best" onclick="showPage('best',this)" data-tooltip="Records">
+      <span class="si-icon">🏆</span><span class="si-label">Records</span>
+    </button>
+    <button class="sidebar-item" id="si-tracker" onclick="showPage('tracker',this)" data-tooltip="Tracker">
+      <span class="si-icon">📋</span><span class="si-label">Tracker</span>
+    </button>
+    <button class="sidebar-item" id="si-profile" onclick="showTab('profile',this);closeSidebar()" data-tooltip="Profile">
+      <span class="si-icon" id="sidebar-profile-icon">👤</span><span class="si-label">Profile</span>
+    </button>
   </nav>
-  <!-- AUTH PANEL inside sidebar -->
+
+  <!-- Profile panel at bottom -->
   <div class="auth-panel" id="auth-panel">
-    <div class="auth-loading" id="auth-loading">Connecting…</div>
-    <div id="auth-logged-in" style="display:none">
-      <div class="auth-user-name" id="auth-user-name">—</div>
-      <button class="auth-btn auth-btn-logout" onclick="handleLogout()">SIGN OUT</button>
+    <!-- Collapsed: just the avatar circle -->
+    <div class="auth-collapsed" id="auth-collapsed">
+      <div class="auth-avatar" id="auth-avatar-icon" onclick="openProfileModal()" title="Profile & Settings">🏏</div>
     </div>
-    <div id="auth-logged-out" style="display:none">
-      <button class="auth-btn auth-btn-login" onclick="handleLogin()">🔑 GOOGLE LOGIN</button>
+    <!-- Expanded: avatar + name + sub -->
+    <div class="auth-expanded" id="auth-expanded">
+      <button class="profile-row-btn" onclick="openProfileModal()">
+        <div class="auth-avatar" id="auth-avatar-icon-exp">🏏</div>
+        <div style="flex:1;min-width:0">
+          <div class="auth-user-name" id="auth-user-name">GOAL264</div>
+          <div class="auth-user-sub" id="auth-user-sub">Tap to manage profile</div>
+        </div>
+      </button>
     </div>
   </div>
 </aside>
@@ -634,6 +1134,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div class="target-daily-grid" id="target-daily-grid"></div>
   </div>
 
+  <!-- RIVAL CARD - SCOREBOARD -->
+  <div id="rival-card-home"></div>
+
   <!-- QUICK STATS -->
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">Career Average</div><div class="stat-val gold" id="sb-avg">—</div><div class="stat-sub">runs per match</div></div>
@@ -650,12 +1153,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     </div>
   </div>
 
-  <!-- EXPORT/IMPORT shortcuts on scoreboard -->
-  <div style="display:flex;gap:.5rem;margin-top:1rem">
-    <button onclick="exportData()" style="flex:1;padding:8px;background:none;border:0.5px solid rgba(46,204,138,0.4);border-radius:6px;color:var(--green);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer">⬇ EXPORT DATA</button>
-    <button onclick="document.getElementById('sb-import-input').click()" style="flex:1;padding:8px;background:none;border:0.5px solid rgba(74,158,255,0.4);border-radius:6px;color:var(--blue);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer">⬆ IMPORT DATA</button>
-    <input type="file" id="sb-import-input" accept=".json" style="display:none" onchange="importData(this)">
-  </div>
+  <!-- Data sync is handled automatically via Firebase cloud sync -->
 
 </div>
 
@@ -750,20 +1248,33 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div class="bio-text" id="bio-text">Play your first match to begin writing your ODI story...</div>
   </div>
 
-  <!-- vs LEGENDS AT THIS STAGE -->
+  <!-- vs LEGENDS — PILL SYSTEM -->
   <div class="comp-section">
     <div class="comp-header">
-      <div class="comp-header-title">⚔️ You vs Legends — Same Career Stage</div>
+      <div class="comp-header-title">⚔️ You vs Legends</div>
       <div class="comp-match-badge" id="comp-match-badge">Match 0</div>
     </div>
+    <div id="comp-pills-row" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.875rem"></div>
     <div id="comp-container">
       <div class="comp-no-data">Play matches to unlock legend comparisons</div>
     </div>
   </div>
 
+  <!-- RIVAL CARD - CAREER -->
+  <div id="rival-card-career"></div>
+
   <!-- ACHIEVEMENTS -->
   <div class="section-title" style="margin-top:1.25rem">🏅 Achievements</div>
-  <div class="ach-grid" id="achievements-grid"></div>
+  <div id="ach-unlocked-wrap" class="ach-unlocked-section">
+    <div class="ach-grid" id="achievements-grid"></div>
+  </div>
+  <button class="ach-locked-toggle" id="ach-locked-toggle" onclick="toggleLockedAch()">
+    <span id="ach-locked-label">Show locked achievements</span>
+    <span id="ach-locked-arrow">▾</span>
+  </button>
+  <div class="ach-locked-section" id="ach-locked-section">
+    <div class="ach-grid" id="achievements-locked-grid"></div>
+  </div>
 
 </div>
 
@@ -779,6 +1290,59 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div class="section-title" style="font-size:18px;margin-bottom:.75rem">📊 Career Average Race</div>
     <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your average vs their career average (min 5 matches to show yours)</div>
     <div id="avg-race-rows"></div>
+  </div>
+  <div class="card">
+    <div class="section-title" style="font-size:18px;margin-bottom:.75rem">🎯 Highest Score Race</div>
+    <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your personal best vs legends' highest ODI scores</div>
+    <div id="best-race-rows"></div>
+  </div>
+</div>
+
+<!-- ══ PAGE: LEADERBOARD ══ -->
+<div class="page" id="page-leaderboard">
+  <div class="lb-header">
+    <div class="lb-title">🌍 GLOBAL LEADERBOARD</div>
+    <div class="lb-sub">Real players competing against ODI legends — who reigns supreme?</div>
+    <div class="lb-meta">
+      <span class="lb-meta-pill lb-meta-users" id="lb-user-count">👤 — players</span>
+      <span class="lb-meta-pill lb-meta-legends">🏏 10 legends</span>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2)" id="lb-last-updated"></span>
+      <button class="lb-refresh-btn" onclick="renderLeaderboard()">↻ REFRESH</button>
+    </div>
+    <!-- Toggle -->
+    <div class="pill-toggle" style="margin-top:1rem;margin-bottom:0">
+      <button class="pill-btn active" id="lb-toggle-combined" onclick="setLbMode('combined',this)">Players + Legends</button>
+      <button class="pill-btn" id="lb-toggle-players" onclick="setLbMode('players',this)">Players Only</button>
+    </div>
+  </div>
+
+  <!-- Full leaderboard table -->
+  <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem">
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th style="width:36px"></th>
+          <th>Player</th>
+          <th>Runs</th>
+          <th>Avg</th>
+          <th>100s</th>
+          <th>Best</th>
+          <th>M</th>
+          <th style="min-width:80px"></th>
+        </tr>
+      </thead>
+      <tbody id="lb-tbody">
+        <tr><td colspan="9"><div class="lb-loading"><div class="lb-spinner"></div><br>Loading leaderboard…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legend key -->
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px;padding:.5rem 0">
+    <span>👤 Real player</span>
+    <span>🏏 ODI Legend (historical)</span>
+    <span style="color:var(--gold)">★ You</span>
   </div>
 </div>
 
@@ -803,20 +1367,105 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   </div>
 </div>
 
+<!-- ══ PAGE: PROFILE ══ -->
+<div class="page" id="page-profile">
+
+  <!-- Logged In State -->
+  <div id="profile-page-logged-in" style="display:none">
+    <div class="profile-page-card">
+      <!-- Header: avatar + name + email -->
+      <div class="profile-page-header">
+        <div class="profile-page-avatar-wrap">
+          <div class="profile-page-avatar" id="profile-page-avatar-display" onclick="triggerProfilePageAvatarClick()">🏏</div>
+          <div class="profile-page-avatar-edit">✏️</div>
+        </div>
+        <div class="profile-page-name" id="profile-page-name-display">PLAYER</div>
+        <div class="profile-page-email" id="profile-page-email-display">—</div>
+      </div>
+
+      <!-- Body: edit form -->
+      <div class="profile-page-body">
+
+        <!-- Edit Section -->
+        <div class="profile-page-section-label">Edit Profile</div>
+
+        <div class="profile-page-field">
+          <div class="profile-page-field-label">Display Name</div>
+          <input class="profile-page-input" id="profile-page-name-input" placeholder="Your name" maxlength="24">
+        </div>
+
+        <!-- Avatar picker -->
+        <div class="profile-page-field">
+          <div class="profile-page-field-label">Profile Picture</div>
+
+          <!-- Upload image button -->
+          <button class="profile-page-upload-btn" onclick="document.getElementById('profile-page-img-upload').click()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3 5l4-4 4 4M2 11h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Upload Photo
+          </button>
+          <input type="file" id="profile-page-img-upload" accept="image/*" style="display:none" onchange="handleProfilePageImageUpload(this)">
+
+          <!-- Emoji grid -->
+          <div class="profile-page-avatar-options" id="profile-page-emoji-grid"></div>
+        </div>
+
+        <button class="profile-page-save-btn" onclick="saveProfilePage()">SAVE CHANGES</button>
+
+        <!-- Account Section -->
+        <div class="profile-page-section-label" style="margin-top:.5rem">Account</div>
+
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.5px;margin-bottom:.625rem">Signed in with Google</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:1.25rem" id="profile-page-google-email-display">—</div>
+
+        <button class="profile-page-logout-btn" onclick="handleLogout();renderProfilePage()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3M9 10l3-3-3-3M5 7h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          SIGN OUT
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logged Out State -->
+  <div id="profile-page-logged-out" style="display:none">
+    <div class="profile-page-card">
+      <div class="profile-page-header">
+        <div class="profile-page-avatar-wrap">
+          <div class="profile-page-avatar" style="cursor:default">🔑</div>
+        </div>
+        <div class="profile-page-name">SIGN IN</div>
+        <div class="profile-page-email">Sync your stats across devices</div>
+      </div>
+      <div class="profile-page-body">
+        <div class="profile-page-login-section">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.5px;margin-bottom:1.5rem;line-height:1.6">
+            Sign in with Google to save your career, join the leaderboard, and access your stats on any device.
+          </div>
+          <button class="profile-page-login-btn" onclick="handleLogin()">🔑 Sign in with Google</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div id="profile-page-loading" style="text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:1px">Connecting…</div>
+
+</div>
+
 <!-- ══ PAGE: TRACKER ══ -->
 <div class="page" id="page-tracker">
   <div class="section-title" style="justify-content:space-between">
     <span>📋 Match History <span id="match-count">0 matches</span></span>
     <div style="display:flex;gap:.5rem;align-items:center">
-      <button onclick="exportData()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 12px;background:none;border:0.5px solid var(--border2);border-radius:6px;color:var(--muted);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">⬇ EXPORT</button>
-      <button onclick="document.getElementById('import-file-input').click()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 12px;background:none;border:0.5px solid var(--border2);border-radius:6px;color:var(--muted);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">⬆ IMPORT</button>
+      <button onclick="exportData()" title="Backup data as JSON" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;background:none;border:0.5px solid var(--border);border-radius:6px;color:var(--muted2);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">⬇ Backup</button>
+      <button onclick="document.getElementById('import-file-input').click()" title="Restore from backup" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;background:none;border:0.5px solid var(--border);border-radius:6px;color:var(--muted2);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">⬆ Restore</button>
       <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="importData(this)">
     </div>
   </div>
   <div class="filter-bar">
     <button class="filter-btn active" onclick="filterMatches('all',this)">All</button>
     <button class="filter-btn" onclick="filterMatches('legendary',this)">⚡ Legendary</button>
-    <button class="filter-btn" onclick="filterMatches('double',this)">🔵 Double</button>
+    <button class="filter-btn" onclick="filterMatches('double',this)">💜 Double 200+</button>
+    <button class="filter-btn" onclick="filterMatches('bigknock',this)">🔵 Big Knock</button>
     <button class="filter-btn" onclick="filterMatches('century',this)">🏆 Century</button>
     <button class="filter-btn" onclick="filterMatches('half',this)">💪 Half</button>
     <button class="filter-btn" onclick="filterMatches('average',this)">📘 Average</button>
@@ -895,7 +1544,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:.875rem;padding-top:.75rem;border-top:0.5px solid var(--border)">
       <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted2);align-self:center;text-transform:uppercase;margin-right:4px">KEY:</span>
       <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(168,85,247,0.2);border:0.5px solid var(--purple);color:var(--purple)">⚡ Legendary 264+</span>
-      <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.15);border:0.5px solid var(--cyan);color:var(--cyan)">🔵 Double 150+</span>
+      <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.15);border:0.5px solid var(--cyan);color:var(--cyan)">💜 Double 200+</span>
+      <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(99,210,255,0.1);border:0.5px solid rgba(99,210,255,0.6);color:rgba(99,210,255,1)">🔵 Big Knock 150+</span>
       <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(245,200,66,0.15);border:0.5px solid var(--gold);color:var(--gold)">🏆 Century 100+</span>
       <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(46,204,138,0.12);border:0.5px solid var(--green);color:var(--green)">💪 Half 50+</span>
       <span style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:4px;background:rgba(74,158,255,0.1);border:0.5px solid var(--blue);color:var(--blue)">📘 Average 40+</span>
@@ -931,6 +1581,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <div class="hm-leg-cell hm-average"></div><span class="hm-leg-label">Average</span>
       <div class="hm-leg-cell hm-half"></div><span class="hm-leg-label">Half</span>
       <div class="hm-leg-cell hm-century"></div><span class="hm-leg-label">Century</span>
+      <div class="hm-leg-cell hm-bigknock"></div><span class="hm-leg-label">Big Knock</span>
       <div class="hm-leg-cell hm-double"></div><span class="hm-leg-label">Double</span>
       <div class="hm-leg-cell hm-legendary"></div><span class="hm-leg-label">Legendary</span>
     </div>
@@ -980,6 +1631,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   <button class="tab-btn" id="tab-graphs" onclick="showTab('graphs',this)">
     <span class="tab-icon">📈</span><span class="tab-label">Graphs</span>
   </button>
+  <button class="tab-btn" id="tab-profile" onclick="showTab('profile',this)">
+    <span class="tab-icon" id="bottom-tab-avatar-icon">👤</span><span class="tab-label">Profile</span>
+  </button>
 </nav>
 
 <!-- MILESTONE POPUP -->
@@ -989,6 +1643,51 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   <div class="ms-sub" id="ms-sub">100+ runs today</div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- ══ RIVAL PICKER MODAL ══ -->
+<div class="modal-overlay" id="rival-modal" onclick="if(event.target===this)closeRivalModal()">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" onclick="closeRivalModal()">✕</button>
+    <div class="modal-title">Pick Your Rival</div>
+    <div class="modal-sub">Choose a legend to compete against</div>
+    <input class="modal-search" id="rival-search" placeholder="Search by name…" oninput="renderRivalList()">
+    <div class="modal-list" id="rival-list"></div>
+  </div>
+</div>
+
+<!-- ══ PROFILE MODAL ══ -->
+<div class="modal-overlay" id="profile-modal" onclick="if(event.target===this)closeProfileModal()">
+  <div class="modal-box profile-modal-box" style="position:relative">
+    <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    <div class="modal-title">Your Profile</div>
+    <div class="modal-sub">App-only · Doesn't affect your Google account</div>
+    <div id="profile-loading" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:1rem;letter-spacing:.5px">Connecting…</div>
+    <div id="profile-logged-in" style="display:none">
+      <div style="text-align:center;margin-bottom:1rem">
+        <div class="profile-avatar-big" id="profile-avatar-big" onclick="toggleEmojiPicker()">?</div>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);margin-top:4px;letter-spacing:.5px">Tap to change avatar</div>
+        <div id="emoji-picker-wrap" style="display:none;margin-top:.75rem">
+          <div class="profile-avatar-emoji-grid" id="emoji-grid"></div>
+        </div>
+      </div>
+      <div class="profile-field">
+        <div class="profile-label">Display Name</div>
+        <input class="profile-input" id="profile-name-input" placeholder="Your name in the app" maxlength="24">
+      </div>
+      <button class="profile-save-btn" onclick="saveProfile()">SAVE CHANGES</button>
+      <div class="profile-divider"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:.5px;margin-bottom:.375rem">Signed in with Google as</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:.75rem" id="profile-google-email"></div>
+      <button class="profile-signout-btn" onclick="handleLogout();closeProfileModal()">Sign Out</button>
+    </div>
+    <div id="profile-logged-out" style="display:none;text-align:center;padding:1rem 0">
+      <div style="font-size:36px;margin-bottom:.75rem">🔑</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);margin-bottom:.375rem">Sign In</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-bottom:1.25rem;letter-spacing:.5px">Sync your data across devices</div>
+      <button class="auth-btn auth-btn-login" onclick="handleLogin()" style="max-width:200px;margin:0 auto">🔑 Sign in with Google</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════
@@ -1028,18 +1727,49 @@ function initFirebase() {
     if (user) {
       await loadFromFirestore(user.uid);
     }
+    // Re-render profile page if it's visible
+    if (activeTab === 'profile') renderProfilePage();
   });
 }
 
 // ── Show/hide the sidebar auth panel ──
 function showAuthUI(user) {
-  document.getElementById('auth-loading').style.display    = 'none';
-  document.getElementById('auth-logged-in').style.display  = user ? 'block' : 'none';
-  document.getElementById('auth-logged-out').style.display = user ? 'none'  : 'block';
-  if (user) {
-    const name = user.displayName || user.email || 'Player';
-    document.getElementById('auth-user-name').textContent = '👤 ' + name.split(' ')[0].toUpperCase();
+  const profile = getAppProfile();
+  const displayAvatar = profile.avatar || (user ? (user.displayName||'P')[0].toUpperCase() : '🏏');
+  const displayName   = profile.name  || (user ? (user.displayName || user.email || 'Player') : 'GOAL264');
+  const isEmoji = /\p{Emoji}/u.test(displayAvatar);
+
+  // Helper to set avatar content (text/emoji or img)
+  function setAvatar(el, val) {
+    if (!el) return;
+    if (val && val.startsWith('data:image') || (val && val.startsWith('http'))) {
+      el.innerHTML = `<img src="${val}" alt="avatar">`;
+    } else {
+      el.textContent = val || '🏏';
+    }
   }
+
+  setAvatar(document.getElementById('auth-avatar-icon'),     displayAvatar);
+  setAvatar(document.getElementById('auth-avatar-icon-exp'), displayAvatar);
+  setAvatar(document.getElementById('top-bar-avatar'),       displayAvatar);
+
+  // Update bottom tab profile icon
+  const bottomTabIcon = document.getElementById('bottom-tab-avatar-icon');
+  if (bottomTabIcon) {
+    if (displayAvatar && (displayAvatar.startsWith('data:image') || displayAvatar.startsWith('http'))) {
+      bottomTabIcon.innerHTML = `<img src="${displayAvatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;" alt="avatar">`;
+    } else {
+      bottomTabIcon.textContent = displayAvatar || '👤';
+    }
+  }
+
+  const nameEl = document.getElementById('auth-user-name');
+  const subEl  = document.getElementById('auth-user-sub');
+  const mobileNameEl = document.getElementById('top-bar-player-name');
+
+  if (nameEl) nameEl.textContent = displayName;
+  if (subEl)  subEl.textContent  = user ? 'Tap to manage profile' : 'Tap to sign in';
+  if (mobileNameEl) mobileNameEl.textContent = displayName;
 }
 
 // ── Google Sign-In ──
@@ -1124,8 +1854,7 @@ const ODI_LEGENDS = [
   {
     name: 'Sachin Tendulkar', flag: '🇮🇳', era: '1989–2012',
     careerRuns: 18426, careerMatches: 463, careerAvg: 44.83,
-    careerHundreds: 49, careerFifties: 96,
-    // avg and 100s at specific match milestones (approx from Cricinfo data)
+    careerHundreds: 49, careerFifties: 96, careerBest: 186,
     stages: {
       5:  { avg: 28.0, runs: 140,  hundreds: 0, fifties: 1 },
       10: { avg: 31.5, runs: 315,  hundreds: 0, fifties: 3 },
@@ -1140,7 +1869,7 @@ const ODI_LEGENDS = [
   {
     name: 'Virat Kohli', flag: '🇮🇳', era: '2008–present',
     careerRuns: 13906, careerMatches: 295, careerAvg: 58.07,
-    careerHundreds: 50, careerFifties: 72,
+    careerHundreds: 50, careerFifties: 72, careerBest: 183,
     stages: {
       5:  { avg: 18.0, runs: 90,   hundreds: 0, fifties: 0 },
       10: { avg: 22.0, runs: 220,  hundreds: 0, fifties: 1 },
@@ -1155,7 +1884,7 @@ const ODI_LEGENDS = [
   {
     name: 'Rohit Sharma', flag: '🇮🇳', era: '2007–present',
     careerRuns: 10860, careerMatches: 264, careerAvg: 48.96,
-    careerHundreds: 31, careerFifties: 57,
+    careerHundreds: 31, careerFifties: 57, careerBest: 264,
     stages: {
       5:  { avg: 20.0, runs: 100,  hundreds: 0, fifties: 1 },
       10: { avg: 24.0, runs: 240,  hundreds: 0, fifties: 2 },
@@ -1170,7 +1899,7 @@ const ODI_LEGENDS = [
   {
     name: 'MS Dhoni', flag: '🇮🇳', era: '2004–2019',
     careerRuns: 10773, careerMatches: 350, careerAvg: 50.57,
-    careerHundreds: 10, careerFifties: 73,
+    careerHundreds: 10, careerFifties: 73, careerBest: 183,
     stages: {
       5:  { avg: 42.0, runs: 210,  hundreds: 1, fifties: 1 },
       10: { avg: 45.0, runs: 450,  hundreds: 1, fifties: 3 },
@@ -1185,7 +1914,7 @@ const ODI_LEGENDS = [
   {
     name: 'Babar Azam', flag: '🇵🇰', era: '2015–present',
     careerRuns: 9635,  careerMatches: 224, careerAvg: 57.35,
-    careerHundreds: 22, careerFifties: 53,
+    careerHundreds: 22, careerFifties: 53, careerBest: 158,
     stages: {
       5:  { avg: 32.0, runs: 160,  hundreds: 0, fifties: 1 },
       10: { avg: 40.0, runs: 400,  hundreds: 1, fifties: 2 },
@@ -1200,7 +1929,7 @@ const ODI_LEGENDS = [
   {
     name: 'AB de Villiers', flag: '🇿🇦', era: '2005–2018',
     careerRuns: 9577,  careerMatches: 228, careerAvg: 53.50,
-    careerHundreds: 25, careerFifties: 53,
+    careerHundreds: 25, careerFifties: 53, careerBest: 176,
     stages: {
       5:  { avg: 30.0, runs: 150,  hundreds: 0, fifties: 1 },
       10: { avg: 34.0, runs: 340,  hundreds: 0, fifties: 3 },
@@ -1215,7 +1944,7 @@ const ODI_LEGENDS = [
   {
     name: 'Kumar Sangakkara', flag: '🇱🇰', era: '2000–2015',
     careerRuns: 14234, careerMatches: 404, careerAvg: 41.98,
-    careerHundreds: 25, careerFifties: 93,
+    careerHundreds: 25, careerFifties: 93, careerBest: 169,
     stages: {
       5:  { avg: 22.0, runs: 110,  hundreds: 0, fifties: 1 },
       10: { avg: 26.0, runs: 260,  hundreds: 0, fifties: 2 },
@@ -1230,7 +1959,7 @@ const ODI_LEGENDS = [
   {
     name: 'Ricky Ponting', flag: '🇦🇺', era: '1995–2012',
     careerRuns: 13704, careerMatches: 375, careerAvg: 42.03,
-    careerHundreds: 30, careerFifties: 82,
+    careerHundreds: 30, careerFifties: 82, careerBest: 164,
     stages: {
       5:  { avg: 24.0, runs: 120,  hundreds: 0, fifties: 1 },
       10: { avg: 28.0, runs: 280,  hundreds: 0, fifties: 2 },
@@ -1245,7 +1974,7 @@ const ODI_LEGENDS = [
   {
     name: 'Sourav Ganguly', flag: '🇮🇳', era: '1992–2007',
     careerRuns: 11363, careerMatches: 311, careerAvg: 41.02,
-    careerHundreds: 22, careerFifties: 72,
+    careerHundreds: 22, careerFifties: 72, careerBest: 183,
     stages: {
       5:  { avg: 20.0, runs: 100,  hundreds: 0, fifties: 1 },
       10: { avg: 26.0, runs: 260,  hundreds: 0, fifties: 2 },
@@ -1260,7 +1989,7 @@ const ODI_LEGENDS = [
   {
     name: 'Shubman Gill', flag: '🇮🇳', era: '2019–present',
     careerRuns: 3127, careerMatches: 58, careerAvg: 62.54,
-    careerHundreds: 9, careerFifties: 13,
+    careerHundreds: 9, careerFifties: 13, careerBest: 208,
     stages: {
       5:  { avg: 38.0, runs: 190,  hundreds: 0, fifties: 2 },
       10: { avg: 52.0, runs: 520,  hundreds: 2, fifties: 3 },
@@ -1346,25 +2075,26 @@ function calcRuns(hours, questions, lifeRaw, penaltyTotal, priorMatches) {
 // ══════════════════════════════════════
 function getGrade(runs) {
   if (runs >= 264) return { label:"⚡ ROHIT'S RECORD!",   cls:'grade-legendary', badge:'badge-legendary', key:'legendary' };
-  if (runs >= 200) return { label:'💜 BIG DOUBLE CENTURY', cls:'grade-legendary', badge:'badge-legendary', key:'legendary' };
-  if (runs >= 150) return { label:'🔵 DOUBLE CENTURY',     cls:'grade-double',    badge:'badge-double',    key:'double'    };
-  if (runs >= 100) return { label:'🏆 CENTURY DAY',        cls:'grade-century',   badge:'badge-century',   key:'century'   };
-  if (runs >= 50)  return { label:'💪 HALF CENTURY',       cls:'grade-half',      badge:'badge-half',      key:'half'      };
-  if (runs >= 40)  return { label:'📘 FIGHTING KNOCK',     cls:'grade-average',   badge:'badge-average',   key:'average'   };
-  if (runs >= 0)   return { label:'📉 POOR DAY',           cls:'grade-poor',      badge:'badge-poor',      key:'poor'      };
-  return                  { label:'❌ MATCH LOST',          cls:'grade-lost',      badge:'badge-lost',      key:'lost'      };
+  if (runs >= 200) return { label:'💜 DOUBLE CENTURY!',   cls:'grade-double',    badge:'badge-double',    key:'double'    };
+  if (runs >= 150) return { label:'🔵 BIG KNOCK 150+',    cls:'grade-bigknock',  badge:'badge-bigknock',  key:'bigknock'  };
+  if (runs >= 100) return { label:'🏆 CENTURY DAY',       cls:'grade-century',   badge:'badge-century',   key:'century'   };
+  if (runs >= 50)  return { label:'💪 HALF CENTURY',      cls:'grade-half',      badge:'badge-half',      key:'half'      };
+  if (runs >= 40)  return { label:'📘 FIGHTING KNOCK',    cls:'grade-average',   badge:'badge-average',   key:'average'   };
+  if (runs >= 0)   return { label:'📉 POOR DAY',          cls:'grade-poor',      badge:'badge-poor',      key:'poor'      };
+  return                  { label:'❌ MATCH LOST',         cls:'grade-lost',      badge:'badge-lost',      key:'lost'      };
 }
 
 // ══════════════════════════════════════
 // CAREER PHASES (ODI-style)
 // ══════════════════════════════════════
 const CAREER_PHASES = [
-  { title:'DEBUTANT',    min:1,   max:10,  sub:'Matches 1–10 · Finding your feet',         color:'var(--muted)'  },
-  { title:'PROMISING',   min:11,  max:25,  sub:'Matches 11–25 · Selectors are watching',   color:'var(--blue)'   },
-  { title:'ESTABLISHED', min:26,  max:40,  sub:'Matches 26–40 · Regular in the team',      color:'var(--green)'  },
-  { title:'VETERAN',     min:41,  max:75,  sub:'Matches 41–75 · A seasoned campaigner emerges',  color:'var(--gold)'   },
-  { title:'LEGEND',      min:76,  max:100, sub:'Matches 76–100 · Full ODI universe',       color:'var(--fire2)'  },
-  { title:'ICON',        min:101, max:9999,sub:'Match 100+ · Name in the record books',    color:'var(--purple)' },
+  { title:'PRE-SEASON',   min:0,   max:0,   sub:'No matches yet · Log your first match!',     color:'var(--muted2)' },
+  { title:'DEBUTANT',    min:1,   max:10,  sub:'Matches 1–10 · Finding your feet',             color:'var(--muted)'  },
+  { title:'PROMISING',   min:11,  max:25,  sub:'Matches 11–25 · Selectors are watching',       color:'var(--blue)'   },
+  { title:'ESTABLISHED', min:26,  max:40,  sub:'Matches 26–40 · Regular in the team',          color:'var(--green)'  },
+  { title:'VETERAN',     min:41,  max:75,  sub:'Matches 41–75 · A seasoned campaigner',        color:'var(--gold)'   },
+  { title:'LEGEND',      min:76,  max:100, sub:'Matches 76–100 · Full ODI universe',           color:'var(--fire2)'  },
+  { title:'ICON',        min:101, max:9999,sub:'Match 100+ · Name in the record books',        color:'var(--purple)' },
 ];
 
 const CAREER_RANKS = [
@@ -1391,8 +2121,8 @@ const ACHIEVEMENTS = [
   { id:'first_match',   icon:'🏏', name:'First Match',       desc:'Play your first match',                     check:(ms)=>ms.length>=1 },
   { id:'first_fifty',   icon:'🙌', name:'First Fifty',        desc:'Score 50+ runs',                            check:(ms)=>ms.some(m=>m.total>=50) },
   { id:'first_ton',     icon:'🏆', name:'First Century',      desc:'Score 100+ runs',                           check:(ms)=>ms.some(m=>m.total>=100) },
-  { id:'first_150',     icon:'🔵', name:'Double Century',     desc:'Score 150+ in a match',                     check:(ms)=>ms.some(m=>m.total>=150) },
-  { id:'first_200',     icon:'💜', name:'Big Double',         desc:'Score 200+',                                check:(ms)=>ms.some(m=>m.total>=200) },
+  { id:'first_150',     icon:'🔵', name:'Big Knock',          desc:'Score 150+ runs in a match',                    check:(ms)=>ms.some(m=>m.total>=150) },
+  { id:'first_200',     icon:'💜', name:'Double Century',      desc:'Score 200+ runs in a match',                    check:(ms)=>ms.some(m=>m.total>=200) },
   { id:'rohit_264',     icon:'⚡', name:"Rohit's Record",     desc:'Score 264+ — the ultimate feat',            check:(ms)=>ms.some(m=>m.total>=264) },
   { id:'ten_matches',   icon:'📅', name:'10 Matches',         desc:'Play 10 matches',                           check:(ms)=>ms.length>=10 },
   { id:'twenty_five',   icon:'🎖️', name:'25 Matches',        desc:'Play 25 matches',                           check:(ms)=>ms.length>=25 },
@@ -1524,8 +2254,8 @@ function saveMatch() {
   saveToFirestore(); // ☁️ also sync to Firebase
 
   if      (s.total>=264) showMilestone('⚡',"ROHIT'S RECORD!",s.total.toFixed(0)+' runs — You are legendary!');
-  else if (s.total>=200) showMilestone('💜','BIG DOUBLE CENTURY!',s.total.toFixed(0)+' runs — Absolutely insane!');
-  else if (s.total>=150) showMilestone('🔵','DOUBLE CENTURY!',s.total.toFixed(0)+' runs — Exceptional day!');
+  else if (s.total>=200) showMilestone('💜','DOUBLE CENTURY!',s.total.toFixed(0)+' runs — Absolutely insane!');
+  else if (s.total>=150) showMilestone('🔵','BIG KNOCK!',s.total.toFixed(0)+' runs — Exceptional day!');
   else if (s.total>=100) showMilestone('🏆','CENTURY!',s.total.toFixed(0)+' runs — Elite performance!');
   else if (s.total>=50)  showMilestone('💪','HALF CENTURY!',s.total.toFixed(0)+' runs — Solid day!');
 
@@ -1704,7 +2434,7 @@ function renderScoreboard() {
   const recent5=[...matches].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5).reverse();
   document.getElementById('form-display').innerHTML=recent5.map(m=>{
     const k=getGrade(m.total).key;
-    const letter=k==='legendary'?'L':k==='double'?'D':k==='century'?'C':k==='half'?'H':k==='average'?'A':k==='lost'?'X':'P';
+    const letter=k==='legendary'?'L':k==='double'?'D':k==='bigknock'?'B':k==='century'?'C':k==='half'?'H':k==='average'?'A':k==='lost'?'X':'P';
     return `<div class="form-dot ${letter}" title="${m.total} runs">${letter}</div>`;
   }).join('');
 }
@@ -1736,11 +2466,21 @@ function renderCareer() {
   }
 
   // Phase
-  const phase = CAREER_PHASES.find(p=>n>=p.min&&n<=p.max)||CAREER_PHASES[CAREER_PHASES.length-1];
+  const phase = CAREER_PHASES.find(p=>n>=p.min&&n<=p.max) || CAREER_PHASES[CAREER_PHASES.length-1];
   document.getElementById('phase-name').textContent    = phase.title;
   document.getElementById('phase-name').style.color   = phase.color;
   document.getElementById('phase-sub').textContent    = phase.sub;
-  document.getElementById('phase-matches-num').textContent = n;
+  // Fix: show cricket bat icon when 0 matches, otherwise show the number
+  const pmNum = document.getElementById('phase-matches-num');
+  if (n === 0) {
+    pmNum.textContent = '🏏';
+    pmNum.style.fontSize = '28px';
+    pmNum.style.lineHeight = '1.2';
+  } else {
+    pmNum.textContent = n;
+    pmNum.style.fontSize = '';
+    pmNum.style.lineHeight = '';
+  }
 
   // Career stats
   document.getElementById('c-avg').textContent       = n ? avg.toFixed(1) : '—';
@@ -1758,17 +2498,7 @@ function renderCareer() {
   // Legend comparisons at this stage
   renderLegendComparisons(n, avg, hundreds, tot);
 
-  // Achievements
-  const achHTML=ACHIEVEMENTS.map(a=>{
-    const u=a.check(matches);
-    return `<div class="ach-card ${u?'unlocked':'locked'}">
-      <span class="ach-icon">${a.icon}</span>
-      <div class="ach-name">${a.name}</div>
-      <div class="ach-desc">${a.desc}</div>
-      ${u?'<div class="ach-date">✓ Unlocked</div>':''}
-    </div>`;
-  }).join('');
-  document.getElementById('achievements-grid').innerHTML = achHTML;
+  // Achievements rendered by renderAchievements() patch below
 }
 
 // ══════════════════════════════════════
@@ -1990,6 +2720,31 @@ function renderRaceBoard() {
       <div class="race-runs ${p.isYou?'is-you':''}">${p.avg.toFixed(2)}</div>
     </div>`;
   }).join('') || '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted2);padding:1rem">Play 5+ matches to see your average here</div>';
+
+  // Highest Score race
+  const yourBest = n ? Math.max(...matches.map(m=>m.total)) : null;
+  const bestData = [
+    ...(yourBest ? [{ name:'YOU', best:yourBest, isYou:true }] : []),
+    ...ODI_LEGENDS.map(l=>({ name:l.name, flag:l.flag, best:l.careerBest||0, isYou:false }))
+  ].sort((a,b)=>b.best-a.best);
+
+  const maxBest = bestData.length ? bestData[0].best : 1;
+  const bestEl = document.getElementById('best-race-rows');
+  if (bestEl) bestEl.innerHTML = bestData.map((p,i)=>{
+    const barW = (p.best/maxBest*100).toFixed(1);
+    const youOvertook = p.isYou ? '' : (yourBest && yourBest > p.best ? '<span class="race-overtake">BEATEN ✓</span>' : '');
+    const scoreColor = p.best >= 200 ? 'var(--purple)' : p.best >= 150 ? 'var(--cyan)' : p.best >= 100 ? 'var(--gold)' : 'var(--text)';
+    return `<div class="race-row">
+      <div class="race-rank">${i+1}</div>
+      <div class="race-name ${p.isYou?'is-you':''}">${p.flag||'🏏'} ${p.name}${youOvertook}</div>
+      <div class="race-bar-wrap">
+        <div class="race-bar-bg">
+          <div class="race-bar-fill ${p.isYou?'you':'legend'}" style="width:${barW}%"></div>
+        </div>
+      </div>
+      <div class="race-runs ${p.isYou?'is-you':''}" style="${p.isYou?'':('color:'+scoreColor)}">${p.best}</div>
+    </div>`;
+  }).join('') || '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted2);padding:1rem">Log a match to see your highest score here</div>';
 }
 
 // renderDressingRoom() — removed (dead code, no page references it)
@@ -2114,11 +2869,12 @@ function renderMonthly() {
     else html+=`<div class="month-cell${isToday?' today':''}" style="color:var(--muted2)">${d}</div>`;
   }
   grid.innerHTML=html;
-  const grades={legendary:0,double:0,century:0,half:0,average:0,poor:0,lost:0};
+  const grades={legendary:0,double:0,bigknock:0,century:0,half:0,average:0,poor:0,lost:0};
   mm.forEach(x=>grades[x.grade]++);
   document.getElementById('month-breakdown').innerHTML=[
     {label:'⚡ Legendary',val:grades.legendary,cls:'purple'},
-    {label:'🔵 Double Centuries',val:grades.double,cls:'blue'},
+    {label:'💜 Double Centuries 200+',val:grades.double,cls:'blue'},
+    {label:'🔵 Big Knocks 150+',val:grades.bigknock,cls:''},
     {label:'🏆 Centuries',val:grades.century,cls:'gold'},
     {label:'💪 Half Centuries',val:grades.half,cls:'green'},
     {label:'📘 Average Days',val:grades.average,cls:''},
@@ -2157,12 +2913,13 @@ function renderMonthlyPage(){
     else html+=`<div class="month-cell${isToday?' today':''}" style="color:var(--muted2)">${d}</div>`;
   }
   grid.innerHTML=html;
-  const grades={legendary:0,double:0,century:0,half:0,average:0,poor:0,lost:0};
+  const grades={legendary:0,double:0,bigknock:0,century:0,half:0,average:0,poor:0,lost:0};
   mm.forEach(x=>{if(grades[x.grade]!==undefined)grades[x.grade]++;});
   const bd=document.getElementById('month-breakdown-pg');
   if(bd) bd.innerHTML=[
     {label:'⚡ Legendary',val:grades.legendary,cls:'purple'},
-    {label:'🔵 Double Centuries',val:grades.double,cls:'blue'},
+    {label:'💜 Double Centuries 200+',val:grades.double,cls:'blue'},
+    {label:'🔵 Big Knocks 150+',val:grades.bigknock,cls:''},
     {label:'🏆 Centuries',val:grades.century,cls:'gold'},
     {label:'💪 Half Centuries',val:grades.half,cls:'green'},
     {label:'📘 Average Days',val:grades.average,cls:''},
@@ -2245,7 +3002,7 @@ function _renderTarget(inputId,subId,scoredId,remId,fillId,verdictId,gridId){
     const m=wm[i],runs=m?Math.round(m.total):null,isToday=ds===today,isFuture=ds>today;
     const g=m?getGrade(m.total):null;
     const fillW=(dailyTarget&&runs)?Math.min(runs/dailyTarget*100,100):0;
-    const fillColor=g?(g.key==='century'||g.key==='legendary'||g.key==='double'?'var(--gold)':g.key==='half'?'var(--green)':'var(--muted2)'):'var(--border)';
+    const fillColor=g?(g.key==='century'||g.key==='legendary'||g.key==='double'||g.key==='bigknock'?'var(--gold)':g.key==='half'?'var(--green)':'var(--muted2)'):'var(--border)';
     return `<div class="tday-cell" style="${isToday?'border-color:var(--fire)':''}${isFuture&&!m?'opacity:.4':''}">
       <div class="tday-name">${dayNames[i]}</div>
       <div class="tday-runs" style="color:${runs?fillColor:'var(--muted2)'}">
@@ -2350,9 +3107,8 @@ let activeTab = 'scoreboard';
 function showTab(id, btn) {
   // Hide all pages
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  // Deactivate all tab buttons
+  // Deactivate all tab buttons & sidebar items
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-  // Deactivate all sidebar items
   document.querySelectorAll('.sidebar-item').forEach(t=>t.classList.remove('active'));
 
   const pageEl = document.getElementById('page-'+id);
@@ -2362,6 +3118,10 @@ function showTab(id, btn) {
     const tb = document.getElementById('tab-'+id);
     if(tb) tb.classList.add('active');
   }
+  // Highlight sidebar item too
+  const si = document.getElementById('si-'+id);
+  if(si) si.classList.add('active');
+
   activeTab = id;
   closeSidebar();
 
@@ -2370,6 +3130,7 @@ function showTab(id, btn) {
   if(id==='weekly'){renderWeekly();renderWeeklyTarget();}
   if(id==='monthly'){renderMonthlyPage();}
   if(id==='graphs'){renderLineGraphs();renderHeatmap();}
+  if(id==='profile'){renderProfilePage();}
 }
 
 function showPage(id,btn){
@@ -2384,10 +3145,11 @@ function showPage(id,btn){
   else if(btn && btn.classList) btn.classList.add('active');
   activeTab = null; // not a tab
   closeSidebar();
-  if(id==='career')  renderCareer();
-  if(id==='best')    renderBest();
-  if(id==='tracker') renderTracker();
-  if(id==='race')    renderRaceBoard();
+  if(id==='career')      renderCareer();
+  if(id==='best')        renderBest();
+  if(id==='tracker')     renderTracker();
+  if(id==='race')        renderRaceBoard();
+  if(id==='leaderboard') renderLeaderboard();
 }
 
 function showMilestone(icon,title,sub){
@@ -2465,7 +3227,7 @@ function renderHeatmap() {
       let cls = 'hm-none', tipText = cellDate.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · No match';
       if (m) {
         const g = getGrade(m.total);
-        cls = g.key==='legendary'?'hm-legendary':g.key==='double'?'hm-double':g.key==='century'?'hm-century':g.key==='half'?'hm-half':g.key==='average'?'hm-average':'hm-poor';
+        cls = g.key==='legendary'?'hm-legendary':g.key==='double'?'hm-double':g.key==='bigknock'?'hm-bigknock':g.key==='century'?'hm-century':g.key==='half'?'hm-half':g.key==='average'?'hm-average':'hm-poor';
         tipText = cellDate.toLocaleDateString('en-IN',{day:'numeric',month:'short'}) + ' · ' + m.total.toFixed(0) + ' runs · ' + g.label.replace(/^[^ ]+ /,'') + (m.reflection ? '\n"'+m.reflection+'"' : '');
       }
       gridHTML += `<div class="heatmap-cell ${cls}" data-tip="${tipText.replace(/"/g,'&quot;')}" onmouseenter="showHmTip(event,this)" onmouseleave="hideHmTip()"></div>`;
@@ -2567,18 +3329,61 @@ function renderGoal() {
 }
 
 // ══════════════════════════════════════
-// SIDEBAR
+// SIDEBAR — desktop expand/collapse + mobile drawer
 // ══════════════════════════════════════
+let sidebarExpanded = false;
+
+function toggleExpand() {
+  sidebarExpanded = !sidebarExpanded;
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('expanded', sidebarExpanded);
+  localStorage.setItem('shiva45_sidebar_expanded', sidebarExpanded ? '1' : '0');
+  // Swap icon: chevron-right when collapsed, X when expanded
+  const icon = document.getElementById('sidebar-toggle-icon');
+  if (icon) {
+    icon.innerHTML = sidebarExpanded
+      ? '<path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+      : '<path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+}
+
 function toggleSidebar(){
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('sidebar-overlay');
-  sb.classList.toggle('open');
-  ov.classList.toggle('show');
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  const isOpen = sb.classList.contains('open');
+  if (isOpen) { sb.classList.remove('open'); ov.classList.remove('show'); }
+  else { sb.classList.add('open'); sb.classList.add('expanded'); ov.classList.add('show'); }
 }
+
 function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('show');
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  sb.classList.remove('open');
+  ov.classList.remove('show');
+  // On mobile, also remove expanded so it re-enters collapsed on desktop resize
+  if(window.innerWidth <= 700) sb.classList.remove('expanded');
 }
+
+function goHome() {
+  showTab('scoreboard', null);
+  // mark correct sidebar item
+  document.querySelectorAll('.sidebar-item').forEach(t=>t.classList.remove('active'));
+  const si = document.getElementById('si-scoreboard');
+  if(si) si.classList.add('active');
+  closeSidebar();
+}
+
+// Restore expanded state on desktop
+(function(){
+  const stored = localStorage.getItem('shiva45_sidebar_expanded');
+  if(stored === '1' && window.innerWidth > 700) {
+    sidebarExpanded = true;
+    const sb = document.getElementById('sidebar');
+    if(sb) sb.classList.add('expanded');
+    const icon = document.getElementById('sidebar-toggle-icon');
+    if (icon) icon.innerHTML = '<path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>';
+  }
+})();
 
 // ══════════════════════════════════════
 // ANALYSIS PILL TOGGLE
@@ -2784,6 +3589,692 @@ document.querySelectorAll('.finput').forEach(inp=>{
     setTimeout(()=>this.scrollIntoView({behavior:'smooth',block:'center'}),300);
   });
 });
+
+// ══════════════════════════════════════
+// GLOBAL LEADERBOARD
+// ══════════════════════════════════════
+
+// ODI Legends as static leaderboard entries
+const LEGEND_LB = [
+  { name:'Sachin Tendulkar', flag:'🇮🇳', runs:18426, avg:44.83, hundreds:49, best:186, matches:463, isLegend:true },
+  { name:'Kumar Sangakkara', flag:'🇱🇰', runs:14234, avg:41.98, hundreds:25, best:169, matches:404, isLegend:true },
+  { name:'Ricky Ponting',    flag:'🇦🇺', runs:13704, avg:42.03, hundreds:30, best:164, matches:375, isLegend:true },
+  { name:'Sanath Jayasuriya',flag:'🇱🇰', runs:13430, avg:32.36, hundreds:28, best:189, matches:445, isLegend:true },
+  { name:'Rohit Sharma',     flag:'🇮🇳', runs:10709, avg:48.96, hundreds:31, best:264, matches:264, isLegend:true },
+  { name:'MS Dhoni',         flag:'🇮🇳', runs:10773, avg:50.57, hundreds:10, best:183, matches:350, isLegend:true },
+  { name:'Virat Kohli',      flag:'🇮🇳', runs:13906, avg:58.07, hundreds:50, best:183, matches:295, isLegend:true },
+  { name:'AB de Villiers',   flag:'🇿🇦', runs:9577,  avg:53.50, hundreds:25, best:176, matches:228, isLegend:true },
+  { name:'Brian Lara',       flag:'🇹🇹', runs:10405, avg:40.48, hundreds:19, best:169, matches:299, isLegend:true },
+  { name:'Sourav Ganguly',   flag:'🇮🇳', runs:11363, avg:41.02, hundreds:22, best:183, matches:311, isLegend:true },
+];
+
+let lbMode = 'combined'; // 'combined' | 'players'
+
+function setLbMode(mode, btn) {
+  lbMode = mode;
+  document.querySelectorAll('#lb-toggle-combined, #lb-toggle-players').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeaderboard();
+}
+
+async function renderLeaderboard() {
+  const tbody = document.getElementById('lb-tbody');
+  const loadHTML = `<tr><td colspan="9"><div class="lb-loading"><div class="lb-spinner"></div><br>Loading players…</div></td></tr>`;
+  if (tbody) tbody.innerHTML = loadHTML;
+
+  const fb = window._fb;
+  let realPlayers = [];
+  if (fb && currentUser) {
+    try {
+      const snap = await fb.getDocs(fb.collection(fb.db, 'users'));
+      snap.forEach(doc => {
+        const d = doc.data();
+        const ms = d.matches || [];
+        if (!ms.length) return;
+        const runs     = ms.reduce((s,m) => s + Math.max(0, m.total||0), 0);
+        const avg      = runs / ms.length;
+        const hundreds = ms.filter(m => m.total >= 100).length;
+        const best     = Math.max(...ms.map(m => m.total||0));
+        realPlayers.push({
+          uid     : doc.id,
+          name    : d.displayName || 'Anonymous',
+          runs    : Math.round(runs),
+          avg     : parseFloat(avg.toFixed(2)),
+          hundreds,
+          best    : Math.round(best),
+          matches : ms.length,
+          isYou   : doc.id === currentUser.uid,
+          isLegend: false,
+          flag    : '👤'
+        });
+      });
+    } catch(e) { console.warn('Leaderboard fetch failed:', e.message); }
+  }
+
+  // Build display list based on toggle mode
+  const combined = [...realPlayers, ...LEGEND_LB].sort((a,b) => b.runs - a.runs);
+  const playersOnly = [...realPlayers].sort((a,b) => b.runs - a.runs);
+  const all = lbMode === 'players' ? playersOnly : combined;
+  const maxRuns = all[0]?.runs || 1;
+  const userCount = realPlayers.length;
+
+  const countEl = document.getElementById('lb-user-count');
+  if (countEl) countEl.textContent = `👤 ${userCount} player${userCount!==1?'s':''}`;
+  const updEl = document.getElementById('lb-last-updated');
+  if (updEl) updEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+
+  function buildTableRows(list) {
+    if (!list.length) return `<tr><td colspan="9" style="text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)">${lbMode==='players'?'No players yet — be the first! 🏏':'No data yet.'}</td></tr>`;
+    return list.map((p, i) => {
+      const rank    = i + 1;
+      const rankCls = rank===1?'top1':rank===2?'top2':rank===3?'top3':'';
+      const isYou   = p.isYou;
+      const barCls  = isYou ? 'you' : p.isLegend ? 'legend' : 'user';
+      const barW    = Math.round(p.runs / maxRuns * 100);
+      const nameCls = isYou ? 'you' : p.isLegend ? 'legend' : '';
+      const runsCls = isYou ? 'you' : p.isLegend ? 'legend' : '';
+      const rowCls  = isYou ? 'lb-you' : p.isLegend ? 'lb-legend' : '';
+      const avatarCls = isYou ? 'you-avatar' : p.isLegend ? 'legend-avatar' : 'user-avatar';
+      const avatarTxt = p.isLegend ? p.flag : (p.name||'?')[0].toUpperCase();
+      const typeTxt   = p.isLegend ? 'ODI Legend' : isYou ? '★ YOU' : 'Player';
+      const uid = p.uid || p.name.replace(/\s/g,'_');
+      const detailId = 'lb-detail-' + uid;
+      const detailRow = `
+        <tr><td colspan="9" style="padding:0">
+          <div class="lb-detail" id="${detailId}">
+            <div class="lb-detail-grid">
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--gold)">${p.runs.toLocaleString()}</div><div class="lb-detail-label">Career Runs</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--green)">${p.avg}</div><div class="lb-detail-label">Average</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--purple)">${p.hundreds}</div><div class="lb-detail-label">Centuries</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--cyan)">${p.best}</div><div class="lb-detail-label">Best Score</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--blue)">${p.matches}</div><div class="lb-detail-label">Matches</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--fire)">${p.matches>0?(p.hundreds/p.matches*100).toFixed(0)+'%':'—'}</div><div class="lb-detail-label">Century Rate</div></div>
+            </div>
+          </div>
+        </td></tr>`;
+      return `
+        <tr class="${rowCls}" style="cursor:pointer" onclick="toggleLbDetail('${uid}')">
+          <td><div class="lb-rank ${rankCls}">${rank}</div></td>
+          <td><div class="lb-avatar ${avatarCls}">${avatarTxt}</div></td>
+          <td>
+            <div class="lb-name-wrap">
+              <div class="lb-name ${nameCls}">${isYou?'★ ':''}${p.name}</div>
+              <div class="lb-type-tag">${typeTxt}</div>
+            </div>
+          </td>
+          <td><div class="lb-runs ${runsCls}">${p.runs.toLocaleString()}</div></td>
+          <td><div class="lb-stat ${p.avg>=50?'good':''}">${p.avg}</div></td>
+          <td><div class="lb-stat">${p.hundreds}</div></td>
+          <td><div class="lb-stat">${p.best}</div></td>
+          <td><div class="lb-stat">${p.matches}</div></td>
+          <td><div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-fill ${barCls}" style="width:${barW}%"></div></div></div></td>
+        </tr>${detailRow}`;
+    }).join('');
+  }
+
+  if (tbody) tbody.innerHTML = buildTableRows(all);
+}
+
+function toggleLbDetail(uid) {
+  const el = document.getElementById('lb-detail-' + uid);
+  if (!el) return;
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.lb-detail').forEach(d => d.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+// ══════════════════════════════════════
+// APP PROFILE (name + avatar, stored locally + Firestore)
+// ══════════════════════════════════════
+const PROFILE_STORE = 'shiva45_profile_v1';
+const AVATAR_EMOJIS = ['🏏','⚡','🔥','👑','🐐','🦁','🎯','💪','🌟','🏆','🦘','🎖️','💯','🚀','🧠','💎','⚔️','🌙','☄️','🏅'];
+
+function getAppProfile() {
+  return JSON.parse(localStorage.getItem(PROFILE_STORE) || '{"name":"","avatar":""}');
+}
+function setAppProfile(p) {
+  localStorage.setItem(PROFILE_STORE, JSON.stringify(p));
+  // also save to Firestore if logged in
+  const fb = window._fb;
+  if (fb && currentUser) {
+    fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), { appProfile: p }, { merge: true }).catch(()=>{});
+  }
+}
+
+function openProfileModal() {
+  const modal = document.getElementById('profile-modal');
+  modal.classList.add('show');
+  const loading = document.getElementById('profile-loading');
+  const loggedIn = document.getElementById('profile-logged-in');
+  const loggedOut = document.getElementById('profile-logged-out');
+
+  if (currentUser) {
+    loading.style.display = 'none';
+    loggedIn.style.display = 'block';
+    loggedOut.style.display = 'none';
+    // Fill in current values
+    const profile = getAppProfile();
+    document.getElementById('profile-name-input').value = profile.name || currentUser.displayName || '';
+    document.getElementById('profile-google-email').textContent = currentUser.email || '';
+    // Avatar
+    const avatarEl = document.getElementById('profile-avatar-big');
+    const av = profile.avatar || (currentUser.displayName||'P')[0].toUpperCase();
+    if (av && (av.startsWith('data:image') || av.startsWith('http'))) {
+      avatarEl.innerHTML = `<img src="${av}" alt="avatar">`;
+    } else {
+      avatarEl.textContent = av;
+    }
+    // Emoji grid
+    renderEmojiGrid(profile.avatar || '');
+  } else if (currentUser === null) {
+    loading.style.display = 'none';
+    loggedIn.style.display = 'none';
+    loggedOut.style.display = 'block';
+  } else {
+    // still loading
+    loading.style.display = 'block';
+    loggedIn.style.display = 'none';
+    loggedOut.style.display = 'none';
+  }
+}
+function closeProfileModal() {
+  document.getElementById('profile-modal').classList.remove('show');
+  document.getElementById('emoji-picker-wrap').style.display = 'none';
+}
+function toggleEmojiPicker() {
+  const wrap = document.getElementById('emoji-picker-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+function renderEmojiGrid(selected) {
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = AVATAR_EMOJIS.map(e =>
+    `<button class="profile-emoji-opt ${e===selected?'selected':''}" onclick="selectAvatar('${e}')">${e}</button>`
+  ).join('');
+}
+function selectAvatar(emoji) {
+  const avatarEl = document.getElementById('profile-avatar-big');
+  avatarEl.textContent = emoji;
+  avatarEl.innerHTML = emoji; // clear any img
+  renderEmojiGrid(emoji);
+  document.getElementById('emoji-picker-wrap').style.display = 'none';
+}
+function saveProfile() {
+  const name   = document.getElementById('profile-name-input').value.trim();
+  const avatarEl = document.getElementById('profile-avatar-big');
+  // Avatar might be an img or text
+  const imgEl = avatarEl.querySelector('img');
+  const avatar = imgEl ? imgEl.src : avatarEl.textContent;
+  setAppProfile({ name, avatar });
+  showAuthUI(currentUser);  // updates sidebar + mobile bar
+  showToast('Profile saved! ✓', true);
+  closeProfileModal();
+}
+
+// ── PROFILE PAGE (full page) ──
+function renderProfilePage() {
+  const loadingEl   = document.getElementById('profile-page-loading');
+  const loggedInEl  = document.getElementById('profile-page-logged-in');
+  const loggedOutEl = document.getElementById('profile-page-logged-out');
+  if (!loadingEl) return;
+
+  if (currentUser) {
+    loadingEl.style.display = 'none';
+    loggedInEl.style.display = 'block';
+    loggedOutEl.style.display = 'none';
+
+    const profile = getAppProfile();
+    const displayName = profile.name || currentUser.displayName || '';
+    const email = currentUser.email || '';
+    const av = profile.avatar || (currentUser.displayName||'P')[0].toUpperCase();
+
+    // Header
+    const headerAvatar = document.getElementById('profile-page-avatar-display');
+    if (headerAvatar) {
+      if (av && (av.startsWith('data:image') || av.startsWith('http'))) {
+        headerAvatar.innerHTML = `<img src="${av}" alt="avatar">`;
+      } else {
+        headerAvatar.textContent = av;
+      }
+    }
+    const nameDisp = document.getElementById('profile-page-name-display');
+    if (nameDisp) nameDisp.textContent = (displayName || 'PLAYER').toUpperCase();
+    const emailDisp = document.getElementById('profile-page-email-display');
+    if (emailDisp) emailDisp.textContent = email;
+    const googleEmail = document.getElementById('profile-page-google-email-display');
+    if (googleEmail) googleEmail.textContent = email;
+
+    // Input
+    const nameInput = document.getElementById('profile-page-name-input');
+    if (nameInput) nameInput.value = displayName;
+
+    // Emoji grid
+    renderProfilePageEmojiGrid(av);
+
+  } else if (currentUser === null) {
+    loadingEl.style.display = 'none';
+    loggedInEl.style.display = 'none';
+    loggedOutEl.style.display = 'block';
+  } else {
+    loadingEl.style.display = 'block';
+    loggedInEl.style.display = 'none';
+    loggedOutEl.style.display = 'none';
+  }
+}
+
+function renderProfilePageEmojiGrid(selected) {
+  const grid = document.getElementById('profile-page-emoji-grid');
+  if (!grid) return;
+  grid.innerHTML = AVATAR_EMOJIS.map(e =>
+    `<button class="profile-page-avatar-opt ${e===selected?'selected':''}" onclick="selectProfilePageAvatar('${e}')">${e}</button>`
+  ).join('');
+}
+
+function selectProfilePageAvatar(emoji) {
+  const avatarEl = document.getElementById('profile-page-avatar-display');
+  if (avatarEl) avatarEl.textContent = emoji;
+  renderProfilePageEmojiGrid(emoji);
+}
+
+function triggerProfilePageAvatarClick() {
+  document.getElementById('profile-page-img-upload').click();
+}
+
+function handleProfilePageImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    const avatarEl = document.getElementById('profile-page-avatar-display');
+    if (avatarEl) avatarEl.innerHTML = `<img src="${dataUrl}" alt="avatar">`;
+    // Deselect all emoji options
+    renderProfilePageEmojiGrid('');
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function saveProfilePage() {
+  const nameInput = document.getElementById('profile-page-name-input');
+  const name = nameInput ? nameInput.value.trim() : '';
+  const avatarEl = document.getElementById('profile-page-avatar-display');
+  const imgEl = avatarEl ? avatarEl.querySelector('img') : null;
+  const avatar = imgEl ? imgEl.src : (avatarEl ? avatarEl.textContent : '🏏');
+  setAppProfile({ name, avatar });
+  showAuthUI(currentUser);
+  // Update header display immediately
+  const nameDisp = document.getElementById('profile-page-name-display');
+  if (nameDisp) nameDisp.textContent = (name || currentUser?.displayName || 'PLAYER').toUpperCase();
+  showToast('Profile saved! ✓', true);
+}
+
+// ══════════════════════════════════════
+// RIVAL SYSTEM
+// ══════════════════════════════════════
+const RIVAL_STORE = 'shiva45_rival_v1';
+let currentRival = JSON.parse(localStorage.getItem(RIVAL_STORE) || 'null');
+
+const RIVAL_POOL = [
+  { name:'Virat Kohli',      flag:'🇮🇳', careerAvg:58.07, careerRuns:13906, careerBest:183,  careerHundreds:50 },
+  { name:'Sachin Tendulkar', flag:'🇮🇳', careerAvg:44.83, careerRuns:18426, careerBest:186,  careerHundreds:49 },
+  { name:'Rohit Sharma',     flag:'🇮🇳', careerAvg:48.96, careerRuns:10860, careerBest:264,  careerHundreds:31 },
+  { name:'MS Dhoni',         flag:'🇮🇳', careerAvg:50.57, careerRuns:10773, careerBest:183,  careerHundreds:10 },
+  { name:'Sourav Ganguly',   flag:'🇮🇳', careerAvg:41.02, careerRuns:11363, careerBest:183,  careerHundreds:22 },
+  { name:'Ricky Ponting',    flag:'🇦🇺', careerAvg:42.03, careerRuns:13704, careerBest:164,  careerHundreds:30 },
+  { name:'AB de Villiers',   flag:'🇿🇦', careerAvg:53.50, careerRuns:9577,  careerBest:176,  careerHundreds:25 },
+  { name:'Kumar Sangakkara', flag:'🇱🇰', careerAvg:41.98, careerRuns:14234, careerBest:169,  careerHundreds:25 },
+  { name:'Sanath Jayasuriya',flag:'🇱🇰', careerAvg:32.36, careerRuns:13430, careerBest:189,  careerHundreds:28 },
+  { name:'Brian Lara',       flag:'🇹🇹', careerAvg:40.48, careerRuns:10405, careerBest:169,  careerHundreds:19 },
+  { name:'Babar Azam',       flag:'🇵🇰', careerAvg:57.40, careerRuns:10000, careerBest:158,  careerHundreds:30 },
+  { name:'Kane Williamson',  flag:'🇳🇿', careerAvg:47.48, careerRuns:6554,  careerBest:148,  careerHundreds:13 },
+  { name:'Joe Root',         flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', careerAvg:52.61, careerRuns:6109, careerBest:133,  careerHundreds:16 },
+  { name:'Steve Smith',      flag:'🇦🇺', careerAvg:43.77, careerRuns:4937,  careerBest:164,  careerHundreds:12 },
+];
+
+function openRivalModal() {
+  document.getElementById('rival-modal').classList.add('show');
+  document.getElementById('rival-search').value = '';
+  renderRivalList();
+}
+function closeRivalModal() {
+  document.getElementById('rival-modal').classList.remove('show');
+}
+function renderRivalList() {
+  const q = (document.getElementById('rival-search').value || '').toLowerCase();
+  const filtered = RIVAL_POOL.filter(r => r.name.toLowerCase().includes(q));
+  const list = document.getElementById('rival-list');
+  list.innerHTML = filtered.map(r => `
+    <div class="modal-item ${currentRival&&currentRival.name===r.name?'selected':''}" onclick="pickRival('${r.name}')">
+      <span class="modal-item-flag">${r.flag}</span>
+      <span class="modal-item-name">${r.name}</span>
+      <span class="modal-item-stats">
+        <span title="Career Average" style="color:var(--gold)">avg ${r.careerAvg}</span>
+        <span style="color:var(--muted2)">·</span>
+        <span title="Career Runs" style="color:var(--cyan)">${r.careerRuns.toLocaleString()} runs</span>
+        <span style="color:var(--muted2)">·</span>
+        <span title="Highest Score" style="color:var(--green)">HS ${r.careerBest}</span>
+      </span>
+    </div>`).join('');
+}
+function pickRival(name) {
+  currentRival = RIVAL_POOL.find(r => r.name === name);
+  localStorage.setItem(RIVAL_STORE, JSON.stringify(currentRival));
+  closeRivalModal();
+  renderRivalCards();
+  showToast('Rival set: ' + name + ' ⚔️', true);
+}
+function renderRivalCards() {
+  ['rival-card-home','rival-card-career'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const n    = matches.length;
+    const tot  = matches.reduce((s,m)=>s+Math.max(0,m.total),0);
+    const avg  = n ? +(tot/n).toFixed(1) : 0;
+    const best = n ? Math.max(...matches.map(m=>m.total)) : 0;
+    const h100 = matches.filter(m=>m.total>=100).length;
+
+    el.innerHTML = `
+      <div class="rival-section">
+        <div class="rival-section-header">
+          <div class="rival-section-title">⚔️ Your Rival</div>
+          <button class="rival-pick-btn" onclick="openRivalModal()">Change Rival</button>
+        </div>
+        ${!currentRival ? `<div class="rival-empty">No rival set — <span style="color:var(--gold);cursor:pointer" onclick="openRivalModal()">pick one</span></div>` : (() => {
+          const r = currentRival;
+          const avgW  = avg >= r.careerAvg ? 'winning' : 'losing';
+          const runsW = tot >= r.careerRuns ? 'winning' : 'losing';
+          const bestW = best >= r.careerBest ? 'winning' : 'losing';
+          const h100W = h100 >= r.careerHundreds ? 'winning' : 'losing';
+          const wins = [avgW,runsW,bestW,h100W].filter(x=>x==='winning').length;
+          const badge = wins >= 3 ? 'winning' : wins >= 2 ? 'tie' : 'losing';
+          const badgeTxt = wins >= 3 ? '🔥 You\'re winning this rivalry' : wins >= 2 ? '⚡ It\'s neck and neck' : '💪 Chase them down';
+          return `
+          <div class="rival-display">
+            <div class="rival-you">
+              <div class="rival-name-big you">YOU</div>
+            </div>
+            <div class="rival-vs-mid">VS</div>
+            <div class="rival-them">
+              <div style="font-size:18px;margin-bottom:2px">${r.flag}</div>
+              <div class="rival-name-big">${r.name.split(' ').pop()}</div>
+            </div>
+          </div>
+          <div style="margin-top:.875rem">
+            ${[
+              {label:'Avg', you:avg||'—', them:r.careerAvg, cls:avgW},
+              {label:'Runs', you:Math.round(tot)||'—', them:r.careerRuns.toLocaleString(), cls:runsW},
+              {label:'Best', you:best||'—', them:r.careerBest, cls:bestW},
+              {label:'100s', you:h100, them:r.careerHundreds, cls:h100W},
+            ].map(s=>`
+              <div class="rival-stat-row">
+                <div class="rival-stat-val ${n?s.cls:''}">${s.you}</div>
+                <div class="rival-stat-label">${s.label}</div>
+                <div class="rival-stat-val" style="color:var(--muted);text-align:right">${s.them}</div>
+              </div>`).join('')}
+          </div>
+          <div style="text-align:center;margin-top:.625rem">
+            <span class="rival-result-badge ${badge}">${badgeTxt}</span>
+          </div>`;
+        })()}
+      </div>`;
+  });
+}
+
+// ══════════════════════════════════════
+// LEGEND COMPARISON PILLS
+// ══════════════════════════════════════
+let activeCompLegend = null;
+
+function renderLegendComparisons(n, avg, hundreds, yourRuns) {
+  const pillsRow  = document.getElementById('comp-pills-row');
+  const container = document.getElementById('comp-container');
+  const badge     = document.getElementById('comp-match-badge');
+  if (badge) badge.textContent = 'Match ' + n;
+
+  if (!n) {
+    if (pillsRow)  pillsRow.innerHTML = '';
+    if (container) container.innerHTML = '<div class="comp-no-data">Play matches to unlock legend comparisons</div>';
+    return;
+  }
+  if (n < 5) {
+    const needed = 5 - n;
+    if (pillsRow) pillsRow.innerHTML = '';
+    if (container) container.innerHTML = `<div style="text-align:center;padding:1.5rem 1rem">
+      <div style="font-size:28px;margin-bottom:.5rem">🔒</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--muted);margin-bottom:.5rem">LEGEND COMPARISONS LOCKED</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-bottom:1.25rem">Play ${needed} more match${needed!==1?'es':''} · ${n}/5 played</div>
+      <div style="height:4px;background:rgba(255,255,255,0.05);border-radius:2px;max-width:200px;margin:0 auto;overflow:hidden">
+        <div style="height:100%;width:${(n/5*100).toFixed(0)}%;background:linear-gradient(90deg,var(--fire),var(--gold));border-radius:2px"></div>
+      </div></div>`;
+    return;
+  }
+
+  // Build pills
+  if (pillsRow) {
+    pillsRow.innerHTML = ODI_LEGENDS.map(l => {
+      const stage = getLegendStage(n, l);
+      if (!stage) return '';
+      const ahead = avg > stage.avg;
+      return `<button class="legend-pill ${activeCompLegend===l.name?'active':''}" onclick="showLegendComp('${l.name}',${n},${avg},${hundreds},${yourRuns})">
+        ${l.flag} ${l.name.split(' ').pop()}
+        <span style="font-size:8px;opacity:.6;margin-left:2px">${ahead?'↑':'↓'}</span>
+      </button>`;
+    }).join('');
+  }
+
+  // If one is active, show its card
+  if (activeCompLegend) {
+    const legend = ODI_LEGENDS.find(l => l.name === activeCompLegend);
+    if (legend) showLegendCompCard(legend, n, avg, hundreds, yourRuns);
+  } else {
+    if (container) container.innerHTML = '<div class="comp-no-data" style="font-size:9px">Tap a legend above to compare</div>';
+  }
+}
+
+function showLegendComp(name, n, avg, hundreds, yourRuns) {
+  activeCompLegend = activeCompLegend === name ? null : name;
+  renderLegendComparisons(n, avg, hundreds, yourRuns);
+}
+
+function showLegendCompCard(legend, n, avg, hundreds, yourRuns) {
+  const container = document.getElementById('comp-container');
+  const stage = getLegendStage(n, legend);
+  if (!stage || !container) return;
+
+  const avgDiff = avg - stage.avg;
+  let resultClass = 'close', resultText = 'NECK AND NECK';
+  if (avgDiff > 5)        { resultClass='ahead';  resultText='+'+avgDiff.toFixed(1)+' avg ahead'; }
+  else if (avgDiff > 0)   { resultClass='ahead';  resultText='Just ahead by '+avgDiff.toFixed(1); }
+  else if (avgDiff < -5)  { resultClass='behind'; resultText=Math.abs(avgDiff).toFixed(1)+' avg behind'; }
+  else if (avgDiff < 0)   { resultClass='behind'; resultText='Just behind by '+Math.abs(avgDiff).toFixed(1); }
+
+  const maxAvg  = Math.max(avg, stage.avg, 1);
+  const maxRuns = Math.max(yourRuns, stage.runs, 1);
+  const maxH    = Math.max(hundreds, stage.hundreds, 1);
+  const yourBest = matches.length ? Math.max(...matches.map(m=>m.total)) : 0;
+  const maxBest = Math.max(yourBest, legend.careerBest||0, 1);
+
+  container.innerHTML = `<div class="comp-card comp-card-anim">
+    <div class="comp-top">
+      <span class="comp-flag">${legend.flag}</span>
+      <div>
+        <div class="comp-name">${legend.name}</div>
+        <div class="comp-era">${legend.era} · At match ${n}</div>
+      </div>
+      <div class="comp-result ${resultClass}">${resultText}</div>
+    </div>
+    <div class="comp-stats">
+      <div class="comp-stat">
+        <div class="comp-stat-label">Batting Average</div>
+        <div class="comp-stat-row">
+          <span class="comp-stat-you">${avg?avg.toFixed(1):'—'}</span>
+          <span class="comp-stat-vs">vs</span>
+          <span class="comp-stat-them">${stage.avg}</span>
+        </div>
+        <div class="comp-bar-wrap"><div class="comp-bar-you" style="width:${(avg/maxAvg*100).toFixed(1)}%"></div></div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Career Runs</div>
+        <div class="comp-stat-row">
+          <span class="comp-stat-you">${Math.round(yourRuns)}</span>
+          <span class="comp-stat-vs">vs</span>
+          <span class="comp-stat-them">${stage.runs}</span>
+        </div>
+        <div class="comp-bar-wrap"><div class="comp-bar-you" style="width:${(yourRuns/maxRuns*100).toFixed(1)}%"></div></div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Centuries</div>
+        <div class="comp-stat-row">
+          <span class="comp-stat-you">${hundreds}</span>
+          <span class="comp-stat-vs">vs</span>
+          <span class="comp-stat-them">${stage.hundreds}</span>
+        </div>
+        <div class="comp-bar-wrap"><div class="comp-bar-you" style="width:${(hundreds/maxH*100).toFixed(1)}%"></div></div>
+      </div>
+      ${legend.careerBest ? `<div class="comp-stat">
+        <div class="comp-stat-label">Highest Score</div>
+        <div class="comp-stat-row">
+          <span class="comp-stat-you">${yourBest||'—'}</span>
+          <span class="comp-stat-vs">vs</span>
+          <span class="comp-stat-them">${legend.careerBest}</span>
+        </div>
+        <div class="comp-bar-wrap"><div class="comp-bar-you" style="width:${(yourBest/maxBest*100).toFixed(1)}%"></div></div>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════
+// EXPANDED ACHIEVEMENTS SYSTEM
+// ══════════════════════════════════════
+const ACHIEVEMENTS_V2 = [
+  // Batting milestones
+  { id:'first_match',    icon:'🏏', name:'First Match',          desc:'Play your first match',                          threshold: ms=>ms.length/1,          check: ms=>ms.length>=1 },
+  { id:'first_fifty',    icon:'🙌', name:'First Fifty',           desc:'Score 50+ runs in a match',                      threshold: ms=>Math.max(...(ms.map(m=>m.total)||[0]))/50,  check: ms=>ms.some(m=>m.total>=50) },
+  { id:'first_ton',      icon:'🏆', name:'First Century',         desc:'Score 100+ runs',                                threshold: ms=>Math.max(...(ms.map(m=>m.total)||[0]))/100, check: ms=>ms.some(m=>m.total>=100) },
+  { id:'first_150',      icon:'🔵', name:'Big Knock',               desc:'Score 150+ in a match',                          threshold: ms=>Math.max(...(ms.map(m=>m.total)||[0]))/150, check: ms=>ms.some(m=>m.total>=150) },
+  { id:'first_200',      icon:'💜', name:'Double Century',          desc:'Score 200+ in a match',                          threshold: ms=>Math.max(...(ms.map(m=>m.total)||[0]))/200, check: ms=>ms.some(m=>m.total>=200) },
+  { id:'rohit_264',      icon:'⚡', name:"Rohit's Record",        desc:'Score 264+ — the ultimate feat',                 threshold: ms=>Math.max(...(ms.map(m=>m.total)||[0]))/264, check: ms=>ms.some(m=>m.total>=264) },
+  // Matches played
+  { id:'m5',             icon:'📅', name:'5 Matches',             desc:'Play 5 matches',                                 threshold: ms=>ms.length/5,           check: ms=>ms.length>=5 },
+  { id:'ten_matches',    icon:'📅', name:'10 Matches',            desc:'Play 10 matches',                                threshold: ms=>ms.length/10,          check: ms=>ms.length>=10 },
+  { id:'m25',            icon:'🎖️', name:'25 Matches',           desc:'Play 25 matches',                                threshold: ms=>ms.length/25,          check: ms=>ms.length>=25 },
+  { id:'fifty_matches',  icon:'🎖️', name:'50 Matches',           desc:'Play 50 matches',                                threshold: ms=>ms.length/50,          check: ms=>ms.length>=50 },
+  { id:'m75',            icon:'💯', name:'75 Matches',            desc:'Play 75 matches',                                threshold: ms=>ms.length/75,          check: ms=>ms.length>=75 },
+  { id:'ton_matches',    icon:'💯', name:'100 Matches',           desc:'Play 100 matches',                               threshold: ms=>ms.length/100,         check: ms=>ms.length>=100 },
+  { id:'m150',           icon:'🏛️', name:'150 Matches',          desc:'Play 150 matches',                               threshold: ms=>ms.length/150,         check: ms=>ms.length>=150 },
+  { id:'m200',           icon:'🐐', name:'200 Matches',           desc:'Play 200 matches',                               threshold: ms=>ms.length/200,         check: ms=>ms.length>=200 },
+  // Career runs
+  { id:'r1000',          icon:'💰', name:'1000 Runs',             desc:'Score 1000 career runs',                         threshold: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)/1000,  check: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)>=1000 },
+  { id:'r2500',          icon:'💰', name:'2500 Runs',             desc:'Score 2500 career runs',                         threshold: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)/2500,  check: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)>=2500 },
+  { id:'r5000',          icon:'💰', name:'5000 Runs',             desc:'Score 5000 career runs',                         threshold: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)/5000,  check: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)>=5000 },
+  { id:'r10000',         icon:'🏛️', name:'10000 Runs',           desc:'Score 10000 career runs — Sachin territory',     threshold: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)/10000, check: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)>=10000 },
+  { id:'r18426',         icon:'🐐', name:"Sachin's Record",       desc:'Beat Sachin — 18426 career runs',                threshold: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)/18426, check: ms=>ms.reduce((s,m)=>s+Math.max(0,m.total),0)>=18426 },
+  // Centuries
+  { id:'c5',             icon:'🏆', name:'5 Centuries',           desc:'Score 5 centuries',                              threshold: ms=>ms.filter(m=>m.total>=100).length/5,   check: ms=>ms.filter(m=>m.total>=100).length>=5 },
+  { id:'c10',            icon:'🏆', name:'10 Centuries',          desc:'Score 10 centuries',                             threshold: ms=>ms.filter(m=>m.total>=100).length/10,  check: ms=>ms.filter(m=>m.total>=100).length>=10 },
+  { id:'c22',            icon:'🔥', name:"Ganguly's 22",          desc:'Match Sourav Ganguly\'s 22 centuries',           threshold: ms=>ms.filter(m=>m.total>=100).length/22,  check: ms=>ms.filter(m=>m.total>=100).length>=22 },
+  { id:'c49',            icon:'🐐', name:"Sachin's 49",           desc:'Equal Sachin Tendulkar\'s 49 ODI centuries',     threshold: ms=>ms.filter(m=>m.total>=100).length/49,  check: ms=>ms.filter(m=>m.total>=100).length>=49 },
+  { id:'c50',            icon:'👑', name:'50 Centuries',          desc:'Score 50 centuries — beyond Sachin',            threshold: ms=>ms.filter(m=>m.total>=100).length/50,  check: ms=>ms.filter(m=>m.total>=100).length>=50 },
+  // Streaks
+  { id:'streak_3',       icon:'🔥', name:'On Fire',               desc:'3 centuries in a row',                           threshold: ms=>getLongestStreak(ms)/3,  check: ms=>getLongestStreak(ms)>=3 },
+  { id:'streak_5',       icon:'🌋', name:'Blazing',               desc:'5 centuries in a row',                           threshold: ms=>getLongestStreak(ms)/5,  check: ms=>getLongestStreak(ms)>=5 },
+  { id:'streak_7',       icon:'🌋', name:'Unstoppable',           desc:'7 centuries in a row',                           threshold: ms=>getLongestStreak(ms)/7,  check: ms=>getLongestStreak(ms)>=7 },
+  { id:'streak_10',      icon:'⚡', name:'Ironman',               desc:'10 centuries in a row',                          threshold: ms=>getLongestStreak(ms)/10, check: ms=>getLongestStreak(ms)>=10 },
+  { id:'streak_15',      icon:'⚡', name:'Machine',               desc:'15 centuries in a row — unreal',                 threshold: ms=>getLongestStreak(ms)/15, check: ms=>getLongestStreak(ms)>=15 },
+  // Study habits
+  { id:'perfect_day',    icon:'✨', name:'Perfect Day',           desc:'All lifestyle habits completed in one match',    threshold: ms=>Math.max(...(ms.map(m=>m.lifeRaw)||[0]))/56, check: ms=>ms.some(m=>m.lifeRaw>=56) },
+  { id:'p5_perfect',     icon:'💎', name:'5 Perfect Days',        desc:'5 matches with all habits',                      threshold: ms=>ms.filter(m=>m.lifeRaw>=56).length/5, check: ms=>ms.filter(m=>m.lifeRaw>=56).length>=5 },
+  { id:'h12',            icon:'⏰', name:'Marathon Innings',      desc:'Study 12+ hours in a day',                       threshold: ms=>Math.max(...(ms.map(m=>m.hours)||[0]))/12, check: ms=>ms.some(m=>m.hours>=12) },
+  { id:'q200',           icon:'📝', name:'Question Machine',      desc:'Solve 200+ questions in a day',                  threshold: ms=>Math.max(...(ms.map(m=>m.questions)||[0]))/200, check: ms=>ms.some(m=>m.questions>=200) },
+  { id:'q100_streak',    icon:'📚', name:'Question Warrior',      desc:'100+ questions in 5 straight matches',           threshold: ms=>{const s=[...ms].sort((a,b)=>new Date(a.date)-new Date(b.date));let mx=0,c=0;for(const m of s){c=m.questions>=100?c+1:0;mx=Math.max(mx,c);}return mx/5;}, check: ms=>{const s=[...ms].sort((a,b)=>new Date(a.date)-new Date(b.date));let mx=0,c=0;for(const m of s){c=m.questions>=100?c+1:0;mx=Math.max(mx,c);}return mx>=5;} },
+  // Average records
+  { id:'avg_40',         icon:'📊', name:'40 Average',            desc:'Career batting avg above 40 (min 10 matches)',   threshold: ms=>ms.length<10?0:(ms.reduce((s,m)=>s+m.total,0)/ms.length)/40, check: ms=>ms.length>=10&&(ms.reduce((s,m)=>s+m.total,0)/ms.length)>=40 },
+  { id:'avg_50',         icon:'👑', name:'Kohli Average',         desc:'Career avg above 50 (min 10 matches)',           threshold: ms=>ms.length<10?0:(ms.reduce((s,m)=>s+m.total,0)/ms.length)/50, check: ms=>ms.length>=10&&(ms.reduce((s,m)=>s+m.total,0)/ms.length)>=50 },
+  { id:'avg_58',         icon:'🐐', name:'Best in the World',     desc:'Career avg above 58 (min 10 matches)',           threshold: ms=>ms.length<10?0:(ms.reduce((s,m)=>s+m.total,0)/ms.length)/58, check: ms=>ms.length>=10&&(ms.reduce((s,m)=>s+m.total,0)/ms.length)>=58 },
+  { id:'avg_70',         icon:'🚀', name:'Bradman-Level',         desc:'Career avg above 70 (min 10 matches)',           threshold: ms=>ms.length<10?0:(ms.reduce((s,m)=>s+m.total,0)/ms.length)/70, check: ms=>ms.length>=10&&(ms.reduce((s,m)=>s+m.total,0)/ms.length)>=70 },
+  // Legend comparisons
+  { id:'ahead_sachin',   icon:'🐐', name:'Ahead of Sachin',       desc:'Your avg higher than Sachin at same stage',      threshold: ms=>checkAheadOf(ms,'Sachin Tendulkar','avg')?1:0, check: ms=>checkAheadOf(ms,'Sachin Tendulkar','avg') },
+  { id:'ahead_virat',    icon:'👑', name:'Ahead of Virat',        desc:'Your avg higher than Virat at same stage',       threshold: ms=>checkAheadOf(ms,'Virat Kohli','avg')?1:0,       check: ms=>checkAheadOf(ms,'Virat Kohli','avg') },
+  { id:'ahead_rohit',    icon:'🎯', name:'Ahead of Rohit',        desc:'Your avg higher than Rohit at same stage',       threshold: ms=>checkAheadOf(ms,'Rohit Sharma','avg')?1:0,      check: ms=>checkAheadOf(ms,'Rohit Sharma','avg') },
+  // Zero-penalty
+  { id:'no_penalty',     icon:'😇', name:'Clean Sheet',           desc:'A match with zero penalties',                   threshold: ms=>ms.some(m=>m.penTotal===0&&m.total>0)?1:0, check: ms=>ms.some(m=>m.penTotal===0&&m.total>0) },
+  { id:'p10_clean',      icon:'🌟', name:'Clean Decade',          desc:'10 matches with zero penalties',                 threshold: ms=>ms.filter(m=>m.penTotal===0&&m.total>0).length/10, check: ms=>ms.filter(m=>m.penTotal===0&&m.total>0).length>=10 },
+];
+
+function renderAchievements() {
+  const unlockedGrid = document.getElementById('achievements-grid');
+  const lockedGrid   = document.getElementById('achievements-locked-grid');
+  const toggle       = document.getElementById('ach-locked-toggle');
+  const label        = document.getElementById('ach-locked-label');
+  if (!unlockedGrid) return;
+
+  const unlocked = [], nearLocked = [], farLocked = [];
+
+  for (const a of ACHIEVEMENTS_V2) {
+    const done = a.check(matches);
+    const prog = Math.min(a.threshold(matches), 1);
+    if (done) {
+      unlocked.push({ a, prog: 1 });
+    } else if (prog >= 0.6) {
+      nearLocked.push({ a, prog });
+    } else {
+      farLocked.push({ a, prog });
+    }
+  }
+
+  function buildCard({ a, prog }, locked) {
+    const pct = Math.round(prog * 100);
+    return `<div class="ach-card ${locked?'locked':'unlocked'} ${!locked&&prog>=0.6?'near':''}">
+      <span class="ach-icon">${a.icon}</span>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+      ${locked && prog > 0 ? `<div class="ach-progress"><div class="ach-progress-fill" style="width:${pct}%"></div></div><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted2);margin-top:3px">${pct}%</div>` : ''}
+      ${!locked ? '<div class="ach-date">✓ Unlocked</div>' : ''}
+    </div>`;
+  }
+
+  const showList = [...unlocked, ...nearLocked];
+  unlockedGrid.innerHTML = showList.length
+    ? showList.map(x => buildCard(x, !x.a.check(matches))).join('')
+    : '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted2);grid-column:1/-1;padding:1rem;text-align:center;letter-spacing:.5px">Play matches to unlock achievements</div>';
+
+  if (lockedGrid) {
+    lockedGrid.innerHTML = farLocked.map(x => buildCard(x, true)).join('');
+  }
+  if (toggle) {
+    const cnt = farLocked.length;
+    if (label) label.textContent = cnt > 0 ? `${cnt} more achievements hidden` : 'All achievements shown';
+    toggle.style.display = cnt > 0 ? 'flex' : 'none';
+  }
+}
+
+function toggleLockedAch() {
+  const sec   = document.getElementById('ach-locked-section');
+  const arrow = document.getElementById('ach-locked-arrow');
+  const isOpen = sec.classList.toggle('open');
+  if (arrow) arrow.textContent = isOpen ? '▴' : '▾';
+}
+
+// ══════════════════════════════════════
+// PATCH renderCareer to use new systems
+// ══════════════════════════════════════
+const _origRenderCareer = renderCareer;
+renderCareer = function() {
+  _origRenderCareer();
+  renderAchievements();
+  renderRivalCards();
+};
+
+// Also patch renderScoreboard to show rival card on home
+const _origRenderScoreboard = renderScoreboard;
+renderScoreboard = function() {
+  _origRenderScoreboard();
+  renderRivalCards();
+};
+
+// Init rival cards on load
+renderRivalCards();
 </script>
 </body>
 </html>
