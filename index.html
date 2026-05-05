@@ -980,9 +980,16 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .lb-detail-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:1px;margin-top:2px}
 @media(max-width:700px){
   .lb-detail-grid{grid-template-columns:repeat(2,1fr)}
-  .lb-table th:nth-child(4),.lb-table td:nth-child(4),
-  .lb-table th:nth-child(5),.lb-table td:nth-child(5),
-  .lb-table th:nth-child(6),.lb-table td:nth-child(6){display:none}
+  /* All leaderboard columns visible on mobile */
+  .lb-table{font-size:11px}
+  .lb-table th{font-size:8px;padding:7px 5px;letter-spacing:.4px}
+  .lb-table td{padding:7px 5px}
+  .lb-runs{font-size:16px}
+  .lb-stat{font-size:13px}
+  .lb-rank{font-size:14px}
+  .lb-avatar{width:24px;height:24px;font-size:11px}
+  .lb-name{font-size:9px}
+  .lb-bar-wrap{min-width:44px}
 }
 
 @media(max-width:700px){
@@ -1393,7 +1400,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     </svg>
   </button>
   <div class="top-bar-title" id="top-bar-player-name">GOAL<span style="color:var(--fire)">264</span></div>
-  <div class="top-bar-profile-btn" id="top-bar-avatar" onclick="showTab('profile',null)" title="Profile">P</div>
+  <div class="top-bar-profile-btn" id="top-bar-avatar" onclick="toggleProfileModal()" title="Profile">P</div>
 </div>
 
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -1426,9 +1433,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <button class="sidebar-item" id="si-monthly" onclick="showTab('monthly',null);closeSidebar()" data-tooltip="Monthly">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M7 15l3 3 7-7"/></svg></span><span class="si-label">Monthly</span>
     </button>
-    <button class="sidebar-item" id="si-graphs" onclick="showTab('graphs',null);closeSidebar()" data-tooltip="Career Goal">
-      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span class="si-label">Career Goal</span>
-    </button>
+
 
     <div class="sidebar-divider" style="margin:6px 10px;"></div>
 
@@ -2058,9 +2063,6 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   </button>
   <button class="tab-btn" id="tab-monthly" onclick="showTab('monthly',this)">
     <span class="tab-icon">📆</span><span class="tab-label">Monthly</span>
-  </button>
-  <button class="tab-btn" id="tab-graphs" onclick="showTab('graphs',this)">
-    <span class="tab-icon">🎯</span><span class="tab-label">Goal</span>
   </button>
 </nav>
 
@@ -3593,6 +3595,13 @@ function showTab(id, btn) {
   activeTab = id;
   closeSidebar();
 
+  // Mobile: highlight top-bar avatar when on profile page
+  const topBarAvatar = document.getElementById('top-bar-avatar');
+  if (topBarAvatar) {
+    topBarAvatar.style.borderColor = (id === 'profile') ? 'rgba(245,200,66,0.8)' : 'rgba(245,200,66,0.3)';
+    topBarAvatar.style.background  = (id === 'profile') ? 'rgba(245,200,66,0.18)' : 'rgba(245,200,66,0.12)';
+  }
+
   // Render on switch
   if(id==='scoreboard'){ renderScoreboard(); renderWeeklyTarget(); renderGoal(); }
   if(id==='weekly'){renderWeekly();renderWeeklyTarget();}
@@ -4277,6 +4286,24 @@ function openProfileModal() {
 }
 function closeProfileModal() {
   document.getElementById('profile-modal').classList.remove('show');
+}
+function toggleProfileModal() {
+  // On mobile: navigate to profile page (or back to home if already on profile)
+  if (window.innerWidth <= 700) {
+    if (activeTab === 'profile') {
+      showTab('scoreboard', null);
+    } else {
+      showTab('profile', null);
+    }
+    return;
+  }
+  // Desktop: open the modal as before
+  const modal = document.getElementById('profile-modal');
+  if (modal.classList.contains('show')) {
+    closeProfileModal();
+  } else {
+    openProfileModal();
+  }
 }
 function triggerProfileModalImageUpload() {
   document.getElementById('profile-modal-img-upload').click();
