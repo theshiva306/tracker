@@ -5,6 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🏏 SHIVA — ODI Career v9</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ══ FIREBASE ══ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA6oWnXtx3g1do77YMu1hw7_b131W7Icns",
+    authDomain: "shiva45-e144e.firebaseapp.com",
+    projectId: "shiva45-e144e",
+    storageBucket: "shiva45-e144e.firebasestorage.app",
+    messagingSenderId: "743806150690",
+    appId: "1:743806150690:web:0957cc94f9a91db32cc27b"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  // ── Expose to global scope so the main script can use them ──
+  window._fb = { auth, db, provider,
+    signInWithPopup, signOut, onAuthStateChanged,
+    doc, setDoc, getDoc, collection, getDocs, deleteDoc };
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -462,6 +490,25 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 /* AI WEEKLY COMMENTARY (kept for .weekly-ai-btn class in case cached) */
 .weekly-ai-btn{display:none}
 
+/* ── AUTH UI ── */
+.auth-panel{padding:.75rem 1.25rem;border-top:0.5px solid var(--border);margin-top:auto;flex-shrink:0}
+.auth-user-name{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.auth-btn{width:100%;padding:7px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;border:0.5px solid;text-align:center}
+.auth-btn-login{background:transparent;border-color:var(--gold);color:var(--gold)}
+.auth-btn-login:hover{background:var(--gold);color:#06090d}
+.auth-btn-logout{background:transparent;border-color:var(--muted2);color:var(--muted2);margin-top:4px}
+.auth-btn-logout:hover{border-color:var(--red);color:var(--red)}
+.auth-loading{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px}
+
+/* ── LOGIN GATE ── */
+.login-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:2rem}
+.login-gate-icon{font-size:48px;margin-bottom:1rem}
+.login-gate-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--gold);margin-bottom:.5rem}
+.login-gate-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:1.5rem;line-height:1.7}
+.login-gate-btn{padding:12px 32px;background:transparent;border:1px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;cursor:pointer;transition:all .2s}
+.login-gate-btn:hover{background:var(--gold);color:#06090d}
+.sync-indicator{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px;padding:.25rem .75rem;background:rgba(255,255,255,0.03);border-radius:4px;display:inline-block;margin-top:.5rem}
+
 @media(max-width:700px){
   .stats-grid,.career-stats-grid{grid-template-columns:repeat(2,1fr)}
   .innings-bars{grid-template-columns:repeat(2,1fr)}
@@ -491,6 +538,17 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <button class="sidebar-item" id="si-best" onclick="showPage('best',this)"><span class="si-icon">🏆</span>Records</button>
     <button class="sidebar-item" id="si-tracker" onclick="showPage('tracker',this)"><span class="si-icon">📋</span>Tracker</button>
   </nav>
+  <!-- AUTH PANEL inside sidebar -->
+  <div class="auth-panel" id="auth-panel">
+    <div class="auth-loading" id="auth-loading">Connecting…</div>
+    <div id="auth-logged-in" style="display:none">
+      <div class="auth-user-name" id="auth-user-name">—</div>
+      <button class="auth-btn auth-btn-logout" onclick="handleLogout()">SIGN OUT</button>
+    </div>
+    <div id="auth-logged-out" style="display:none">
+      <button class="auth-btn auth-btn-login" onclick="handleLogin()">🔑 GOOGLE LOGIN</button>
+    </div>
+  </div>
 </aside>
 
 <!-- ══ MAIN WRAP ══ -->
@@ -936,18 +994,126 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 // ══════════════════════════════════════
 // STORAGE KEYS
 // ══════════════════════════════════════
-const STORE        = 'shiva45_matches_v3'; // same as v3 — data carries over
+const STORE        = 'shiva45_matches_v3';
 const EXAM_STORE   = 'shiva45_exam_v1';
 const TARGET_STORE = 'shiva45_targets_v1';
 const COMM_STORE   = 'shiva45_commentary_v4';
 
-let matches      = JSON.parse(localStorage.getItem(STORE) || '[]');
-let currentFilter = 'all';
-let viewMonth    = new Date();
-let examData     = JSON.parse(localStorage.getItem(EXAM_STORE) || 'null');
-let weekTargets  = JSON.parse(localStorage.getItem(TARGET_STORE) || '{}');
+let matches        = JSON.parse(localStorage.getItem(STORE) || '[]');
+let currentFilter  = 'all';
+let viewMonth      = new Date();
+let examData       = JSON.parse(localStorage.getItem(EXAM_STORE) || 'null');
+let weekTargets    = JSON.parse(localStorage.getItem(TARGET_STORE) || '{}');
 let lastCommentary = localStorage.getItem(COMM_STORE) || '';
-let drOpenPlayer = null;
+let drOpenPlayer   = null;
+
+// ══════════════════════════════════════
+// FIREBASE AUTH + FIRESTORE
+// ══════════════════════════════════════
+let currentUser = null; // the logged-in Firebase user
+
+// Wait for Firebase module to load, then set up auth listener
+window.addEventListener('load', () => {
+  // Firebase SDK loads as ES module — give it a tick
+  setTimeout(initFirebase, 200);
+});
+
+function initFirebase() {
+  const fb = window._fb;
+  if (!fb) { showAuthUI(null); return; }
+
+  fb.onAuthStateChanged(fb.auth, async (user) => {
+    currentUser = user;
+    showAuthUI(user);
+    if (user) {
+      await loadFromFirestore(user.uid);
+    }
+  });
+}
+
+// ── Show/hide the sidebar auth panel ──
+function showAuthUI(user) {
+  document.getElementById('auth-loading').style.display    = 'none';
+  document.getElementById('auth-logged-in').style.display  = user ? 'block' : 'none';
+  document.getElementById('auth-logged-out').style.display = user ? 'none'  : 'block';
+  if (user) {
+    const name = user.displayName || user.email || 'Player';
+    document.getElementById('auth-user-name').textContent = '👤 ' + name.split(' ')[0].toUpperCase();
+  }
+}
+
+// ── Google Sign-In ──
+async function handleLogin() {
+  const fb = window._fb;
+  if (!fb) { alert('Firebase not loaded yet. Try again in a moment.'); return; }
+  try {
+    await fb.signInWithPopup(fb.auth, fb.provider);
+    // onAuthStateChanged fires automatically — no need to do anything here
+  } catch (e) {
+    showToast('Login failed: ' + e.message, false);
+  }
+}
+
+// ── Sign Out ──
+async function handleLogout() {
+  const fb = window._fb;
+  if (!fb) return;
+  await fb.signOut(fb.auth);
+  currentUser = null;
+  showToast('Signed out.', true);
+}
+
+// ── Save ALL user data to Firestore ──
+async function saveToFirestore() {
+  const fb = window._fb;
+  if (!fb || !currentUser) return; // not logged in — only localStorage
+  try {
+    const ref = fb.doc(fb.db, 'users', currentUser.uid);
+    await fb.setDoc(ref, {
+      displayName : currentUser.displayName || '',
+      email       : currentUser.email || '',
+      matches     : matches,
+      examData    : examData    || null,
+      weekTargets : weekTargets || {},
+      lastSaved   : new Date().toISOString()
+    }, { merge: true });
+  } catch (e) {
+    console.warn('Firestore save failed:', e.message);
+  }
+}
+
+// ── Load user data from Firestore ──
+async function loadFromFirestore(uid) {
+  const fb = window._fb;
+  if (!fb) return;
+  try {
+    const ref  = fb.doc(fb.db, 'users', uid);
+    const snap = await fb.getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      // Merge: Firestore wins over localStorage if it has more matches
+      const cloudMatches = data.matches || [];
+      if (cloudMatches.length >= matches.length) {
+        matches     = cloudMatches;
+        examData    = data.examData    || examData;
+        weekTargets = data.weekTargets || weekTargets;
+        // Sync back to localStorage
+        localStorage.setItem(STORE,        JSON.stringify(matches));
+        localStorage.setItem(EXAM_STORE,   JSON.stringify(examData));
+        localStorage.setItem(TARGET_STORE, JSON.stringify(weekTargets));
+      }
+      refreshAll();
+      showToast('☁️ Data loaded from cloud!', true);
+    } else {
+      // First time — upload existing local data to cloud
+      await saveToFirestore();
+      showToast('☁️ Local data synced to cloud!', true);
+    }
+  } catch (e) {
+    console.warn('Firestore load failed:', e.message);
+    showToast('Cloud sync failed — using local data.', false);
+  }
+}
 
 // ══════════════════════════════════════
 // ODI LEGEND DATABASE
@@ -1355,6 +1521,7 @@ function saveMatch() {
   };
   matches.push(match);
   localStorage.setItem(STORE,JSON.stringify(matches));
+  saveToFirestore(); // ☁️ also sync to Firebase
 
   if      (s.total>=264) showMilestone('⚡',"ROHIT'S RECORD!",s.total.toFixed(0)+' runs — You are legendary!');
   else if (s.total>=200) showMilestone('💜','BIG DOUBLE CENTURY!',s.total.toFixed(0)+' runs — Absolutely insane!');
@@ -1870,6 +2037,7 @@ function deleteMatch(id){
   showConfirm('Delete this match? This cannot be undone.', ()=>{
     matches=matches.filter(m=>m.id!==id);
     localStorage.setItem(STORE,JSON.stringify(matches));
+    saveToFirestore(); // ☁️ sync deletion to Firebase
     refreshAll();
     showToast('Match deleted.',true);
   });
@@ -2042,6 +2210,7 @@ function _saveTarget(inputId){
   if(!val||val<=0){showToast('Enter a valid target!',false);return;}
   weekTargets[getWeekKey()]=val;
   localStorage.setItem(TARGET_STORE,JSON.stringify(weekTargets));
+  saveToFirestore(); // ☁️ sync to Firebase
   // Sync both inputs to same value immediately
   const other = inputId==='target-input'?'w-target-input':'target-input';
   const otherEl = document.getElementById(other);
@@ -2107,6 +2276,7 @@ function saveExamDate(){
   const date=document.getElementById('cd-date-input').value;
   if(!date){showToast('Pick an exam date!',false);return;}
   examData={name,date};localStorage.setItem(EXAM_STORE,JSON.stringify(examData));
+  saveToFirestore(); // ☁️ sync to Firebase
   renderCountdown();showToast('Exam date set! Stay locked in. 🏏',true);
 }
 function renderCountdown(){
