@@ -264,7 +264,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .graph-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.625rem;display:flex;align-items:center;gap:6px}
 .graph-title::after{content:'';flex:1;height:0.5px;background:var(--border)}
 .graph-wrap{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem 1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
-.graph-svg{width:100%;overflow:visible;display:block}
+.graph-svg{width:100%;height:auto;min-height:160px;overflow:visible;display:block}
 .graph-no-data{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-align:center;padding:2rem 0;letter-spacing:1px}
 
 /* ── BOTTOM TAB BAR — mobile only ── */
@@ -807,19 +807,50 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 /* ACHIEVEMENTS v2 */
 .ach-unlocked-section{margin-bottom:1rem}
-.ach-locked-toggle{width:100%;background:none;border:0.5px solid var(--border);border-radius:8px;padding:10px 16px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
-.ach-locked-toggle:hover{border-color:var(--border2);color:var(--text)}
+.ach-locked-toggle{width:100%;background:none;border:0.5px solid var(--border);border-radius:10px;padding:11px 16px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between;margin-top:.75rem}
+.ach-locked-toggle:hover{border-color:var(--border2);color:var(--text);background:rgba(255,255,255,0.02)}
 .ach-locked-section{display:none;margin-top:.75rem}
 .ach-locked-section.open{display:block}
-.ach-progress{height:2px;background:var(--border);border-radius:1px;margin-top:4px;overflow:hidden}
-.ach-progress-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--gold));border-radius:1px}
-.ach-card{position:relative;overflow:hidden}
-.ach-card.near{border-color:rgba(245,200,66,0.25);background:rgba(245,200,66,0.02)}
-.ach-card.locked{opacity:.4;filter:saturate(.2)}
-.ach-icon{font-size:24px;display:block;margin-bottom:.375rem}
-.ach-name{font-family:'DM Mono',monospace;font-size:10px;color:var(--text);letter-spacing:.5px;margin-bottom:3px}
-.ach-desc{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);line-height:1.4}
-.ach-date{font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);margin-top:4px}
+.ach-progress{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.ach-progress-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--gold));border-radius:2px;transition:width .6s ease}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:700px){.ach-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+.ach-card{
+  position:relative;overflow:hidden;
+  background:var(--card);
+  border:0.5px solid var(--border);
+  border-radius:14px;
+  padding:14px 12px 12px;
+  display:flex;flex-direction:column;
+  transition:transform .15s,border-color .15s,box-shadow .15s;
+  cursor:default;
+}
+.ach-card.unlocked{
+  border-color:rgba(245,200,66,0.3);
+  background:linear-gradient(135deg,rgba(245,200,66,0.06) 0%,var(--card) 60%);
+  box-shadow:0 2px 16px rgba(245,200,66,0.07);
+}
+.ach-card.unlocked::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--fire),var(--gold));
+  border-radius:14px 14px 0 0;
+}
+.ach-card.near{
+  border-color:rgba(74,158,255,0.25);
+  background:linear-gradient(135deg,rgba(74,158,255,0.04) 0%,var(--card) 60%);
+}
+.ach-card.near::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  border-radius:14px 14px 0 0;
+}
+.ach-card.locked{opacity:.35;filter:saturate(.15)}
+.ach-card:not(.locked):hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.ach-icon{font-size:28px;display:block;margin-bottom:8px;line-height:1}
+.ach-name{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--text);letter-spacing:.3px;margin-bottom:4px;line-height:1.3}
+.ach-desc{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);line-height:1.5;flex:1}
+.ach-badge{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:3px 7px;background:rgba(245,200,66,0.12);border:0.5px solid rgba(245,200,66,0.25);border-radius:20px;font-family:'DM Mono',monospace;font-size:7px;color:var(--gold);letter-spacing:.5px}
+.ach-pct{font-family:'DM Mono',monospace;font-size:7px;color:var(--muted2);margin-top:3px}
 
 /* RIVALS */
 .rival-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.75rem}
@@ -957,7 +988,6 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   .innings-bars{grid-template-columns:repeat(2,1fr)}
   .comp-stats{grid-template-columns:repeat(2,1fr)}
   .dr-detail-grid{grid-template-columns:repeat(2,1fr)}
-  .ach-grid{grid-template-columns:repeat(2,1fr)}
   .podium{grid-template-columns:1fr 1fr}
   .podium-card.second{order:1}.podium-card.first{order:0;grid-column:1/-1}
   .podium-card.third{order:2}
@@ -1706,7 +1736,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
   <!-- Full leaderboard table -->
   <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem">
-    <table class="lb-table">
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="lb-table" style="min-width:380px">
       <thead>
         <tr>
           <th style="width:36px">#</th>
@@ -1724,6 +1755,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
         <tr><td colspan="9"><div class="lb-loading"><div class="lb-spinner"></div><br>Loading leaderboard…</div></td></tr>
       </tbody>
     </table>
+  </div>
   </div>
 
   <!-- Legend key -->
@@ -1945,9 +1977,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   <div class="section-title">📈 Performance Graphs</div>
   <div class="graph-section">
     <div class="graph-title">📈 Hours Studied — Last 30 Days</div>
-    <div class="graph-wrap"><svg class="graph-svg" id="graph-hours" viewBox="0 0 600 160" preserveAspectRatio="none"></svg></div>
+    <div class="graph-wrap"><svg class="graph-svg" id="graph-hours" viewBox="0 0 600 160" preserveAspectRatio="xMidYMid meet"></svg></div>
     <div class="graph-title" style="margin-top:.5rem">📐 Questions Solved — Last 30 Days</div>
-    <div class="graph-wrap"><svg class="graph-svg" id="graph-questions" viewBox="0 0 600 160" preserveAspectRatio="none"></svg></div>
+    <div class="graph-wrap"><svg class="graph-svg" id="graph-questions" viewBox="0 0 600 160" preserveAspectRatio="xMidYMid meet"></svg></div>
   </div>
   <!-- Heatmap section -->
   <div class="section-title" style="margin-top:1.5rem;font-size:18px">🗓 Year Heatmap</div>
@@ -2095,6 +2127,11 @@ let currentUser = null; // the logged-in Firebase user
 window.addEventListener('load', () => {
   // Firebase SDK loads as ES module — give it a tick
   setTimeout(initFirebase, 200);
+});
+
+// Redraw graphs on resize/orientation change
+window.addEventListener('resize', ()=>{
+  if(activeTab==='graphs'){ renderLineGraphs(); }
 });
 
 function initFirebase() {
@@ -3786,8 +3823,7 @@ function goHome() {
 // LINE GRAPHS — PURE SVG
 // ══════════════════════════════════════
 function renderLineGraphs(){
-  const W=600,H=160,padL=8,padR=8,padT=16,padB=28;
-  const gW=W-padL-padR,gH=H-padT-padB;
+  const H=160,padL=28,padR=8,padT=16,padB=28;
 
   // Build last 30 days
   const today=new Date();today.setHours(0,0,0,0);
@@ -3804,13 +3840,17 @@ function renderLineGraphs(){
   function buildGraph(svgId, data, color, unit){
     const svg=document.getElementById(svgId);
     if(!svg) return;
+    // Use actual rendered width for true responsiveness
+    const W=Math.max(svg.clientWidth||600, 280);
+    const gW=W-padL-padR,gH=H-padT-padB;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
     const vals=data.filter(v=>v!==null);
     if(!vals.length){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="rgba(255,255,255,0.15)" font-family="monospace" font-size="11">No data yet — log some matches!</text>`;return;}
     const mx=Math.max(...vals,1),mn=0;
     const range=mx-mn||1;
     const xStep=gW/(days30.length-1);
 
-    // Build point coords
     const pts=days30.map((ds,i)=>{
       if(data[i]===null) return null;
       const x=padL+i*xStep;
@@ -3818,10 +3858,9 @@ function renderLineGraphs(){
       return {x,y,v:data[i],ds};
     });
 
-    // Smooth curve path
     function catmullRom(pts){
       const valid=pts.filter(Boolean);
-      if(valid.length<2) return valid.map(p=>`${p.x},${p.y}`).join(' ');
+      if(valid.length<2) return `M${valid.map(p=>`${p.x},${p.y}`).join(' L')}`;
       let d=`M${valid[0].x},${valid[0].y}`;
       for(let i=0;i<valid.length-1;i++){
         const p0=valid[Math.max(0,i-1)],p1=valid[i],p2=valid[i+1],p3=valid[Math.min(valid.length-1,i+2)];
@@ -3832,20 +3871,17 @@ function renderLineGraphs(){
       return d;
     }
 
-    // Fill path (area under curve)
     const validPts=pts.filter(Boolean);
     let pathD=catmullRom(validPts);
     const fillD=pathD+` L${validPts[validPts.length-1].x},${padT+gH} L${validPts[0].x},${padT+gH} Z`;
 
-    // Y gridlines (3 lines)
     const grids=[0,0.5,1].map(f=>{
       const yg=padT+gH-f*gH;
       const val=Math.round(mn+f*range);
       return `<line x1="${padL}" y1="${yg}" x2="${W-padR}" y2="${yg}" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
-      <text x="${padL}" y="${yg-3}" fill="rgba(255,255,255,0.18)" font-family="monospace" font-size="8">${val}${unit}</text>`;
+      <text x="${padL-3}" y="${yg+3}" text-anchor="end" fill="rgba(255,255,255,0.25)" font-family="monospace" font-size="8">${val}${unit}</text>`;
     }).join('');
 
-    // X labels (show every 5 days)
     const xLabels=days30.map((ds,i)=>{
       if(i%5!==0&&i!==29) return '';
       const x=padL+i*xStep;
@@ -3854,13 +3890,12 @@ function renderLineGraphs(){
       return `<text x="${x}" y="${H-4}" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-family="monospace" font-size="7.5">${label}</text>`;
     }).join('');
 
-    // Dots + invisible hit areas
     const dots=pts.map((p,i)=>{
       if(!p) return '';
       const isToday=(i===29);
       return `
         <circle cx="${p.x}" cy="${p.y}" r="${isToday?4:3}" fill="${color}" stroke="var(--bg)" stroke-width="1.5" opacity="0.9"/>
-        <circle cx="${p.x}" cy="${p.y}" r="10" fill="transparent" class="graph-hit"
+        <circle cx="${p.x}" cy="${p.y}" r="10" fill="transparent"
           onmouseenter="showGraphTip(event,'${p.v}${unit} · ${p.ds}')"
           ontouchstart="showGraphTip(event,'${p.v}${unit} · ${p.ds}')"
           onmouseleave="hideGraphTip()" ontouchend="hideGraphTip()"/>
@@ -3883,8 +3918,11 @@ function renderLineGraphs(){
     `;
   }
 
-  buildGraph('graph-hours', hoursArr, 'var(--fire2)', 'h');
-  buildGraph('graph-questions', qArr, 'var(--cyan)', 'Q');
+  // Small delay to ensure SVG is rendered in DOM and has a width
+  setTimeout(()=>{
+    buildGraph('graph-hours', hoursArr, 'var(--fire2)', 'h');
+    buildGraph('graph-questions', qArr, 'var(--cyan)', 'Q');
+  }, 50);
 }
 
 // Graph tooltip
@@ -4621,12 +4659,15 @@ function renderAchievements() {
 
   function buildCard({ a, prog }, locked) {
     const pct = Math.round(prog * 100);
-    return `<div class="ach-card ${locked?'locked':'unlocked'} ${!locked&&prog>=0.6?'near':''}">
+    const isNear = !locked && prog >= 0.6 && prog < 1;
+    const isUnlocked = !locked;
+    const cardClass = `ach-card ${isUnlocked ? 'unlocked' : (isNear ? 'near' : 'locked')}`;
+    return `<div class="${cardClass}">
       <span class="ach-icon">${a.icon}</span>
       <div class="ach-name">${a.name}</div>
       <div class="ach-desc">${a.desc}</div>
-      ${locked && prog > 0 ? `<div class="ach-progress"><div class="ach-progress-fill" style="width:${pct}%"></div></div><div style="font-family:'DM Mono',monospace;font-size:7px;color:var(--muted2);margin-top:3px">${pct}%</div>` : ''}
-      ${!locked ? '<div class="ach-date">✓ Unlocked</div>' : ''}
+      ${locked && prog > 0 ? `<div class="ach-progress"><div class="ach-progress-fill" style="width:${pct}%"></div></div><div class="ach-pct">${pct}%</div>` : ''}
+      ${isUnlocked ? '<div class="ach-badge">✓ UNLOCKED</div>' : ''}
     </div>`;
   }
 
