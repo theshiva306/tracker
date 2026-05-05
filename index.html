@@ -9,14 +9,14 @@
 <!-- ══ FIREBASE ══ -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA6oWnXtx3g1do77YMu1hw7_b131W7Icns",
-    authDomain: "shiva45-e144e.firebaseapp.com",
+    authDomain: "theshiva306.github.io",
     projectId: "shiva45-e144e",
     storageBucket: "shiva45-e144e.firebasestorage.app",
     messagingSenderId: "743806150690",
@@ -30,7 +30,7 @@
 
   // ── Expose to global scope so the main script can use them ──
   window._fb = { auth, db, provider,
-    signInWithPopup, signOut, onAuthStateChanged,
+    signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged,
     doc, setDoc, getDoc, collection, getDocs, deleteDoc };
 </script>
 <style>
@@ -1332,7 +1332,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     var t2=setInterval(function(){
       if(!window._fb)return;clearInterval(t2);
       var fb=window._fb;
-      fb.signInWithPopup(fb.auth,fb.provider)
+      fb.signInWithRedirect(fb.auth,fb.provider)
         .then(function(){dismissAll();})
         .catch(function(e){
           btn.disabled=false;btn.style.opacity='1';
@@ -2099,6 +2099,11 @@ function initFirebase() {
   const fb = window._fb;
   if (!fb) { showAuthUI(null); return; }
 
+  // Handle result coming back from Google redirect sign-in
+  fb.getRedirectResult(fb.auth).catch(function(e) {
+    console.error('Redirect result error:', e);
+  });
+
   fb.onAuthStateChanged(fb.auth, async (user) => {
     currentUser = user;
     showAuthUI(user);
@@ -2162,7 +2167,7 @@ async function handleLogin() {
   const fb = window._fb;
   if (!fb) { alert('Firebase not loaded yet. Try again in a moment.'); return; }
   try {
-    await fb.signInWithPopup(fb.auth, fb.provider);
+    await fb.signInWithRedirect(fb.auth, fb.provider);
     // onAuthStateChanged fires automatically — no need to do anything here
   } catch (e) {
     showToast('Login failed: ' + e.message, false);
