@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🏏 SHIVA — ODI Career v9</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
 <!-- ══ FIREBASE ══ -->
 <script type="module">
@@ -489,6 +490,51 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .mc-average{background:rgba(74,158,255,0.1);border-color:var(--blue)!important;color:var(--blue)!important}
 .mc-poor{background:rgba(255,255,255,0.04);border-color:var(--border)!important}
 .mc-lost{background:rgba(224,80,80,0.1);border-color:var(--red)!important;color:var(--red)!important}
+
+/* ── MONTHLY LINE GRAPH ── */
+.monthly-graph-wrap{
+  background:var(--card);border:0.5px solid var(--border);border-radius:14px;
+  padding:1.25rem 1.25rem 1rem;margin-top:1.25rem;position:relative;overflow:hidden;
+}
+.monthly-graph-wrap::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(6,182,212,0.4),transparent);
+}
+.monthly-graph-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;
+}
+.monthly-graph-title{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--muted);text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
+}
+.monthly-graph-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--cyan);display:inline-block;flex-shrink:0;}
+.monthly-graph-badge{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;
+  padding:3px 10px;border-radius:10px;
+  background:rgba(6,182,212,0.08);border:0.5px solid rgba(6,182,212,0.25);color:var(--cyan);
+}
+.monthly-graph-canvas-wrap{
+  position:relative;width:100%;
+  /* height is controlled by canvas aspect ratio */
+}
+.monthly-graph-canvas-wrap canvas{
+  display:block;width:100%!important;
+}
+.monthly-graph-empty{
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);
+  text-align:center;padding:2.5rem 0;letter-spacing:1px;
+}
+/* Tooltip override */
+#monthly-chart-tooltip{
+  position:fixed;pointer-events:none;z-index:999;
+  background:var(--card2);border:0.5px solid var(--border2);
+  border-radius:8px;padding:6px 12px;
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--text);white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);
+  display:none;
+}
 
 /* FILTER BTNS */
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
@@ -1975,6 +2021,20 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     </div>
   </div>
   <div class="stats-grid" id="month-breakdown-pg" style="margin-top:1rem"></div>
+
+  <!-- ── MONTHLY LINE GRAPH ── -->
+  <div class="monthly-graph-wrap" id="monthly-graph-section">
+    <div class="monthly-graph-header">
+      <div class="monthly-graph-title">Questions Solved — Daily Trend</div>
+      <div class="monthly-graph-badge" id="monthly-graph-peak-badge"></div>
+    </div>
+    <div class="monthly-graph-canvas-wrap" id="monthly-graph-canvas-wrap">
+      <canvas id="monthly-line-chart" height="180"></canvas>
+      <div class="monthly-graph-empty" id="monthly-graph-empty" style="display:none">No match data for this month yet</div>
+    </div>
+  </div>
+  <!-- Floating tooltip -->
+  <div id="monthly-chart-tooltip"></div>
 </div>
 
 <!-- ══ PAGE: GRAPHS ══ (Career Goal only) -->
@@ -3406,7 +3466,203 @@ function renderMonthlyPage(){
     {label:'📘 Average Days',val:grades.average,cls:''},
     {label:'Matches Played',val:mm.length,cls:'fire'},
   ].map(r=>`<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-val ${r.cls}">${r.val}</div></div>`).join('');
+
+  // ── Draw monthly line graph ───────────────────────────────────────────
+  if (typeof renderMonthlyLineGraph === 'function') {
+    requestAnimationFrame(renderMonthlyLineGraph);
+  }
 }
+
+// ══════════════════════════════════════
+// MONTHLY LINE GRAPH — Chart.js
+// ══════════════════════════════════════
+(function(){
+  let _monthlyChart = null;
+  let _chartReady   = false;
+
+  function waitForChartJS(cb, attempts) {
+    attempts = attempts || 0;
+    if (typeof Chart !== 'undefined') { cb(); return; }
+    if (attempts > 50) { console.warn('Chart.js did not load'); return; }
+    setTimeout(function(){ waitForChartJS(cb, attempts + 1); }, 150);
+  }
+
+  waitForChartJS(function(){
+    _chartReady = true;
+    // If monthly page is already active at load time, draw immediately
+    const pg = document.getElementById('page-monthly');
+    if (pg && pg.classList.contains('active')) {
+      requestAnimationFrame(renderMonthlyLineGraph);
+    }
+  });
+
+  window.renderMonthlyLineGraph = function() {
+    if (!_chartReady || typeof Chart === 'undefined') return;
+
+    const canvas  = document.getElementById('monthly-line-chart');
+    const emptyEl = document.getElementById('monthly-graph-empty');
+    const badgeEl = document.getElementById('monthly-graph-peak-badge');
+    if (!canvas) return;
+
+    const y   = viewMonth.getFullYear();
+    const m   = viewMonth.getMonth();
+    const dim = new Date(y, m + 1, 0).getDate();
+
+    // Build daily arrays
+    const labels = [];
+    const values = [];
+    let hasData  = false;
+    let peakQ    = 0;
+    let peakDay  = null;
+
+    for (let d = 1; d <= dim; d++) {
+      const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      labels.push(d);
+      const dayMatches = matches.filter(x => x.date === ds);
+      let q = 0;
+      dayMatches.forEach(x => { q += (parseFloat(x.questions) || 0); });
+      q = Math.round(q);
+      values.push(q);
+      if (q > 0) hasData = true;
+      if (q > peakQ) { peakQ = q; peakDay = d; }
+    }
+
+    canvas.style.display = hasData ? 'block' : 'none';
+    if (emptyEl) emptyEl.style.display = hasData ? 'none' : 'block';
+    if (badgeEl) badgeEl.textContent = hasData ? `Peak: ${peakQ}Q · Day ${peakDay}` : '';
+
+    // Destroy old chart cleanly
+    if (_monthlyChart) {
+      try { _monthlyChart.destroy(); } catch(e){}
+      _monthlyChart = null;
+    }
+    if (!hasData) return;
+
+    // Ensure canvas has height before we draw
+    if (!canvas.offsetParent) return; // not visible yet — skip
+    const ctx = canvas.getContext('2d');
+
+    // Gradient fill using canvas actual height
+    const canvasH = canvas.offsetHeight || 180;
+    const grad = ctx.createLinearGradient(0, 0, 0, canvasH);
+    grad.addColorStop(0,   'rgba(6,182,212,0.25)');
+    grad.addColorStop(0.55,'rgba(6,182,212,0.07)');
+    grad.addColorStop(1,   'rgba(6,182,212,0)');
+
+    let tipEl = document.getElementById('monthly-chart-tooltip');
+    if (!tipEl) {
+      tipEl = document.createElement('div');
+      tipEl.id = 'monthly-chart-tooltip';
+      document.body.appendChild(tipEl);
+    }
+
+    const isMobile = window.innerWidth < 500;
+    const tickStep = isMobile ? 4 : (window.innerWidth < 768 ? 3 : 2);
+
+    _monthlyChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Questions Solved',
+          data: values,
+          borderColor: 'rgba(6,182,212,0.92)',
+          borderWidth: 2,
+          backgroundColor: grad,
+          fill: true,
+          tension: 0.38,
+          pointRadius: values.map(v => v > 0 ? 3.5 : 1.5),
+          pointBackgroundColor: values.map((v, i) => {
+            if (v === peakQ && v > 0) return '#fad96a';
+            return v > 0 ? 'rgba(6,182,212,1)' : 'rgba(255,255,255,0.08)';
+          }),
+          pointBorderColor: 'transparent',
+          pointHoverRadius: 5.5,
+          pointHoverBackgroundColor: '#fad96a',
+          spanGaps: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: false,
+            external({ tooltip }) {
+              if (!tipEl) return;
+              if (tooltip.opacity === 0) { tipEl.style.display = 'none'; return; }
+              const dp    = tooltip.dataPoints[0];
+              const day   = dp.label;
+              const q     = dp.raw;
+              const mon   = viewMonth.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+              tipEl.innerHTML =
+                `<span style="color:var(--cyan);font-size:9px;letter-spacing:1px">DAY ${day} · ${mon}</span>` +
+                `<br><span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px">${q}</span>` +
+                `<span style="color:var(--muted);font-size:9px"> questions</span>`;
+              const rect = canvas.getBoundingClientRect();
+              let lx = rect.left + tooltip.caretX + 14;
+              if (lx + 160 > window.innerWidth - 8) lx = rect.left + tooltip.caretX - 174;
+              tipEl.style.left    = lx + 'px';
+              tipEl.style.top     = (rect.top + tooltip.caretY - 36) + 'px';
+              tipEl.style.display = 'block';
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            border: { color: 'transparent' },
+            ticks: {
+              color: 'rgba(106,128,160,0.75)',
+              font: { family:"'DM Mono',monospace", size: 9 },
+              maxRotation: 0,
+              autoSkip: false,
+              callback(val, idx) {
+                const lbl = labels[idx];
+                if (lbl === 1 || lbl === dim || lbl % tickStep === 0) return lbl;
+                return '';
+              }
+            }
+          },
+          y: {
+            position: 'left',
+            grid: { color: 'rgba(255,255,255,0.045)' },
+            border: { color: 'transparent' },
+            ticks: {
+              color: 'rgba(106,128,160,0.75)',
+              font: { family:"'DM Mono',monospace", size: 9 },
+              maxTicksLimit: 5,
+              callback: v => v === 0 ? '0' : v + 'Q'
+            },
+            beginAtZero: true,
+            suggestedMin: 0
+          }
+        },
+        animation: { duration: 550, easing: 'easeOutCubic' },
+        layout: { padding: { top: 8, right: 4, bottom: 2, left: 0 } }
+      }
+    });
+  };
+
+  // Resize: redraw on orientation/size change
+  let _rTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(_rTimer);
+    _rTimer = setTimeout(() => {
+      const pg = document.getElementById('page-monthly');
+      if (pg && pg.classList.contains('active')) renderMonthlyLineGraph();
+    }, 220);
+  });
+
+  // Hide tooltip on scroll
+  document.addEventListener('scroll', () => {
+    const t = document.getElementById('monthly-chart-tooltip');
+    if (t) t.style.display = 'none';
+  }, true);
+
+})();
 
 // ══════════════════════════════════════
 // RECORDS PAGE
