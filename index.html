@@ -662,13 +662,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 /* PROFILE MODAL */
 .profile-modal-box{max-width:360px}
-.profile-avatar-big{width:64px;height:64px;border-radius:50%;background:rgba(245,200,66,0.12);border:2px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin:0 auto 1rem;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s}
-.profile-avatar-big:hover{border-color:rgba(245,200,66,0.6)}
+.profile-avatar-big{width:64px;height:64px;border-radius:50%;background:rgba(245,200,66,0.12);border:2px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin:0 auto 1rem;overflow:hidden;transition:border-color .15s}
 .profile-avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.profile-avatar-emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:.75rem}
-.profile-emoji-opt{width:36px;height:36px;border-radius:8px;border:0.5px solid var(--border);background:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.profile-emoji-opt:hover{border-color:var(--gold);background:rgba(245,200,66,0.08)}
-.profile-emoji-opt.selected{border-color:var(--gold);background:rgba(245,200,66,0.15)}
 .profile-field{margin-bottom:.875rem}
 .profile-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:4px}
 .profile-input{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
@@ -704,20 +699,11 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   border:2px solid rgba(245,200,66,0.35);
   display:flex;align-items:center;justify-content:center;
   font-size:36px;color:var(--gold);
-  cursor:pointer;overflow:hidden;
-  transition:border-color .2s,transform .2s;
+  overflow:hidden;
+  transition:border-color .2s;
   position:relative;
 }
-.profile-page-avatar:hover{border-color:rgba(245,200,66,0.7);transform:scale(1.04);}
 .profile-page-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.profile-page-avatar-edit{
-  position:absolute;bottom:0;right:0;
-  width:24px;height:24px;border-radius:50%;
-  background:var(--gold);color:#06090d;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;pointer-events:none;
-  border:2px solid var(--bg);
-}
 .profile-page-name{
   font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;
   color:var(--text);margin-bottom:2px;
@@ -757,31 +743,6 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   transition:all .2s;margin-bottom:1rem;
 }
 .profile-page-save-btn:hover{background:var(--gold);color:#06090d;}
-.profile-page-avatar-options{
-  display:grid;grid-template-columns:repeat(6,1fr);gap:6px;
-  margin-top:.875rem;
-  padding:1rem;background:rgba(255,255,255,0.02);
-  border:0.5px solid var(--border);border-radius:8px;
-}
-.profile-page-avatar-opt{
-  width:36px;height:36px;border-radius:8px;
-  border:0.5px solid var(--border);background:none;
-  font-size:18px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
-}
-.profile-page-avatar-opt:hover{border-color:var(--gold);background:rgba(245,200,66,0.08);}
-.profile-page-avatar-opt.selected{border-color:var(--gold);background:rgba(245,200,66,0.15);}
-.profile-page-upload-btn{
-  width:100%;padding:9px;
-  background:rgba(74,158,255,0.06);
-  border:0.5px solid rgba(74,158,255,0.3);border-radius:8px;
-  color:var(--blue);font-family:'DM Mono',monospace;
-  font-size:10px;letter-spacing:1px;cursor:pointer;
-  transition:all .2s;margin-bottom:.625rem;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.profile-page-upload-btn:hover{background:rgba(74,158,255,0.12);border-color:var(--blue);}
 .profile-page-logout-btn{
   width:100%;padding:11px;
   background:rgba(224,80,80,0.06);
@@ -946,7 +907,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .lb-table tr.lb-legend td{background:rgba(168,85,247,0.02)}
 .lb-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted2);min-width:30px}
 .lb-rank.top1{color:#ffd700}.lb-rank.top2{color:#c0c0c0}.lb-rank.top3{color:#cd7f32}
-.lb-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0}
+.lb-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0;overflow:hidden;}
+.lb-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .lb-avatar.user-avatar{background:rgba(74,158,255,0.15);border:1px solid rgba(74,158,255,0.3);color:var(--blue)}
 .lb-avatar.legend-avatar{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);font-size:16px}
 .lb-avatar.you-avatar{background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.4);color:var(--gold)}
@@ -1493,6 +1455,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <div>
         <div class="sb-match">ODI Career</div>
         <div class="sb-matchname" id="sb-matchname">Match 1</div>
+        <div id="sb-last-match-label" style="display:none;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-top:2px">Last Match Logged</div>
       </div>
       <div class="sb-right">
         <div class="sb-date" id="sb-date"></div>
@@ -1845,8 +1808,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <!-- Header: avatar + name + email -->
       <div class="profile-page-header">
         <div class="profile-page-avatar-wrap">
-          <div class="profile-page-avatar" id="profile-page-avatar-display" onclick="document.getElementById('profile-page-img-upload').click()">🏏</div>
-          <div class="profile-page-avatar-edit">✏️</div>
+          <div class="profile-page-avatar" id="profile-page-avatar-display" >🏏</div>
         </div>
         <div class="profile-page-name" id="profile-page-name-display">PLAYER</div>
         <div class="profile-page-email" id="profile-page-email-display">—</div>
@@ -1863,16 +1825,10 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
           <input class="profile-page-input" id="profile-page-name-input" placeholder="Your name" maxlength="24">
         </div>
 
-        <!-- Avatar picker -->
+        <!-- Avatar section -->
         <div class="profile-page-field">
           <div class="profile-page-field-label">Profile Picture</div>
-
-          <!-- Upload image button -->
-          <button class="profile-page-upload-btn" onclick="document.getElementById('profile-page-img-upload').click()">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3 5l4-4 4 4M2 11h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Upload Photo
-          </button>
-          <input type="file" id="profile-page-img-upload" accept="image/*" style="display:none" onchange="handleProfilePageImageUpload(this)">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.5px">Using your Google account photo</div>
         </div>
 
         <button class="profile-page-save-btn" onclick="saveProfilePage()">SAVE CHANGES</button>
@@ -2094,9 +2050,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div id="profile-loading" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:1rem;letter-spacing:.5px">Connecting…</div>
     <div id="profile-logged-in" style="display:none">
       <div style="text-align:center;margin-bottom:1rem">
-        <div class="profile-avatar-big" id="profile-avatar-big" onclick="triggerProfileModalImageUpload()">?</div>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);margin-top:4px;letter-spacing:.5px">Tap to change photo</div>
-        <input type="file" id="profile-modal-img-upload" accept="image/*" style="display:none" onchange="handleProfileModalImageUpload(this)">
+        <div class="profile-avatar-big" id="profile-avatar-big">?</div>
       </div>
       <div class="profile-field">
         <div class="profile-label">Display Name</div>
@@ -2166,34 +2120,14 @@ function initFirebase() {
 
 // ── Show/hide the sidebar auth panel ──
 function showAuthUI(user) {
-  const profile = getAppProfile();
-  const displayAvatar = profile.avatar || (user ? (user.displayName||'P')[0].toUpperCase() : 'P');
-  const displayName   = profile.name  || (user ? (user.displayName || user.email || 'Player') : 'GOAL264');
-  const isEmoji = /\p{Emoji}/u.test(displayAvatar);
+  const profile      = getAppProfile();
+  const displayName  = profile.name || (user ? (user.displayName || user.email || 'Player') : 'GOAL264');
+  const photoURL     = user ? user.photoURL : null;
+  const fallbackChar = (displayName || 'P')[0].toUpperCase();
 
-  // Helper to set avatar content (text/emoji or img)
-  function setAvatar(el, val) {
-    if (!el) return;
-    if (val && val.startsWith('data:image') || (val && val.startsWith('http'))) {
-      el.innerHTML = `<img src="${val}" alt="avatar">`;
-    } else {
-      el.textContent = val || 'P';
-    }
-  }
-
-  setAvatar(document.getElementById('auth-avatar-icon'),     displayAvatar);
-  setAvatar(document.getElementById('auth-avatar-icon-exp'), displayAvatar);
-  setAvatar(document.getElementById('top-bar-avatar'),       displayAvatar);
-
-  // Update bottom tab profile icon
-  const bottomTabIcon = document.getElementById('bottom-tab-avatar-icon');
-  if (bottomTabIcon) {
-    if (displayAvatar && (displayAvatar.startsWith('data:image') || displayAvatar.startsWith('http'))) {
-      bottomTabIcon.innerHTML = `<img src="${displayAvatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;" alt="avatar">`;
-    } else {
-      bottomTabIcon.textContent = displayAvatar || 'P';
-    }
-  }
+  renderAvatar(document.getElementById('auth-avatar-icon'),     photoURL, fallbackChar);
+  renderAvatar(document.getElementById('auth-avatar-icon-exp'), photoURL, fallbackChar);
+  renderAvatar(document.getElementById('top-bar-avatar'),       photoURL, fallbackChar);
 
   const nameEl = document.getElementById('auth-user-name');
   const subEl  = document.getElementById('auth-user-sub');
@@ -2202,7 +2136,6 @@ function showAuthUI(user) {
   if (nameEl) nameEl.textContent = displayName;
   if (subEl)  subEl.textContent  = user ? 'Tap to manage profile' : 'Tap to sign in';
   if (mobileNameEl) {
-    // If name is default GOAL264, show with fire-colored 264 like desktop
     if (displayName === 'GOAL264') {
       mobileNameEl.innerHTML = 'GOAL<span style="color:var(--fire)">264</span>';
     } else {
@@ -2241,12 +2174,14 @@ async function saveToFirestore() {
     await fb.setDoc(ref, {
       displayName  : currentUser.displayName || '',
       email        : currentUser.email || '',
+      photoURL     : currentUser.photoURL || '',
       matches      : matches,
       examData     : examData     || null,
       weekTargets  : weekTargets  || {},
       goalData     : goalData     || null,
       commentary   : lastCommentary || '',
       appProfile   : getAppProfile(),
+      currentRival : currentRival || null,
       lastSaved    : new Date().toISOString()
     }, { merge: true });
   } catch (e) {
@@ -2289,9 +2224,16 @@ async function loadFromFirestore(uid) {
           localStorage.setItem(COMM_STORE, lastCommentary);
         }
 
-        // Sync appProfile (name + avatar)
-        if (data.appProfile && (data.appProfile.name || data.appProfile.avatar)) {
-          localStorage.setItem(PROFILE_STORE, JSON.stringify(data.appProfile));
+        // Sync appProfile (name only — avatar is always Google photoURL)
+        if (data.appProfile && data.appProfile.name) {
+          const cleanProfile = { name: data.appProfile.name, avatar: '' };
+          localStorage.setItem(PROFILE_STORE, JSON.stringify(cleanProfile));
+        }
+
+        // Sync rival
+        if (data.currentRival) {
+          currentRival = data.currentRival;
+          localStorage.setItem(RIVAL_STORE, JSON.stringify(currentRival));
         }
 
         // Sync back to localStorage
@@ -2301,7 +2243,8 @@ async function loadFromFirestore(uid) {
         localStorage.setItem('shiva45_lastSaved', data.lastSaved || new Date().toISOString());
       }
       refreshAll();
-      showAuthUI(currentUser); // re-apply synced profile name/avatar
+      showAuthUI(currentUser);
+      renderProfilePage();
       showToast('☁️ Data synced from cloud!', true);
     } else {
       // First time — upload existing local data to cloud
@@ -2673,7 +2616,8 @@ function compute() {
   document.getElementById('ib-pen').textContent = '-'+totalPen;
   document.getElementById('ib-pen-bar').style.width = Math.min(totalPen/100*100,100)+'%';
   const to100 = Math.max(0,100-s.total);
-  document.getElementById('ib-to100').textContent = to100>0?Math.round(to100)+' to 100':'✓ CENTURY';
+  const over100live = Math.round(s.total - 100);
+  document.getElementById('ib-to100').textContent = to100>0 ? Math.round(to100)+' to CENTURY' : over100live+'+ CENTURY';
   document.getElementById('ib-cent-bar').style.width = Math.min(s.total/100*100,100)+'%';
 
   const fpw = document.getElementById('form-pill-wrap');
@@ -2716,7 +2660,8 @@ function saveMatch() {
     studyRuns:s.studyRuns, questionRuns:s.questionRuns,
     lifestyleFinal:s.lifestyleFinal, formPct:s.formPct,
     total:s.total, grade:grade.key,
-    reflection:document.getElementById('reflection').value
+    reflection:document.getElementById('reflection').value,
+    commentary: ''
   };
   matches.push(match);
   localStorage.setItem(STORE,JSON.stringify(matches));
@@ -2735,7 +2680,7 @@ function saveMatch() {
   }
 
   showToast('Match saved! '+s.total.toFixed(0)+' runs.',true);
-  generateCommentary(s.total, grade.key, hours, questions, matches.length);
+  generateCommentary(s.total, grade.key, hours, questions, matches.length, match.id);
 
   // FIX 10: Reset form — all tags OFF, inputs cleared
   document.getElementById('hours').value='';
@@ -2752,41 +2697,49 @@ function saveMatch() {
 // ══════════════════════════════════════
 // AI COMMENTARY (Claude API)
 // ══════════════════════════════════════
-async function generateCommentary(runs, gradeKey, hours, questions, matchNum) {
-  const wrap = document.getElementById('last-commentary-wrap');
-  const el   = document.getElementById('last-commentary-text');
-  wrap.style.display='block';
-
-  // Show offline commentary immediately — no "Generating..." flicker
+async function generateCommentary(runs, gradeKey, hours, questions, matchNum, matchId) {
+  // Step 1: save offline commentary immediately onto the match object
   const offlineText = getOfflineCommentary(runs, gradeKey);
-  el.textContent = offlineText;
-  localStorage.setItem(COMM_STORE, offlineText);
-  lastCommentary = offlineText;
+  if (matchId) {
+    const m = matches.find(x => x.id === matchId);
+    if (m) {
+      m.commentary = offlineText;
+      localStorage.setItem(STORE, JSON.stringify(matches));
+    }
+  }
+  // Re-render so offline commentary shows right away
+  renderScoreboard();
 
+  // Step 2: try to upgrade to AI commentary via Firebase Function proxy
+  // Deploy functions/index.js (see comment below) to keep the API key off the client
   const comparisons = getCommentaryComparisons(runs, matchNum);
   const prompt = `Match ${matchNum} · ${runs} runs · ${hours}h study · ${questions} questions solved · Grade: ${gradeKey}. ${comparisons}. Write the commentary now.`;
-
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:150,
-        system:`You are Harsha Bhogle, the legendary cricket commentator, but today you're calling a JEE student's study session as if it were an ODI innings. Be dramatic, emotional, and specific. Reference real ODI legends (Sachin, Virat, Rohit, Sehwag, Dravid, Dhoni, de Villiers, Lara) when the score warrants it. Use cricket metaphors for studying — "wickets" are distractions, "boundaries" are breakthrough moments, "net sessions" are revision. Keep it to 2–3 punchy, vivid sentences. No hashtags. No emojis. Pure commentary gold.`,
-        messages:[{role:'user',content:prompt}]
-      })
+    // ── Firebase Function proxy ──────────────────────────────────────────
+    // functions/index.js on your Firebase project handles the Anthropic call.
+    // Set your key with: firebase functions:secrets:set ANTHROPIC_API_KEY
+    // ─────────────────────────────────────────────────────────────────────
+    const FIREBASE_COMMENTARY_URL = 'https://us-central1-shiva45-e144e.cloudfunctions.net/commentary';
+    const resp = await fetch(FIREBASE_COMMENTARY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
     });
+    if (!resp.ok) throw new Error('Function returned ' + resp.status);
     const data = await resp.json();
-    const text = data.content?.[0]?.text || '';
-    const clean = text.trim().replace(/^"|"$/g,'');
-    if (clean) {
-      el.textContent = clean;
-      localStorage.setItem(COMM_STORE, clean);
-      lastCommentary = clean;
+    const clean = (data.text || '').trim().replace(/^"|"$/g, '');
+    if (clean && matchId) {
+      const m = matches.find(x => x.id === matchId);
+      if (m) {
+        m.commentary = clean;
+        localStorage.setItem(STORE, JSON.stringify(matches));
+        saveToFirestore();
+        renderScoreboard();
+      }
     }
   } catch(e) {
-    // already showing offline commentary — nothing to do
+    console.warn('Commentary API failed:', e.message);
+    // offline commentary already saved and showing — no user-visible change needed
   }
 }
 
@@ -2802,59 +2755,106 @@ function getCommentaryComparisons(runs, matchNum) {
 }
 
 function getOfflineCommentary(runs, key) {
-  const lines = {
-    legendary:[
-      "And SHIVA has entered the pantheon tonight — Sehwag at his most violent couldn't have done this with more authority. The scoreboard doesn't lie. Absolute mayhem.",
-      "This is not a study session. This is a statement. Rohit Sharma once said the best innings make the bowlers look ordinary — well, the syllabus looks ordinary tonight.",
-      "Historic. Unprecedented. The kind of day where even Sachin would put down his bat and just watch. SHIVA is writing mythology in real time.",
-      "The dressing room is on its feet. The coaching staff are scrambling for superlatives. This is what happens when preparation meets peak form — pure, uncut genius.",
-      "Lara had his 400. Rohit had his 264. Tonight, SHIVA wrote their own chapter. Future generations will read about this innings."
-    ],
-    double:[
-      "A double century of rare brilliance — Sachin himself averaged forty-four, and SHIVA is making forty-four look modest tonight. The mental strength on display here is something else entirely.",
-      "Two hundred runs. Six hours of cricket. If this were an actual ODI, the opposition would be filing complaints with the ICC. SHIVA is simply unplayable right now.",
-      "De Villiers once said he never had a plan, just trusted his instincts. Tonight, SHIVA's instincts led to a double hundred. Trust the process — it is clearly working.",
-      "The crowd would be on their feet. The commentary box would be breathless. Two hundred runs is not a score — it's a declaration of intent.",
-      "This innings will be replayed in the mind for weeks. Every boundary, every milestone, every dropped wicket — a double century that announces a serious contender."
-    ],
-    century:[
-      "Century! The bat is raised, the helmet is off, and SHIVA acknowledges the crowd that exists only in the imagination — but the runs are very, very real.",
-      "Kohli always said centuries are about hunger, not talent. Tonight SHIVA showed both. A composed, authoritative hundred that would make any selector reach for the phone.",
-      "One hundred runs. Dravid built The Wall one brick at a time — today, SHIVA laid a hundred bricks and the foundation looks magnificent.",
-      "The century is up. SHIVA points the bat to the sky in tribute. Hours of preparation, hours of execution — this is what the grind looks like when it finally pays.",
-      "Textbook. Technically correct, mentally iron-clad, brutally effective. Dhoni once said pressure is a privilege — today SHIVA wore that pressure like a crown."
-    ],
-    half:[
-      "A solid half-century. Dravid would call this a proper knock — not flashy, not reckless, but the kind of innings that builds a career one good day at a time.",
-      "Fifty runs on the board. The foundation is laid. This is the innings of a player who knows their game — controlled, purposeful, and full of quiet confidence.",
-      "Gritty. Determined. The selectors are watching. Fifty runs in difficult conditions is worth more than a flashy hundred on a flat pitch — SHIVA knows this.",
-      "A half-century that speaks of character. Virat Kohli once scratched around for a fifty in a crucial game and called it his best innings. Today, SHIVA understands why.",
-      "Fifty up. The crowd applauds. Not spectacular — but solid, honest, and exactly what the team needed. The building blocks of something much larger are taking shape."
-    ],
-    average:[
-      "A watchful innings. The foundations are being laid even when the runs don't flow. Sachin had scratchy days too — the champions are the ones who keep occupying the crease.",
-      "Not vintage. Not fluent. But present. Dravid once said the hardest thing in cricket is to stay when you're playing badly — today, SHIVA stayed.",
-      "The pitch was difficult, the conditions weren't ideal, but SHIVA kept their wicket intact. Some days the game is about survival. Tomorrow, the counter-attack begins.",
-      "The great Rahul Dravid batted through an entire day for forty runs once. Nobody questioned his commitment. Today, SHIVA showed that same quiet resolve.",
-      "Character innings. It didn't flow, it wasn't easy, but the runs came. Every legend has had days like this — what separates them is that they show up the next morning."
-    ],
-    poor:[
-      "Below par. The champion within knows it. The selectors note it. But Sachin Tendulkar was dropped from the Indian team once — and then came back to score 100 international centuries.",
-      "A horror of a day at the crease. The ball beat the bat more than once. But Virat Kohli went through a lean patch in 2014 and came back the most complete batter in the world.",
-      "The scoreboard is unkind today. Dhoni once said failure is just success that hasn't happened yet. SHIVA files that thought away and goes back to the nets.",
-      "Not the innings that was needed. The footwork was off, the timing was absent. But the greatest players treat bad days as information, not verdicts. Tomorrow is another match.",
-      "Sometimes the game bites back. Rohit Sharma had first-class centuries before he had ODI ones — the talent was never in doubt, only the opportunity. Reset. Reload."
-    ],
-    lost:[
-      "Rock bottom. Even Sachin had horror shows. The question is never whether you fall — every legend has fallen. The question is whether you lace up tomorrow and walk back out.",
-      "The wheels came off completely today. But hear this: Virat Kohli was dropped from the Indian team at 22 years old. He used that rejection as fuel for a decade. Remember that.",
-      "A day to forget. Quickly. The pitch was unplayable, the bat felt like a foreign object, and the runs simply refused to come. Park it. Move on. The series is not over.",
-      "Zero on the scoreboard hurts. It should hurt — that's what makes the next century taste so sweet. Dravid once said adversity introduces a man to himself. Time for introductions.",
-      "The nightmare session. But champions don't dwell — they diagnose. What went wrong? Why? The answer to those questions is worth a hundred future runs. Find the answer."
-    ]
+  // Kept for compatibility — real commentary now comes from buildMatchCommentary
+  return buildMatchCommentary({ total: runs, grade: key, hours: 0, questions: 0, studyRuns: 0, questionRuns: 0, lifestyleFinal: 0, penTotal: 0, formPct: 0, matchNo: 1 }, matches);
+}
+
+// ── SMART MATCH COMMENTARY — built from real match data like biography ──
+function buildMatchCommentary(match, allMatches) {
+  const runs      = Math.round(match.total || 0);
+  const hours     = parseFloat(match.hours) || 0;
+  const questions = parseInt(match.questions) || 0;
+  const matchNo   = match.matchNo || (allMatches ? allMatches.length : 1) || 1;
+  const pen       = Math.round(match.penTotal || 0);
+  const formPct   = match.formPct || 0;
+  const key       = match.grade || 'poor';
+
+  // Career context
+  const allM      = allMatches || [];
+  const n         = allM.length;
+  const tot       = allM.reduce((s,m) => s + Math.max(0, m.total || 0), 0);
+  const avg       = n > 1 ? (tot / n).toFixed(1) : null;
+  const hundreds  = allM.filter(m => (m.total || 0) >= 100).length;
+  const streak    = (typeof getCurrentStreak === 'function') ? getCurrentStreak(allM) : 0;
+  const best      = n > 0 ? Math.max(...allM.map(m => m.total || 0)) : 0;
+  const isPersonalBest = n > 1 && runs >= best;
+
+  // ── Opener: match number + score ──
+  let opener = '';
+  if      (runs >= 264) opener = `Match ${matchNo}. ${runs} runs. SHIVA has rewritten the record books — Rohit's 264 is no longer the ceiling.`;
+  else if (runs >= 200) opener = `Match ${matchNo}. ${runs} runs. A double century. The commentary box has gone silent — there are no words left.`;
+  else if (runs >= 150) opener = `Match ${matchNo}. ${runs} runs on the board. A big knock that the opposition will be talking about for weeks.`;
+  else if (runs >= 100) opener = `Match ${matchNo}. ${runs} runs. Century! The bat goes up, the crowd rises — this is what all the preparation was for.`;
+  else if (runs >= 75)  opener = `Match ${matchNo}. ${runs} runs — a knock that fell agonisingly short of three figures, but the quality was undeniable.`;
+  else if (runs >= 50)  opener = `Match ${matchNo}. ${runs} runs. A solid half-century — controlled, purposeful, exactly what the innings needed.`;
+  else if (runs >= 30)  opener = `Match ${matchNo}. ${runs} runs. Not the innings SHIVA wanted, but there were signs. The intent was there.`;
+  else if (runs >= 10)  opener = `Match ${matchNo}. ${runs} runs. A scratchy knock — the rhythm wasn't there today. Honest assessment: below par.`;
+  else                  opener = `Match ${matchNo}. ${runs} runs. A day to forget at the crease. The sooner the next innings begins, the better.`;
+
+  // ── Hours line ──
+  let hoursLine = '';
+  if      (hours >= 10) hoursLine = `${hours} hours at the crease — this is marathon cricket. The physical and mental endurance on display here is exceptional.`;
+  else if (hours >= 8)  hoursLine = `${hours} hours of batting. The kind of session that separates the serious from the casual.`;
+  else if (hours >= 6)  hoursLine = `${hours} hours of hard labour. Dravid himself would approve of this application.`;
+  else if (hours >= 4)  hoursLine = `${hours} hours at the crease — a proper session. The intent to build was clear.`;
+  else if (hours >= 2)  hoursLine = `${hours} hours at the crease today. The body needed rest, or the mind wasn't fully in it — more is available.`;
+  else if (hours >  0)  hoursLine = `${hours} hour${hours === 1 ? '' : 's'} at the crease. A brief stay — the pads barely had time to warm up.`;
+
+  // ── Questions line ──
+  let qLine = '';
+  if      (questions >= 150) qLine = `${questions} questions dispatched — that's not solving problems, that's dismantling an attack ball by ball. Ruthless.`;
+  else if (questions >= 100) qLine = `${questions} questions in the bag. A century of problems solved — the syllabus took a serious beating today.`;
+  else if (questions >= 60)  qLine = `${questions} questions answered. The footwork is there, the shot selection is sharp.`;
+  else if (questions >= 30)  qLine = `${questions} questions on the board. Decent volume — the engine was running, if not at full throttle.`;
+  else if (questions >   0)  qLine = `Only ${questions} questions today. The scoreboard rewards volume — more tomorrow.`;
+
+  // ── Career milestone line ──
+  let careerLine = '';
+  if (isPersonalBest && runs >= 50) {
+    careerLine = `A new personal best — ${runs} runs. The ceiling just got higher.`;
+  } else if (streak >= 5) {
+    careerLine = `${streak} centuries on the trot. This is not a purple patch — this is a purple season.`;
+  } else if (hundreds >= 10 && runs >= 100) {
+    careerLine = `${hundreds} ODI centuries now. Sachin had 49 — SHIVA is building a case.`;
+  } else if (hundreds > 0 && runs >= 100) {
+    careerLine = `Century number ${hundreds} for SHIVA. Each one adds another line to the career biography.`;
+  } else if (avg && parseFloat(avg) >= 60) {
+    careerLine = `Career average now ${avg} — Kohli territory. The selectors cannot look away.`;
+  } else if (avg && parseFloat(avg) >= 50) {
+    careerLine = `Averaging ${avg} across ${n} matches. That's elite company in any dressing room.`;
+  } else if (avg && parseFloat(avg) >= 40) {
+    careerLine = `${avg} career average across ${n} matches — the consistency is becoming a pattern, not a coincidence.`;
+  } else if (formPct > 0) {
+    careerLine = `Hot form — +${formPct}% boost this match. When SHIVA is in form, the opposition has no answer.`;
+  }
+
+  // ── Penalty / lifestyle note ──
+  let penLine = '';
+  if      (pen >= 30) penLine = `${pen} penalty runs conceded — the habits cost SHIVA today. Discipline off the field shows on the scoreboard.`;
+  else if (pen >= 15) penLine = `${pen} runs leaked in penalties. Small margins, but at this level small margins are the difference.`;
+
+  // ── Closer ──
+  const closes = {
+    legendary: `This innings goes into the archive. What a day to be alive.`,
+    double:    `Two hundred. Take a bow, SHIVA. Take a bow.`,
+    bigknock:  `A big knock that sets the tone for what's coming. The best is still ahead.`,
+    century:   `The hundred is in the bank. Now go get another one.`,
+    half:      `Fifty on the board. The building blocks are in place.`,
+    average:   `Not the day SHIVA wanted — but the innings isn't over. Next match, same crease.`,
+    poor:      `Tough day. File it away. The response will be the real story.`,
+    lost:      `Back to the nets. Champions are made on days like this — not broken by them.`
   };
-  const arr = lines[key]||lines.poor;
-  return arr[Math.floor(Math.random()*arr.length)];
+  const close = closes[key] || closes.poor;
+
+  // ── Assemble ──
+  const parts = [opener];
+  if (hoursLine)   parts.push(hoursLine);
+  if (qLine)       parts.push(qLine);
+  if (careerLine)  parts.push(careerLine);
+  if (penLine)     parts.push(penLine);
+  parts.push(close);
+
+  return parts.join(' ');
 }
 
 // ══════════════════════════════════════
@@ -2870,17 +2870,21 @@ function renderScoreboard() {
   document.getElementById('sb-streak').textContent  = getCurrentStreak(matches);
   document.getElementById('sb-matchname').textContent = 'Match '+(n+1);
 
-  // FIX 12: show last match breakdown when form is empty
+  // Sort by id (Date.now() timestamp) — most recently SAVED match, not just date string
+  const last = n > 0 ? [...matches].sort((a,b)=>(b.id||0)-(a.id||0))[0] : null;
+
   const hoursVal = parseFloat(document.getElementById('hours').value) || 0;
-  const qVal = parseFloat(document.getElementById('questions').value) || 0;
-  if (n > 0 && hoursVal === 0 && qVal === 0) {
-    const last = [...matches].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+  const qVal     = parseFloat(document.getElementById('questions').value) || 0;
+
+  // Show last match breakdown when no live data is being entered
+  const labelEl = document.getElementById('sb-last-match-label');
+  if (last && hoursVal === 0 && qVal === 0) {
+    document.getElementById('sb-matchname').textContent = 'Match ' + n;
+    if (labelEl) labelEl.style.display = 'block';
     const g = getGrade(last.total);
-    // Big number + badge
     document.getElementById('live-runs').textContent = last.total.toFixed(0);
     const badge = document.getElementById('grade-badge');
     badge.textContent = '\u21a9 LAST: '+g.label; badge.className = 'grade-badge '+g.cls;
-    // Fill all 6 breakdown bars from saved match data
     document.getElementById('ib-study').textContent      = last.studyRuns   || 0;
     document.getElementById('ib-study-bar').style.width  = Math.min((last.studyRuns||0)/120*100,100)+'%';
     document.getElementById('ib-q').textContent          = last.questionRuns || 0;
@@ -2892,16 +2896,23 @@ function renderScoreboard() {
     document.getElementById('ib-pen').textContent        = last.penTotal>0?'\u2212'+last.penTotal:'-0';
     document.getElementById('ib-pen-bar').style.width    = Math.min((last.penTotal||0)/50*100,100)+'%';
     const toGo = Math.max(0, Math.round(100 - last.total));
-    document.getElementById('ib-to100').textContent = toGo > 0 ? toGo+' to 100' : '\u2713 CENTURY';
+    const over100 = Math.round(last.total - 100);
+    document.getElementById('ib-to100').textContent = toGo > 0 ? toGo+' to CENTURY' : over100+'+ CENTURY';
     document.getElementById('ib-cent-bar').style.width = Math.min(last.total/100*100,100)+'%';
+  } else {
+    if (labelEl) labelEl.style.display = 'none';
   }
 
-  if (lastCommentary) {
-    document.getElementById('last-commentary-wrap').style.display='block';
-    document.getElementById('last-commentary-text').textContent = lastCommentary;
+  // Commentary: built live from match data — unique every time like biography
+  if (last) {
+    const commToShow = buildMatchCommentary(last, matches);
+    document.getElementById('last-commentary-wrap').style.display = 'block';
+    document.getElementById('last-commentary-text').textContent   = commToShow;
+  } else {
+    document.getElementById('last-commentary-wrap').style.display = 'none';
   }
 
-  const recent5=[...matches].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5).reverse();
+  const recent5=[...matches].sort((a,b)=>(b.id||0)-(a.id||0)).slice(0,5).reverse();
   document.getElementById('form-display').innerHTML=recent5.map(m=>{
     const k=getGrade(m.total).key;
     const letter=k==='legendary'?'L':k==='double'?'D':k==='bigknock'?'B':k==='century'?'C':k==='half'?'H':k==='average'?'A':k==='lost'?'X':'P';
@@ -4147,6 +4158,7 @@ async function renderLeaderboard() {
         realPlayers.push({
           uid     : doc.id,
           name    : d.displayName || 'Anonymous',
+          photoURL: d.photoURL || '',
           runs    : Math.round(runs),
           avg     : parseFloat(avg.toFixed(2)),
           hundreds,
@@ -4184,7 +4196,11 @@ async function renderLeaderboard() {
       const runsCls = isYou ? 'you' : p.isLegend ? 'legend' : '';
       const rowCls  = isYou ? 'lb-you' : p.isLegend ? 'lb-legend' : '';
       const avatarCls = isYou ? 'you-avatar' : p.isLegend ? 'legend-avatar' : 'user-avatar';
-      const avatarTxt = p.isLegend ? p.flag : (p.name||'?')[0].toUpperCase();
+      const avatarContent = p.isLegend
+        ? p.flag
+        : (p.photoURL
+            ? `<img src="${p.photoURL}" alt="avatar" onerror="this.parentNode.textContent='${(p.name||'?')[0].toUpperCase()}'">`
+            : (p.name||'?')[0].toUpperCase());
       const typeTxt   = p.isLegend ? 'ODI Legend' : isYou ? '★ YOU' : 'Player';
       const uid = p.uid || p.name.replace(/\s/g,'_');
       const detailId = 'lb-detail-' + uid;
@@ -4204,7 +4220,7 @@ async function renderLeaderboard() {
       return `
         <tr class="${rowCls}" style="cursor:pointer" onclick="toggleLbDetail('${uid}')">
           <td><div class="lb-rank ${rankCls}">${rank}</div></td>
-          <td><div class="lb-avatar ${avatarCls}">${avatarTxt}</div></td>
+          <td><div class="lb-avatar ${avatarCls}">${avatarContent}</div></td>
           <td>
             <div class="lb-name-wrap">
               <div class="lb-name ${nameCls}">${isYou?'★ ':''}${p.name}</div>
@@ -4233,20 +4249,40 @@ function toggleLbDetail(uid) {
 }
 
 // ══════════════════════════════════════
-// APP PROFILE (name + avatar, stored locally + Firestore)
+// APP PROFILE (name only — avatar comes from Google)
 // ══════════════════════════════════════
 const PROFILE_STORE = 'shiva45_profile_v1';
-const AVATAR_EMOJIS = ['🏏','⚡','🔥','👑','🐐','🦁','🎯','💪','🌟','🏆','🦘','🎖️','💯','🚀','🧠','💎','⚔️','🌙','☄️','🏅'];
 
 function getAppProfile() {
   return JSON.parse(localStorage.getItem(PROFILE_STORE) || '{"name":"","avatar":""}');
 }
 function setAppProfile(p) {
-  localStorage.setItem(PROFILE_STORE, JSON.stringify(p));
-  // also save to Firestore if logged in
+  // Only persist name; avatar is always auth.currentUser.photoURL
+  const clean = { name: p.name || '', avatar: '' };
+  localStorage.setItem(PROFILE_STORE, JSON.stringify(clean));
   const fb = window._fb;
   if (fb && currentUser) {
-    fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), { appProfile: p }, { merge: true }).catch(()=>{});
+    fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), { appProfile: clean }, { merge: true }).catch(()=>{});
+  }
+}
+
+// ── Single unified avatar renderer ──
+// el        : DOM element to render into
+// photoURL  : Google profile photo URL (auth.currentUser.photoURL)
+// fallback  : single character or emoji to show if no photo
+function renderAvatar(el, photoURL, fallback) {
+  if (!el) return;
+  if (photoURL) {
+    const img = document.createElement('img');
+    img.src = photoURL;
+    img.alt = 'avatar';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+    img.onerror = () => { el.innerHTML = ''; el.textContent = fallback || 'P'; };
+    el.innerHTML = '';
+    el.appendChild(img);
+  } else {
+    el.innerHTML = '';
+    el.textContent = fallback || 'P';
   }
 }
 
@@ -4261,28 +4297,27 @@ function openProfileModal() {
     loading.style.display = 'none';
     loggedIn.style.display = 'block';
     loggedOut.style.display = 'none';
-    // Fill in current values
     const profile = getAppProfile();
     document.getElementById('profile-name-input').value = profile.name || currentUser.displayName || '';
     document.getElementById('profile-google-email').textContent = currentUser.email || '';
-    // Avatar
-    const avatarEl = document.getElementById('profile-avatar-big');
-    const av = profile.avatar || (currentUser.displayName||'P')[0].toUpperCase();
-    if (av && (av.startsWith('data:image') || av.startsWith('http'))) {
-      avatarEl.innerHTML = `<img src="${av}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-    } else {
-      avatarEl.textContent = av;
-    }
+    const fallback = (currentUser.displayName || 'P')[0].toUpperCase();
+    renderAvatar(document.getElementById('profile-avatar-big'), currentUser.photoURL, fallback);
   } else if (currentUser === null) {
     loading.style.display = 'none';
     loggedIn.style.display = 'none';
     loggedOut.style.display = 'block';
   } else {
-    // still loading
     loading.style.display = 'block';
     loggedIn.style.display = 'none';
     loggedOut.style.display = 'none';
   }
+}
+function saveProfile() {
+  const name = document.getElementById('profile-name-input').value.trim();
+  setAppProfile({ name });
+  showAuthUI(currentUser);
+  showToast('Profile saved! ✓', true);
+  closeProfileModal();
 }
 function closeProfileModal() {
   document.getElementById('profile-modal').classList.remove('show');
@@ -4297,56 +4332,13 @@ function toggleProfileModal() {
     }
     return;
   }
-  // Desktop: open the modal as before
+  // Desktop: open the modal
   const modal = document.getElementById('profile-modal');
   if (modal.classList.contains('show')) {
     closeProfileModal();
   } else {
     openProfileModal();
   }
-}
-function triggerProfileModalImageUpload() {
-  document.getElementById('profile-modal-img-upload').click();
-}
-function handleProfileModalImageUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const dataUrl = e.target.result;
-    const avatarEl = document.getElementById('profile-avatar-big');
-    if (avatarEl) avatarEl.innerHTML = `<img src="${dataUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-function toggleEmojiPicker() {
-  const wrap = document.getElementById('emoji-picker-wrap');
-  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
-}
-function renderEmojiGrid(selected) {
-  const grid = document.getElementById('emoji-grid');
-  grid.innerHTML = AVATAR_EMOJIS.map(e =>
-    `<button class="profile-emoji-opt ${e===selected?'selected':''}" onclick="selectAvatar('${e}')">${e}</button>`
-  ).join('');
-}
-function selectAvatar(emoji) {
-  const avatarEl = document.getElementById('profile-avatar-big');
-  avatarEl.textContent = emoji;
-  avatarEl.innerHTML = emoji; // clear any img
-  renderEmojiGrid(emoji);
-  document.getElementById('emoji-picker-wrap').style.display = 'none';
-}
-function saveProfile() {
-  const name   = document.getElementById('profile-name-input').value.trim();
-  const avatarEl = document.getElementById('profile-avatar-big');
-  // Avatar might be an img or text
-  const imgEl = avatarEl.querySelector('img');
-  const avatar = imgEl ? imgEl.src : avatarEl.textContent;
-  setAppProfile({ name, avatar });
-  showAuthUI(currentUser);  // updates sidebar + mobile bar
-  showToast('Profile saved! ✓', true);
-  closeProfileModal();
 }
 
 // ── PROFILE PAGE (full page) ──
@@ -4364,17 +4356,11 @@ function renderProfilePage() {
     const profile = getAppProfile();
     const displayName = profile.name || currentUser.displayName || '';
     const email = currentUser.email || '';
-    const av = profile.avatar || (currentUser.displayName||'P')[0].toUpperCase();
+    const fallback = (currentUser.displayName || 'P')[0].toUpperCase();
 
-    // Header
-    const headerAvatar = document.getElementById('profile-page-avatar-display');
-    if (headerAvatar) {
-      if (av && (av.startsWith('data:image') || av.startsWith('http'))) {
-        headerAvatar.innerHTML = `<img src="${av}" alt="avatar">`;
-      } else {
-        headerAvatar.textContent = av;
-      }
-    }
+    // Header avatar — always Google photo
+    renderAvatar(document.getElementById('profile-page-avatar-display'), currentUser.photoURL, fallback);
+
     const nameDisp = document.getElementById('profile-page-name-display');
     if (nameDisp) nameDisp.textContent = (displayName || 'PLAYER').toUpperCase();
     const emailDisp = document.getElementById('profile-page-email-display');
@@ -4382,7 +4368,6 @@ function renderProfilePage() {
     const googleEmail = document.getElementById('profile-page-google-email-display');
     if (googleEmail) googleEmail.textContent = email;
 
-    // Input
     const nameInput = document.getElementById('profile-page-name-input');
     if (nameInput) nameInput.value = displayName;
 
@@ -4397,48 +4382,11 @@ function renderProfilePage() {
   }
 }
 
-function renderProfilePageEmojiGrid(selected) {
-  const grid = document.getElementById('profile-page-emoji-grid');
-  if (!grid) return;
-  grid.innerHTML = AVATAR_EMOJIS.map(e =>
-    `<button class="profile-page-avatar-opt ${e===selected?'selected':''}" onclick="selectProfilePageAvatar('${e}')">${e}</button>`
-  ).join('');
-}
-
-function selectProfilePageAvatar(emoji) {
-  const avatarEl = document.getElementById('profile-page-avatar-display');
-  if (avatarEl) avatarEl.textContent = emoji;
-  renderProfilePageEmojiGrid(emoji);
-}
-
-function triggerProfilePageAvatarClick() {
-  document.getElementById('profile-page-img-upload').click();
-}
-
-function handleProfilePageImageUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const dataUrl = e.target.result;
-    const avatarEl = document.getElementById('profile-page-avatar-display');
-    if (avatarEl) avatarEl.innerHTML = `<img src="${dataUrl}" alt="avatar">`;
-    // Deselect all emoji options
-    renderProfilePageEmojiGrid('');
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-
 function saveProfilePage() {
   const nameInput = document.getElementById('profile-page-name-input');
   const name = nameInput ? nameInput.value.trim() : '';
-  const avatarEl = document.getElementById('profile-page-avatar-display');
-  const imgEl = avatarEl ? avatarEl.querySelector('img') : null;
-  const avatar = imgEl ? imgEl.src : (avatarEl ? avatarEl.textContent : '🏏');
-  setAppProfile({ name, avatar });
+  setAppProfile({ name });
   showAuthUI(currentUser);
-  // Update header display immediately
   const nameDisp = document.getElementById('profile-page-name-display');
   if (nameDisp) nameDisp.textContent = (name || currentUser?.displayName || 'PLAYER').toUpperCase();
   showToast('Profile saved! ✓', true);
@@ -4495,6 +4443,7 @@ function renderRivalList() {
 function pickRival(name) {
   currentRival = RIVAL_POOL.find(r => r.name === name);
   localStorage.setItem(RIVAL_STORE, JSON.stringify(currentRival));
+  saveToFirestore();
   closeRivalModal();
   renderRivalCards();
   showToast('Rival set: ' + name + ' ⚔️', true);
