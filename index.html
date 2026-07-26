@@ -1040,6 +1040,134 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
   .two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr}
   .race-name{min-width:90px;font-size:10px}
 }
+
+/* ══ TEST LEDGER ══ */
+.subtab-bar{display:flex;gap:4px;border-bottom:0.5px solid var(--border);margin-bottom:1.25rem}
+.subtab-btn{background:none;border:none;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;padding:8px 16px 10px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.subtab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.subtab-btn:hover{color:var(--text)}
+.subtab-panel{display:none}
+.subtab-panel.active{display:block}
+
+.test-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+#testCountdownCard{margin-bottom:1.25rem}
+#testCountdownCard .tcd-card{padding:1.25rem 1.25rem}
+#testCountdownCard .tcd-blocks{margin:1rem 0 .25rem}
+.test-stat{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem .6rem;text-align:center}
+.test-stat .tn{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);line-height:1.1}
+.test-stat.next .tn{font-size:12px;color:var(--fire2);font-family:'DM Mono',monospace;line-height:1.3}
+.test-stat .tl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+.test-progress-track{height:7px;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:1rem}
+.test-progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#1f8a5e);width:0%;transition:width .5s ease}
+
+.test-fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--bg);border:none;font-size:26px;font-weight:400;line-height:1;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;z-index:210}
+.test-fab:hover{transform:scale(1.06);background:var(--gold2)}
+.test-fab:active{transform:scale(.94)}
+@media(max-width:700px){.test-fab{bottom:76px;right:18px}}
+
+.test-cd-btn{flex:0 0 auto;background:transparent;border:0.5px solid var(--border);color:var(--gold);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;line-height:1}
+.test-cd-btn:hover{background:var(--gold);color:var(--bg)}
+.test-cd-btn.is-target{background:rgba(245,200,66,0.18);border-color:var(--gold)}
+
+.tcd-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1.75rem 1.25rem;text-align:center;transition:border-color .3s}
+.tcd-card.urgent{border-color:var(--red);animation:tcdPulse 1.6s infinite}
+@keyframes tcdPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,80,80,0.35)}50%{box-shadow:0 0 0 10px rgba(224,80,80,0)}}
+.tcd-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border:0.5px solid var(--border2);border-radius:20px;padding:3px 10px;margin-bottom:.75rem}
+.tcd-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--gold)}
+.tcd-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px}
+.tcd-blocks{display:flex;justify-content:center;gap:1rem;margin:1.5rem 0 1rem;flex-wrap:wrap}
+.tcd-block{background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:10px;padding:1rem 1.5rem;min-width:84px}
+.tcd-num{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;color:var(--text)}
+.tcd-block.days .tcd-num{color:var(--fire2)}
+.tcd-block.hrs .tcd-num{color:var(--gold)}
+.tcd-block.mins .tcd-num{color:var(--muted)}
+.tcd-unit{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-top:6px}
+.tcd-reset{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:6px 14px;background:none;border:0.5px solid var(--border);border-radius:8px;color:var(--muted2);cursor:pointer;margin-top:.5rem}
+.tcd-reset:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:560px){.tcd-num{font-size:28px}.tcd-block{padding:.75rem 1rem;min-width:64px}}
+
+/* HOME TEST REMINDER (compact) */
+.htr-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;transition:border-color .3s}
+.htr-card.urgent{border-color:var(--red);animation:tcdPulse 1.6s infinite}
+.htr-card.today{border-color:var(--gold)}
+.htr-left{min-width:0}
+.htr-badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border:0.5px solid var(--border2);border-radius:20px;padding:2px 8px;display:inline-block;margin-bottom:5px}
+.htr-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.5px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htr-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px}
+.htr-right{text-align:center;flex-shrink:0}
+.htr-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;color:var(--fire2)}
+.htr-num.today{color:var(--red)}
+.htr-unit{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-top:2px}
+.htr-empty{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:center}
+
+.test-edit-btn{flex:0 0 auto;background:transparent;border:0.5px solid var(--border);color:var(--blue);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;line-height:1}
+.test-edit-btn:hover{background:var(--blue);color:var(--text)}
+
+.test-row{background:var(--card);border:0.5px solid var(--border);border-left:3px solid var(--border2);border-radius:10px;margin-bottom:.6rem;overflow:hidden;transition:border-color .2s}
+.test-row.t-cleared{border-left-color:var(--green)}
+.test-row.t-due{border-left-color:var(--red)}
+.test-row.t-upcoming{border-left-color:var(--gold)}
+
+.test-row-head{display:flex;align-items:center;gap:.75rem;padding:.75rem .875rem;cursor:pointer}
+.test-check{width:22px;height:22px;flex:0 0 22px;border:2px solid var(--muted2);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.02)}
+.test-check.checked{background:var(--green);border-color:var(--green)}
+.test-check svg{width:12px;height:12px;stroke:var(--bg);display:none}
+.test-check.checked svg{display:block}
+.test-row-main{flex:1;min-width:0}
+.test-title-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.test-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.5px;color:var(--text)}
+.test-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.test-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
+.ttag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:20px;border:0.5px solid var(--border2)}
+.ttag.track-dlp{color:var(--blue);border-color:var(--blue)}
+.ttag.track-online{color:var(--purple);border-color:var(--purple)}
+.ttag.mode-tag{color:var(--muted)}
+.ttag.custom-tag{color:var(--gold);border-color:var(--gold)}
+.test-stamp{font-family:'DM Mono',monospace;font-weight:600;font-size:8.5px;letter-spacing:1px;text-transform:uppercase;padding:4px 8px;border-radius:6px;border:1px solid;flex:0 0 auto;white-space:nowrap}
+.test-stamp.cleared{color:var(--green);border-color:var(--green)}
+.test-stamp.due{color:var(--red);border-color:var(--red)}
+.test-stamp.upcoming{color:var(--gold);border-color:var(--gold)}
+.test-chev{font-size:11px;color:var(--muted2);transition:transform .2s;flex:0 0 auto}
+.test-row.open .test-chev{transform:rotate(90deg)}
+.test-row-body{display:none;padding:0 .875rem .875rem 2.6rem}
+.test-row.open .test-row-body{display:block}
+.test-syllabus{font-family:'Crimson Pro',serif;font-size:12.5px;line-height:1.6;color:var(--muted);background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:8px;padding:.6rem .75rem;margin-bottom:.75rem}
+.test-syllabus b{color:var(--text)}
+.test-entry-fields{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.test-field{display:flex;flex-direction:column;gap:4px}
+.test-field label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted2)}
+.test-field input{font-family:'DM Mono',monospace;font-size:12px;border:0.5px solid var(--border);background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:6px;color:var(--text);width:80px}
+.test-field input.tnotes{width:200px;max-width:55vw}
+.test-field input:focus{outline:1px solid var(--gold);outline-offset:1px}
+.test-pct-badge{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green);padding:6px 0}
+.test-del-btn{flex:0 0 auto;background:transparent;border:0.5px solid var(--border);color:var(--red);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:13px;line-height:1}
+.test-del-btn:hover{background:var(--red);color:var(--text)}
+
+.perf-summary-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.perf-big-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;flex:1;min-width:110px;text-align:center}
+.perf-big-card .pb{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold)}
+.perf-big-card .pl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+.perf-breakdown-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;color:var(--text);margin:1.25rem 0 .6rem;display:flex;align-items:center;gap:8px}
+.perf-type-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.75rem}
+.perf-type-head{display:flex;justify-content:space-between;align-items:center;padding:.6rem .875rem;background:rgba(255,255,255,0.02);border-bottom:0.5px solid var(--border)}
+.perf-type-head .ptname{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--text)}
+.perf-type-head .ptavg{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);font-weight:600}
+.perf-t-row{display:flex;align-items:center;gap:10px;padding:.5rem .875rem;border-bottom:0.5px solid var(--border);font-family:'DM Mono',monospace;font-size:11px}
+.perf-t-row:last-child{border-bottom:none}
+.perf-t-row .ptname2{flex:0 0 120px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.perf-bar-track{flex:1;height:6px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden}
+.perf-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green))}
+.perf-t-row .ptval{flex:0 0 46px;text-align:right;color:var(--text)}
+.perf-empty{padding:1rem .875rem;font-size:11.5px;color:var(--muted2);font-family:'DM Mono',monospace;text-align:center}
+
+@media(max-width:560px){
+  .test-stats{grid-template-columns:repeat(2,1fr)}
+  .test-row-body{padding-left:1rem}
+  .test-field input.tnotes{width:100%}
+  .perf-t-row .ptname2{flex:0 0 80px}
+}
 </style>
 </head>
 <body>
@@ -1490,6 +1618,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <button class="sidebar-item" id="si-tracker" onclick="showPage('tracker',this)" data-tooltip="Tracker">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><span class="si-label">Tracker</span>
     </button>
+    <button class="sidebar-item" id="si-test" onclick="showPage('test',this)" data-tooltip="Test">
+      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span><span class="si-label">Test</span>
+    </button>
   </nav>
 
   <!-- Profile panel at bottom -->
@@ -1579,6 +1710,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       </div>
     </div>
   </div>
+
+  <!-- TEST REMINDER -->
+  <div id="homeTestReminder"></div>
 
   <!-- WEEKLY TARGET on scoreboard -->
   <div class="target-card">
@@ -2003,6 +2137,111 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 </div>
 
 
+<!-- ══ PAGE: TEST LEDGER ══ -->
+<div class="page" id="page-test">
+  <div class="section-title">
+    <span>🎯 Test Ledger</span>
+  </div>
+
+  <div class="subtab-bar">
+    <button class="subtab-btn active" id="testsub-schedule" onclick="switchTestSub('schedule')">Schedule</button>
+    <button class="subtab-btn" id="testsub-performance" onclick="switchTestSub('performance')">Performance</button>
+  </div>
+
+  <!-- SCHEDULE SUB-TAB -->
+  <div class="subtab-panel active" id="testpanel-schedule">
+    <div id="testCountdownCard"></div>
+    <div class="test-stats">
+      <div class="test-stat"><div class="tn" id="tstatTotal">0</div><div class="tl">Total Tests</div></div>
+      <div class="test-stat"><div class="tn" id="tstatCleared">0</div><div class="tl">Cleared</div></div>
+      <div class="test-stat"><div class="tn" id="tstatDue">0</div><div class="tl">Due</div></div>
+    </div>
+    <div class="test-progress-track"><div class="test-progress-fill" id="testProgressFill"></div></div>
+
+    <div class="filter-bar" id="testFilters"></div>
+
+    <div id="testSections"></div>
+  </div>
+
+  <!-- PERFORMANCE SUB-TAB -->
+  <div class="subtab-panel" id="testpanel-performance">
+    <div class="perf-summary-row">
+      <div class="perf-big-card"><div class="pb" id="testPerfOverallAvg">—</div><div class="pl">Overall Average</div></div>
+      <div class="perf-big-card"><div class="pb" id="testPerfOverallCount">0</div><div class="pl">Tests Logged</div></div>
+      <div class="perf-big-card"><div class="pb" id="testPerfBest">—</div><div class="pl">Best Score</div></div>
+    </div>
+    <div class="perf-breakdown-title">📘 DLP Breakdown</div>
+    <div id="testPerfDLP"></div>
+    <div class="perf-breakdown-title">💻 Online Breakdown</div>
+    <div id="testPerfOnline"></div>
+  </div>
+
+  <button class="test-fab" onclick="openTestModal()" title="Add a test" aria-label="Add a test">+</button>
+</div>
+
+<!-- ADD/EDIT TEST MODAL -->
+<div class="modal-overlay" id="testModalOverlay" onclick="if(event.target===this)closeTestModal()">
+  <div class="modal-box" style="max-height:88vh">
+    <button class="modal-close" onclick="closeTestModal()">✕</button>
+    <div class="modal-title" id="tf-modal-title">Add a Test</div>
+    <div class="modal-sub" id="tf-modal-sub">Custom tests are added to your ledger</div>
+    <div style="overflow-y:auto;display:flex;flex-direction:column;gap:.75rem;padding-right:2px">
+      <div class="test-field" style="width:100%">
+        <label>Test name *</label>
+        <input type="text" id="tf-name" class="modal-search" style="margin-bottom:0;width:100%" placeholder="e.g. Minor Test-11">
+      </div>
+      <div style="display:flex;gap:.6rem">
+        <div class="test-field" style="flex:1">
+          <label>Date *</label>
+          <input type="date" id="tf-date" class="modal-search" style="margin-bottom:0;width:100%">
+        </div>
+        <div class="test-field" style="flex:1">
+          <label>Phase</label>
+          <select id="tf-phase" class="modal-search" style="margin-bottom:0;width:100%">
+            <option value="Minor">Minor</option>
+            <option value="Review">Review</option>
+            <option value="Semi Major">Semi Major</option>
+            <option value="Major">Major</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:.6rem">
+        <div class="test-field" style="flex:1">
+          <label>Track</label>
+          <select id="tf-track" class="modal-search" style="margin-bottom:0;width:100%">
+            <option value="DLP">DLP</option>
+            <option value="Online">Online</option>
+          </select>
+        </div>
+        <div class="test-field" style="flex:1">
+          <label>Mode</label>
+          <select id="tf-mode" class="modal-search" style="margin-bottom:0;width:100%">
+            <option value="Pen Paper">Pen Paper</option>
+            <option value="CBT">CBT</option>
+            <option value="Online">Online</option>
+          </select>
+        </div>
+      </div>
+      <div class="test-field" style="width:100%">
+        <label>Pattern</label>
+        <select id="tf-pattern" class="modal-search" style="margin-bottom:0;width:100%">
+          <option value="JEE Advanced">JEE Advanced</option>
+          <option value="JEE Main">JEE Main</option>
+        </select>
+      </div>
+      <div class="test-field" style="width:100%">
+        <label>Syllabus / details</label>
+        <textarea id="tf-syllabus" class="modal-search" style="margin-bottom:0;width:100%;min-height:70px;resize:vertical" placeholder="Physics: ...&#10;Chemistry: ...&#10;Maths: ..."></textarea>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:.5rem;margin-top:1rem">
+      <button class="confirm-btn cancel" onclick="closeTestModal()">CANCEL</button>
+      <button class="confirm-btn danger" id="tf-save-btn" style="background:rgba(245,200,66,0.12);border-color:var(--gold);color:var(--gold)" onclick="saveTestModal()">ADD TEST</button>
+    </div>
+  </div>
+</div>
+
+
 <!-- CUSTOM CONFIRM DIALOG -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
@@ -2236,6 +2475,10 @@ const EXAM_STORE   = 'shiva45_exam_v1';
 const TARGET_STORE = 'shiva45_targets_v1';
 const COMM_STORE   = 'shiva45_commentary_v4';
 const HABIT_STORE  = 'shiva45_habits_v1';
+const TEST_ENTRIES_STORE = 'shiva45_test_entries_v1';
+const TEST_CUSTOM_STORE  = 'shiva45_test_custom_v1';
+const TEST_OVERRIDES_STORE = 'shiva45_test_overrides_v1';
+const TEST_COUNTDOWN_STORE = 'shiva45_test_countdown_id_v1';
 
 const DEFAULT_HABITS = [
   { emoji:'💧', name:'Water',        pts:8  },
@@ -2279,6 +2522,13 @@ let examData       = JSON.parse(localStorage.getItem(EXAM_STORE) || 'null');
 let weekTargets    = JSON.parse(localStorage.getItem(TARGET_STORE) || '{}');
 let lastCommentary = localStorage.getItem(COMM_STORE) || '';
 let drOpenPlayer   = null;
+let testEntries    = JSON.parse(localStorage.getItem(TEST_ENTRIES_STORE) || '{}');
+let testCustom     = JSON.parse(localStorage.getItem(TEST_CUSTOM_STORE) || '[]');
+let testOverrides  = JSON.parse(localStorage.getItem(TEST_OVERRIDES_STORE) || '{}');
+let testCountdownId = localStorage.getItem(TEST_COUNTDOWN_STORE) || null;
+let editingTestId  = null;
+let testFilter     = 'All';
+let activeTestSub  = 'schedule';
 
 // ══════════════════════════════════════
 // FIREBASE AUTH + FIRESTORE
@@ -2376,6 +2626,10 @@ async function saveToFirestore() {
       currentRival : currentRival || null,
       rivals       : rivals || [],
       habitConfig  : getHabitConfig(),
+      testEntries  : testEntries || {},
+      testCustom   : testCustom  || [],
+      testOverrides: testOverrides || {},
+      testCountdownId: testCountdownId || null,
       lastSaved    : new Date().toISOString()
     }, { merge: true });
   } catch (e) {
@@ -2440,6 +2694,28 @@ async function loadFromFirestore(uid) {
         if (data.habitConfig && data.habitConfig.habits && data.habitConfig.penalties) {
           localStorage.setItem(HABIT_STORE, JSON.stringify(data.habitConfig));
           renderEntryTags();
+        }
+
+        // Sync test ledger (entries + custom tests)
+        if (data.testEntries) {
+          testEntries = data.testEntries;
+          localStorage.setItem(TEST_ENTRIES_STORE, JSON.stringify(testEntries));
+        }
+        if (data.testCustom && Array.isArray(data.testCustom)) {
+          testCustom = data.testCustom;
+          localStorage.setItem(TEST_CUSTOM_STORE, JSON.stringify(testCustom));
+        }
+        if (data.testOverrides) {
+          testOverrides = data.testOverrides;
+          localStorage.setItem(TEST_OVERRIDES_STORE, JSON.stringify(testOverrides));
+        }
+        if (typeof data.testCountdownId !== 'undefined') {
+          testCountdownId = data.testCountdownId;
+          if (testCountdownId) localStorage.setItem(TEST_COUNTDOWN_STORE, testCountdownId);
+          else localStorage.removeItem(TEST_COUNTDOWN_STORE);
+        }
+        if (activeTab === null && document.getElementById('page-test') && document.getElementById('page-test').classList.contains('active')) {
+          renderTestSchedule(); renderTestPerformance();
         }
 
         // Sync back to localStorage
@@ -4548,6 +4824,7 @@ function showPage(id,btn){
   if(id==='tracker')     renderTracker();
   if(id==='race')        renderRaceBoard();
   if(id==='leaderboard') renderLeaderboard();
+  if(id==='test')        { buildTestFilters(); renderTestSchedule(); }
 }
 
 function showMilestone(icon,title,sub){
@@ -4573,6 +4850,8 @@ function refreshAll(){
   renderWeekOfYearBadge();
   renderCapCards();
   renderPeakInsight();
+  renderHomeTestReminder();
+  if(document.getElementById('page-test')){ buildTestFilters(); renderTestSchedule(); renderTestPerformance(); renderTestCountdown(); }
 }
 
 // ══════════════════════════════════════
@@ -5933,6 +6212,596 @@ renderScoreboard = function() {
 
 // Init rival cards on load
 renderRivalCards();
+
+// ══════════════════════════════════════
+// TEST LEDGER — DLP + Online combined schedule
+// ══════════════════════════════════════
+const TEST_PHASES = ['Minor','Review','Semi Major','Major'];
+
+const BASE_TESTS = [
+  // ── DLP TRACK ──
+  {id:'dlp-mi1', track:'DLP', phase:'Minor', mode:'CBT', name:'Minor Test-1', date:'2026-06-28', pattern:'JEE Advanced (1-Shift)',
+   physics:'Basic Maths Used In Physics, Unit &amp; Dimension, Vectors, Geometrical Optics',
+   chemistry:'Mole Concept &amp; Eudiometry, Concentration Terms, Solid State, Liquid Solution',
+   maths:'Sets, Numbers &amp; Intervals, Fundamental of Algebra, Quadratic Equations, Function, Inverse Trigonometric Function'},
+  {id:'dlp-mi2', track:'DLP', phase:'Minor', mode:'CBT', name:'Minor Test-2', date:'2026-07-19', pattern:'JEE Advanced (1-Shift)',
+   physics:'Kinematics - 1D, 2D, Electrostatics',
+   chemistry:'Quantum Number &amp; Electronic Configuration, Periodic Table &amp; Periodic Properties, Chemical Kinetics',
+   maths:'Logarithms, Sequence &amp; Series, Limit, Continuity &amp; Differentiability'},
+  {id:'dlp-mi3', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-3', date:'2026-08-02', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'Newton Laws of Motion, Friction, Gravitation',
+   chemistry:'Chemical Bonding, Thermodynamics-01, Thermochemistry, Thermodynamics-02',
+   maths:'Trigonometric Ratio &amp; Identities, Method Of Differentiation, Application Of Derivative'},
+  {id:'dlp-rv1', track:'DLP', phase:'Review', mode:'CBT', name:'Review Test-1', date:'2026-08-16', pattern:'JEE Main 10AM-1PM · JEE Adv 2PM-5PM',
+   physics:'Cumulative of Minor Test-1, 2 &amp; 3', chemistry:'Cumulative of Minor Test-1, 2 &amp; 3', maths:'Cumulative of Minor Test-1, 2 &amp; 3'},
+  {id:'dlp-mi4', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-4', date:'2026-08-30', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'Circular Motion, Current Electricity',
+   chemistry:'Redox &amp; Equivalent Concepts, Coordination Chemistry, Metallurgy',
+   maths:'Trigonometric Ratio &amp; Identities, Trigonometric Equation, Fundamental Of Geometry, Indefinite Integration'},
+  {id:'dlp-mi5', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-5', date:'2026-09-13', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'Work, Power, Energy, Capacitance',
+   chemistry:'Nomenclature &amp; Common Names, Electronic Displacement Effects, Halogen Derivatives, Alcohol &amp; Ether, Hydrocarbon',
+   maths:'Straight Line, Determinant, Definite Integration'},
+  {id:'dlp-sm1', track:'DLP', phase:'Semi Major', mode:'CBT', name:'Semi Major Test-1', date:'2026-09-27', pattern:'JEE Main 10AM-1PM · JEE Adv 2PM-5PM',
+   physics:'Cumulative of Minor Test-1 to 5', chemistry:'Cumulative of Minor Test-1 to 5', maths:'Cumulative of Minor Test-1 to 5'},
+  {id:'dlp-mi6', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-6', date:'2026-10-04', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'Centre of Mass, Momentum &amp; Collision, Magnetic Effect of Current',
+   chemistry:'Electronic Displacement Effects, Carbonyl Compound, Oxidation, Reduction, Aldol &amp; Similar Name Reactions',
+   maths:'Circle, Area Under The Curve, Differential Equation'},
+  {id:'dlp-mi7', track:'DLP', phase:'Minor', mode:'CBT', name:'Minor Test-7', date:'2026-10-25', pattern:'JEE Advanced (1-Shift)',
+   physics:'Rotational Motion, Electromagnetic Induction (EMI)',
+   chemistry:'Acidic Strength &amp; Basic Strength, Ideal Gas, Real Gas, Atomic Structure (Upto Bohr Model), Electrochemistry',
+   maths:'Parabola, Ellipse, Hyperbola, Matrices'},
+  {id:'dlp-mi8', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-8', date:'2026-11-01', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'Elasticity, Thermal Expansion, Calorimetry &amp; Heat Transfer, Alternating Current',
+   chemistry:'Atomic Structure, Surface Chemistry, Salt Analysis, Heating Effect, Reactions of Salt Analysis',
+   maths:'Permutation &amp; Combination, Binomial Theorem, Vectors'},
+  {id:'dlp-rv2', track:'DLP', phase:'Review', mode:'CBT', name:'Review Test-2', date:'2026-11-22', pattern:'JEE Main 10AM-1PM · JEE Adv 2PM-5PM',
+   physics:'Cumulative of Minor Test-6, 7 &amp; 8', chemistry:'Cumulative of Minor Test-6, 7 &amp; 8', maths:'Cumulative of Minor Test-6, 7 &amp; 8'},
+  {id:'dlp-mi9', track:'DLP', phase:'Minor', mode:'Pen Paper', name:'Minor Test-9', date:'2026-12-06', pattern:'JEE Advanced (1PM-4PM)',
+   physics:'KTG, Thermodynamics, Wave on String, Sound Wave, EM Waves, Wave Optics',
+   chemistry:'Chemical Equilibrium, Ionic Equilibrium, s-Block Element &amp; d-Block Compounds, p-Block Element, Hydrogen And Its Compounds, f-Block Element, Environmental Chemistry',
+   maths:'Complex Number, 3-Dimensional Geometry'},
+  {id:'dlp-mi10', track:'DLP', phase:'Minor', mode:'CBT', name:'Minor Test-10', date:'2026-12-20', pattern:'JEE Advanced (1-Shift)',
+   physics:'Fluid Mechanics, Simple Harmonic Motion, Modern Physics, Error in Measurements &amp; Instruments, Semiconductor',
+   chemistry:'Isomerism, Purification &amp; Characteristics of Organic Compounds, Carboxylic Acids &amp; Derivatives, Aliphatic Amines, Aromatic Compounds, Biomolecules, Polymer &amp; Practical Organic Chemistry, Separation Techniques, Chemistry In Everyday Life',
+   maths:'Relation, Statistics, Probability'},
+  {id:'dlp-sm2', track:'DLP', phase:'Semi Major', mode:'CBT', name:'Semi Major Test-2', date:'2026-12-27', pattern:'JEE Main 10AM-1PM · JEE Adv 2PM-5PM',
+   physics:'Cumulative of Minor Test-6 to 10', chemistry:'Cumulative of Minor Test-6 to 10', maths:'Cumulative of Minor Test-6 to 10'},
+  {id:'dlp-mj1', track:'DLP', phase:'Major', mode:'CBT', name:'Major Test-1', date:'2027-01-03', pattern:'JEE Main (1-Shift)',
+   physics:'Full Syllabus', chemistry:'Full Syllabus', maths:'Full Syllabus'},
+  {id:'dlp-mj2', track:'DLP', phase:'Major', mode:'CBT', name:'Major Test-2 (All India Open Test)', date:'2027-01-10', pattern:'JEE Main (1-Shift)',
+   physics:'Full Syllabus', chemistry:'Full Syllabus', maths:'Full Syllabus'},
+  {id:'dlp-mj3', track:'DLP', phase:'Major', mode:'CBT', name:'Major Test-3', date:'2027-01-17', pattern:'JEE Main (1-Shift)',
+   physics:'Full Syllabus', chemistry:'Full Syllabus', maths:'Full Syllabus'},
+
+  // ── ONLINE TRACK ──
+  {id:'ots-mi1', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-1', date:'2026-07-05', pattern:'JEE Advanced',
+   physics:'Units and Measurements, Vector, Electrostatics &amp; Gravitation',
+   chemistry:'Mole Concept, Stoichiometry and Redox Reactions',
+   maths:'Quadratic Equation, Set Theory and Number System, Relations, Functions'},
+  {id:'ots-mi2', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-2', date:'2026-07-19', pattern:'JEE Advanced',
+   physics:'Kinematics, Current &amp; Capacitor',
+   chemistry:'Atomic Structure, Periodic Table, Liquid Solutions, Electrochemistry',
+   maths:'Logarithm, Inverse Trigonometric Function'},
+  {id:'ots-mi3', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-3', date:'2026-08-02', pattern:'JEE Advanced',
+   physics:"Newton's Laws of Motion &amp; Friction, Magnetic Effect Of Current and Magnetism",
+   chemistry:'Chemical Bonding and Molecular Structure, IUPAC Nomenclature and Common Names, Chemical Kinetics',
+   maths:'Sequence and Progression, Binomial Theorem, Limits, Continuity &amp; Differentiability'},
+  {id:'ots-sm1', track:'Online', phase:'Semi Major', mode:'Online', name:'Semi Major Test-1', date:'2026-08-16', pattern:'JEE Main (1 Paper) + JEE Adv (1 Paper)',
+   physics:'Cumulative of Online Minor Test-1 to 3', chemistry:'Cumulative of Online Minor Test-1 to 3', maths:'Cumulative of Online Minor Test-1 to 3'},
+  {id:'ots-mi4', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-4', date:'2026-08-30', pattern:'JEE Advanced',
+   physics:'Circular Motion, Electromagnetic Induction &amp; Alternating Current',
+   chemistry:'Electronic Displacement Effects (GOC), Structural Isomerism, Geometrical Isomerism and Conformations, Optical Isomerism, Coordination Compounds, d- and f-Block Elements',
+   maths:'Trigonometric Ratios and Identities, Trigonometric Equation, Method of Differentiation, Tangent and Normal, Monotonicity, Maxima and Minima'},
+  {id:'ots-mi5', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-5', date:'2026-09-13', pattern:'JEE Advanced',
+   physics:'Work, Energy &amp; Power, Geometrical Optics',
+   chemistry:'Hydrocarbons',
+   maths:'Permutation and Combination, Determinants, Matrices'},
+  {id:'ots-sm2', track:'Online', phase:'Semi Major', mode:'Online', name:'Semi Major Test-2', date:'2026-09-20', pattern:'JEE Advanced (2 Papers)',
+   physics:'Cumulative of Online Minor Test-1 to 5', chemistry:'Cumulative of Online Minor Test-1 to 5', maths:'Cumulative of Online Minor Test-1 to 5'},
+  {id:'ots-mi6', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-6', date:'2026-10-04', pattern:'JEE Advanced',
+   physics:'Centre of Mass, Wave On String &amp; Sound Waves',
+   chemistry:'Haloalkanes and Haloarenes',
+   maths:'Solution of Triangle, Indefinite Integration, Definite Integration'},
+  {id:'ots-mi7', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-7', date:'2026-10-18', pattern:'JEE Advanced',
+   physics:'Rotational Motion, Electromagnetic Waves And Wave Optics',
+   chemistry:"Thermodynamics-I: First Law, Thermochemistry, Thermodynamics-II: Second and Third Law, Alcohols/Phenols/Ethers, Carbonyl Compounds",
+   maths:'Straight Line and Linear Inequality, Differential Equation, Area Under The Curve'},
+  {id:'ots-mi8', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-8', date:'2026-11-01', pattern:'JEE Advanced',
+   physics:'Simple Harmonic Motion',
+   chemistry:"Equilibrium-I: Chemical Equilibrium, Equilibrium-II: Ionic Equilibrium, Carboxylic Acids and Derivatives, Organic Compounds Containing Nitrogen, Biomolecules, Polymers and POC, Chemistry in Everyday Life",
+   maths:'Circle, Vector, Three Dimensional Coordinate Geometry'},
+  {id:'ots-sm3', track:'Online', phase:'Semi Major', mode:'Online', name:'Semi Major Test-3', date:'2026-11-15', pattern:'JEE Main (1 Paper) + JEE Adv (1 Paper)',
+   physics:'Cumulative of Online Minor Test-6 to 8 + Modern Physics', chemistry:'Cumulative of Online Minor Test-6 to 8', maths:'Cumulative of Online Minor Test-6 to 8'},
+  {id:'ots-mi9', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-9', date:'2026-11-22', pattern:'JEE Advanced',
+   physics:'Fluid Mechanics, Errors In Measurements And Instruments',
+   chemistry:"Hydrogen and its Compounds, s-Block Elements, Environmental Chemistry, Solid State, States of Matter and Eudiometry",
+   maths:'Parabola, Ellipse, Probability'},
+  {id:'ots-mi10', track:'Online', phase:'Minor', mode:'Online', name:'Minor Test-10', date:'2026-12-06', pattern:'JEE Advanced',
+   physics:'Heat &amp; Thermodynamics, Semiconductor Electronics',
+   chemistry:"p-Block Elements (Group 13-18), Qualitative Analysis, Surface Chemistry, Metallurgy",
+   maths:'Hyperbola, Statistics, Complex Number'},
+  {id:'ots-sm4', track:'Online', phase:'Semi Major', mode:'Online', name:'Semi Major Test-4', date:'2026-12-13', pattern:'JEE Advanced (2 Papers)',
+   physics:'Cumulative of Online Minor Test-6 to 10', chemistry:'Cumulative of Online Minor Test-6 to 10', maths:'Cumulative of Online Minor Test-6 to 10'},
+];
+
+function getAllTests(){
+  return BASE_TESTS.concat(testCustom).map(t => testOverrides[t.id] ? {...t, ...testOverrides[t.id]} : t);
+}
+function stripTags(s){ return (s||'').replace(/<[^>]+>/g,''); }
+function testSyllabusPlainText(test){
+  if(test.syllabus) return stripTags(test.syllabus.replace(/<br\s*\/?>/gi,'\n'));
+  return `Physics: ${stripTags(test.physics||'')}\nChemistry: ${stripTags(test.chemistry||'')}\nMaths: ${stripTags(test.maths||'')}`;
+}
+
+function fmtTestDate(d){
+  const dt = new Date(d+'T00:00:00');
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+function todayTestISO(){ return new Date().toISOString().slice(0,10); }
+
+function computeTestStatus(test){
+  const e = testEntries[test.id] || {};
+  if(e.checked) return 'cleared';
+  const today = todayTestISO();
+  return test.date < today ? 'due' : 'upcoming';
+}
+function testStampLabel(s){ return {cleared:'Cleared',due:'Due',upcoming:'Upcoming'}[s]; }
+
+function testPctFor(id){
+  const e = testEntries[id];
+  if(!e || e.obtained==null || e.obtained==='' || !e.total) return null;
+  const o = parseFloat(e.obtained), t = parseFloat(e.total);
+  if(isNaN(o) || isNaN(t) || t<=0) return null;
+  return Math.round((o/t)*1000)/10;
+}
+
+function buildTestFilters(){
+  const el = document.getElementById('testFilters');
+  if(!el) return;
+  const opts = ['All',...TEST_PHASES];
+  el.innerHTML = opts.map(o=>`<button class="filter-btn ${o===testFilter?'active':''}" data-tf="${o}">${o}</button>`).join('');
+  el.querySelectorAll('.filter-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      testFilter = b.dataset.tf;
+      el.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderTestSchedule();
+    });
+  });
+}
+
+function renderTestSchedule(){
+  const sectionsEl = document.getElementById('testSections');
+  if(!sectionsEl) return;
+  sectionsEl.innerHTML = '';
+  const all = getAllTests();
+
+  TEST_PHASES.forEach(phase=>{
+    if(testFilter !== 'All' && testFilter !== phase) return;
+    const tests = all.filter(t=>t.phase===phase).sort((a,b)=> a.date.localeCompare(b.date));
+    if(!tests.length) return;
+
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.style.fontSize = '15px';
+    title.textContent = phase + ' Tests';
+    sectionsEl.appendChild(title);
+
+    tests.forEach(test=>{
+      const status = computeTestStatus(test);
+      const e = testEntries[test.id] || {};
+      const pct = testPctFor(test.id);
+      const row = document.createElement('div');
+      row.className = `test-row t-${status}`;
+      const syllabusHtml = test.syllabus
+        ? test.syllabus
+        : `<b>Physics:</b> ${test.physics||'—'}<br><b>Chemistry:</b> ${test.chemistry||'—'}<br><b>Maths:</b> ${test.maths||'—'}`;
+      row.innerHTML = `
+        <div class="test-row-head">
+          <div class="test-check ${e.checked?'checked':''}" data-tcheck="${test.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div class="test-row-main">
+            <div class="test-title-line">
+              <span class="test-title">${test.name}</span>
+              <span class="test-date">${fmtTestDate(test.date)}</span>
+            </div>
+            <div class="test-tags">
+              <span class="ttag ${test.track==='DLP'?'track-dlp':'track-online'}">${test.track}</span>
+              <span class="ttag mode-tag">${test.mode}</span>
+              ${test.pattern?`<span class="ttag mode-tag">${test.pattern}</span>`:''}
+              ${test.isCustom?'<span class="ttag custom-tag">Added by you</span>':''}
+            </div>
+          </div>
+          <div class="test-stamp ${status}">${testStampLabel(status)}</div>
+          <button class="test-cd-btn ${testCountdownId===test.id?'is-target':''}" data-tcd="${test.id}" title="Set as countdown target">🎯</button>
+          <button class="test-edit-btn" data-tedit="${test.id}" title="Edit test">✎</button>
+          ${test.isCustom?`<button class="test-del-btn" data-tdel="${test.id}" title="Delete test">✕</button>`:''}
+          <div class="test-chev">▸</div>
+        </div>
+        <div class="test-row-body">
+          <div class="test-syllabus">${syllabusHtml}</div>
+          <div class="test-entry-fields">
+            <div class="test-field">
+              <label>Marks Obtained</label>
+              <input type="number" placeholder="142" data-tobtained="${test.id}" value="${e.obtained!=null?e.obtained:''}">
+            </div>
+            <div class="test-field">
+              <label>Out Of</label>
+              <input type="number" placeholder="180" data-ttotal="${test.id}" value="${e.total!=null?e.total:''}">
+            </div>
+            <div class="test-field">
+              <label>Score</label>
+              <div class="test-pct-badge">${pct!=null ? pct+'%' : '—'}</div>
+            </div>
+            <div class="test-field">
+              <label>Notes</label>
+              <input type="text" class="tnotes" placeholder="weak topics, rank, review points…" data-tnotes="${test.id}" value="${e.notes||''}">
+            </div>
+          </div>
+        </div>
+      `;
+      sectionsEl.appendChild(row);
+
+      row.querySelector('.test-row-head').addEventListener('click', (ev)=>{
+        if(ev.target.closest('[data-tcheck]') || ev.target.closest('[data-tdel]') || ev.target.closest('[data-tedit]') || ev.target.closest('[data-tcd]')) return;
+        row.classList.toggle('open');
+      });
+      row.querySelector('[data-tcd]').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        setTestCountdown(test.id);
+      });
+      row.querySelector('[data-tcheck]').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        if(!testEntries[test.id]) testEntries[test.id] = {};
+        testEntries[test.id].checked = !testEntries[test.id].checked;
+        saveTestState();
+        renderTestSchedule();
+        updateTestStats();
+      });
+      row.querySelector('[data-tedit]').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        openTestModal(test.id);
+      });
+      const delBtn = row.querySelector('[data-tdel]');
+      if(delBtn){
+        delBtn.addEventListener('click', (ev)=>{
+          ev.stopPropagation();
+          showConfirm(`Remove "${test.name}" from your ledger?`, ()=>{
+            testCustom = testCustom.filter(t=>t.id!==test.id);
+            delete testEntries[test.id];
+            saveTestState();
+            renderTestSchedule();
+            updateTestStats();
+            renderTestPerformance();
+            showToast('Test removed.', true);
+          });
+        });
+      }
+      row.querySelector('[data-tobtained]').addEventListener('input', (ev)=>{
+        if(!testEntries[test.id]) testEntries[test.id] = {};
+        testEntries[test.id].obtained = ev.target.value;
+        saveTestState();
+        row.querySelector('.test-pct-badge').textContent = (testPctFor(test.id)!=null ? testPctFor(test.id)+'%' : '—');
+      });
+      row.querySelector('[data-ttotal]').addEventListener('input', (ev)=>{
+        if(!testEntries[test.id]) testEntries[test.id] = {};
+        testEntries[test.id].total = ev.target.value;
+        saveTestState();
+        row.querySelector('.test-pct-badge').textContent = (testPctFor(test.id)!=null ? testPctFor(test.id)+'%' : '—');
+      });
+      row.querySelector('[data-tnotes]').addEventListener('input', (ev)=>{
+        if(!testEntries[test.id]) testEntries[test.id] = {};
+        testEntries[test.id].notes = ev.target.value;
+        saveTestState();
+      });
+    });
+  });
+
+  if(!sectionsEl.children.length){
+    sectionsEl.innerHTML = '<div class="perf-empty">No tests in this filter.</div>';
+  }
+
+  updateTestStats();
+}
+
+function updateTestStats(){
+  const all = getAllTests();
+  const total = all.length;
+  let cleared = 0, due = 0;
+  const today = todayTestISO();
+  let next = null;
+  all.forEach(t=>{
+    const st = computeTestStatus(t);
+    if(st==='cleared') cleared++;
+    if(st==='due') due++;
+    if(!testEntries[t.id] || !testEntries[t.id].checked){
+      if(t.date >= today && (!next || t.date < next.date)) next = t;
+    }
+  });
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val; };
+  set('tstatTotal', total);
+  set('tstatCleared', cleared);
+  set('tstatDue', due);
+  set('tstatNext', next ? `${next.name} · ${fmtTestDate(next.date)}` : '—');
+  const fill = document.getElementById('testProgressFill');
+  if(fill) fill.style.width = (total ? Math.round((cleared/total)*100) : 0)+'%';
+}
+
+function renderTestPerformance(){
+  const all = getAllTests();
+
+  function renderTrack(trackName, containerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+    const trackTests = all.filter(t=>t.track===trackName);
+
+    TEST_PHASES.forEach(phase=>{
+      const tests = trackTests.filter(t=>t.phase===phase).sort((a,b)=>a.date.localeCompare(b.date));
+      if(!tests.length) return;
+      const scored = tests.map(t=>({test:t, pct:testPctFor(t.id)})).filter(r=>r.pct!=null);
+      const avg = scored.length ? Math.round((scored.reduce((s,r)=>s+r.pct,0)/scored.length)*10)/10 : null;
+
+      const card = document.createElement('div');
+      card.className = 'perf-type-card';
+      card.innerHTML = `
+        <div class="perf-type-head">
+          <span class="ptname">${phase}</span>
+          <span class="ptavg">${avg!=null ? 'avg '+avg+'%' : ''}</span>
+        </div>
+        ${scored.length ? scored.map(r=>`
+          <div class="perf-t-row">
+            <span class="ptname2">${r.test.name}</span>
+            <div class="perf-bar-track"><div class="perf-bar-fill" style="width:${r.pct}%"></div></div>
+            <span class="ptval">${r.pct}%</span>
+          </div>
+        `).join('') : `<div class="perf-empty">No marks logged yet for ${trackName} ${phase} tests.</div>`}
+      `;
+      container.appendChild(card);
+    });
+    if(!container.children.length){
+      container.innerHTML = `<div class="perf-empty">No ${trackName} tests found.</div>`;
+    }
+  }
+
+  renderTrack('DLP', 'testPerfDLP');
+  renderTrack('Online', 'testPerfOnline');
+
+  const allScored = all.map(t=>testPctFor(t.id)).filter(p=>p!=null);
+  const overallAvg = allScored.length ? Math.round((allScored.reduce((s,p)=>s+p,0)/allScored.length)*10)/10 : null;
+  const best = allScored.length ? Math.max(...allScored) : null;
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val; };
+  set('testPerfOverallAvg', overallAvg!=null ? overallAvg+'%' : '—');
+  set('testPerfOverallCount', allScored.length);
+  set('testPerfBest', best!=null ? best+'%' : '—');
+}
+
+function switchTestSub(sub){
+  activeTestSub = sub;
+  document.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('testsub-'+sub).classList.add('active');
+  document.querySelectorAll('.subtab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('testpanel-'+sub).classList.add('active');
+  if(sub==='performance') renderTestPerformance();
+}
+
+// ── Countdown target ──
+function getCountdownTarget(){
+  const all = getAllTests();
+  const today = todayTestISO();
+  if(testCountdownId){
+    const t = all.find(x=>x.id===testCountdownId);
+    const cleared = t && testEntries[t.id] && testEntries[t.id].checked;
+    if(t && !cleared) return {test:t, manual:true};
+  }
+  let next = null;
+  all.forEach(t=>{
+    const cleared = testEntries[t.id] && testEntries[t.id].checked;
+    if(!cleared && t.date >= today && (!next || t.date < next.date)) next = t;
+  });
+  return next ? {test:next, manual:false} : null;
+}
+
+function setTestCountdown(id){
+  testCountdownId = id;
+  localStorage.setItem(TEST_COUNTDOWN_STORE, id);
+  saveToFirestore();
+  renderTestSchedule();
+  const t = getAllTests().find(x=>x.id===id);
+  showToast(`Countdown set to ${t ? t.name : 'test'}.`, true);
+}
+
+function clearTestCountdown(){
+  testCountdownId = null;
+  localStorage.removeItem(TEST_COUNTDOWN_STORE);
+  saveToFirestore();
+  renderTestSchedule();
+  renderTestCountdown();
+  showToast('Countdown reset to next upcoming test.', true);
+}
+
+function renderTestCountdown(){
+  const card = document.getElementById('testCountdownCard');
+  if(!card) return;
+  const result = getCountdownTarget();
+  if(!result){
+    card.innerHTML = `<div class="tcd-card"><div class="tcd-name">🎉 No upcoming tests</div><div class="tcd-date">All tests cleared or none scheduled.</div></div>`;
+    return;
+  }
+  const { test, manual } = result;
+  const targetDate = new Date(test.date+'T09:00:00');
+  const diff = targetDate - new Date();
+  const urgent = diff > 0 && diff <= 3*24*60*60*1000;
+
+  if(diff <= 0){
+    card.innerHTML = `
+      <div class="tcd-card ${urgent?'urgent':''}">
+        <div class="tcd-badge">${manual?'📌 Manually selected':'🔄 Next upcoming'}</div>
+        <div class="tcd-name">${test.name}</div>
+        <div class="tcd-date">${fmtTestDate(test.date)} · ${test.track} · ${test.mode}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);margin-top:1.25rem">Test day is here — good luck! 🏏</div>
+        ${manual?`<button class="tcd-reset" onclick="clearTestCountdown()">Reset to next upcoming</button>`:''}
+      </div>`;
+    return;
+  }
+
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hrs  = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins = Math.floor((diff%(1000*60*60))/(1000*60));
+
+  card.innerHTML = `
+    <div class="tcd-card ${urgent?'urgent':''}">
+      <div class="tcd-badge">${manual?'📌 Manually selected':'🔄 Next upcoming'}</div>
+      <div class="tcd-name">${test.name}</div>
+      <div class="tcd-date">${fmtTestDate(test.date)} · ${test.track} · ${test.mode}</div>
+      <div class="tcd-blocks">
+        <div class="tcd-block days"><div class="tcd-num">${days}</div><div class="tcd-unit">Days</div></div>
+        <div class="tcd-block hrs"><div class="tcd-num">${String(hrs).padStart(2,'0')}</div><div class="tcd-unit">Hrs</div></div>
+        <div class="tcd-block mins"><div class="tcd-num">${String(mins).padStart(2,'0')}</div><div class="tcd-unit">Min</div></div>
+      </div>
+      ${manual?`<button class="tcd-reset" onclick="clearTestCountdown()">Reset to next upcoming</button>`:''}
+    </div>`;
+}
+setInterval(()=>{ if(activeTestSub==='schedule') renderTestCountdown(); renderHomeTestReminder(); }, 60000);
+
+function renderHomeTestReminder(){
+  const box = document.getElementById('homeTestReminder');
+  if(!box) return;
+  const result = getCountdownTarget();
+  if(!result){
+    box.innerHTML = `<div class="htr-card"><div class="htr-empty">🎉 No upcoming tests scheduled</div></div>`;
+    return;
+  }
+  const { test } = result;
+  const today = todayTestISO();
+  const targetDate = new Date(test.date+'T09:00:00');
+  const diffDays = Math.ceil((targetDate - new Date())/(1000*60*60*24));
+  const isToday = test.date === today;
+  const urgent = !isToday && diffDays > 0 && diffDays <= 3;
+
+  if(isToday){
+    box.innerHTML = `
+      <div class="htr-card today">
+        <div class="htr-left">
+          <div class="htr-badge">📅 Today</div>
+          <div class="htr-name">${test.name}</div>
+          <div class="htr-date">${test.track} · ${test.mode}</div>
+        </div>
+        <div class="htr-right">
+          <div class="htr-num today">🏏</div>
+          <div class="htr-unit">Good luck!</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="htr-card ${urgent?'urgent':''}">
+      <div class="htr-left">
+        <div class="htr-badge">⏳ Next Test</div>
+        <div class="htr-name">${test.name}</div>
+        <div class="htr-date">${fmtTestDate(test.date)} · ${test.track}</div>
+      </div>
+      <div class="htr-right">
+        <div class="htr-num">${diffDays}</div>
+        <div class="htr-unit">${diffDays===1?'Day':'Days'}</div>
+      </div>
+    </div>`;
+}
+
+function saveTestState(){
+  localStorage.setItem(TEST_ENTRIES_STORE, JSON.stringify(testEntries));
+  localStorage.setItem(TEST_CUSTOM_STORE, JSON.stringify(testCustom));
+  localStorage.setItem(TEST_OVERRIDES_STORE, JSON.stringify(testOverrides));
+  saveToFirestore(); // ☁️ sync to Firebase
+}
+
+// ── Add Test Modal ──
+function openTestModal(editId){
+  editingTestId = editId || null;
+  const titleEl = document.getElementById('tf-modal-title');
+  const subEl   = document.getElementById('tf-modal-sub');
+  const saveBtn = document.getElementById('tf-save-btn');
+
+  if(editingTestId){
+    const test = getAllTests().find(t=>t.id===editingTestId);
+    if(!test) return;
+    titleEl.textContent = 'Edit Test';
+    subEl.textContent   = test.isCustom ? 'Editing your custom test' : 'Editing schedule details (syllabus, mode, pattern etc.)';
+    saveBtn.textContent = 'SAVE CHANGES';
+    document.getElementById('tf-name').value = test.name;
+    document.getElementById('tf-date').value = test.date;
+    document.getElementById('tf-phase').value = test.phase;
+    document.getElementById('tf-track').value = test.track;
+    document.getElementById('tf-mode').value = test.mode;
+    document.getElementById('tf-pattern').value = /main/i.test(test.pattern||'') ? 'JEE Main' : 'JEE Advanced';
+    document.getElementById('tf-syllabus').value = testSyllabusPlainText(test);
+  } else {
+    titleEl.textContent = 'Add a Test';
+    subEl.textContent   = 'Custom tests are added to your ledger';
+    saveBtn.textContent = 'ADD TEST';
+    document.getElementById('tf-name').value='';
+    document.getElementById('tf-date').value='';
+    document.getElementById('tf-phase').value='Minor';
+    document.getElementById('tf-track').value='DLP';
+    document.getElementById('tf-mode').value='Pen Paper';
+    document.getElementById('tf-pattern').value='JEE Advanced';
+    document.getElementById('tf-syllabus').value='';
+  }
+
+  document.getElementById('testModalOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('tf-name').focus(), 50);
+}
+function closeTestModal(){
+  document.getElementById('testModalOverlay').classList.remove('show');
+  editingTestId = null;
+}
+
+function saveTestModal(){
+  const name = document.getElementById('tf-name').value.trim();
+  const date = document.getElementById('tf-date').value;
+  const phase = document.getElementById('tf-phase').value;
+  const track = document.getElementById('tf-track').value;
+  const mode = document.getElementById('tf-mode').value;
+  const pattern = document.getElementById('tf-pattern').value;
+  const syllabusRaw = document.getElementById('tf-syllabus').value.trim();
+
+  if(!name || !date){
+    showToast('Please add at least a test name and a date.', false);
+    return;
+  }
+
+  const payload = {
+    track, phase, mode, name, date, pattern,
+    syllabus: syllabusRaw ? syllabusRaw.replace(/\n/g,'<br>') : ''
+  };
+
+  if(editingTestId){
+    const customIdx = testCustom.findIndex(t=>t.id===editingTestId);
+    if(customIdx > -1){
+      testCustom[customIdx] = {...testCustom[customIdx], ...payload};
+    } else {
+      testOverrides[editingTestId] = payload;
+    }
+    saveTestState();
+    closeTestModal();
+    renderTestSchedule();
+    renderTestPerformance();
+    showToast('Test updated.', true);
+  } else {
+    const id = 'custom-' + Date.now();
+    testCustom.push({ id, ...payload, isCustom: true });
+    saveTestState();
+    closeTestModal();
+    testFilter = 'All';
+    buildTestFilters();
+    renderTestSchedule();
+    showToast('Test added.', true);
+  }
+}
 </script>
 </body>
 </html>
