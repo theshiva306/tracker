@@ -1,10 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  try{
+    if (sessionStorage.getItem('g264_session_shown')) {
+      document.documentElement.classList.add('g264-session');
+    } else {
+      sessionStorage.setItem('g264_session_shown','1');
+    }
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  function ready(){ document.documentElement.classList.add('g264-fonts-ready'); }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(ready);
+    // safety net in case a browser resolves fonts.ready late/never
+    setTimeout(ready, 1200);
+  } else {
+    ready();
+  }
+})();
+</script>
 <title>🏏 GOAL 264 </title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
 <!-- ══ FIREBASE ══ -->
@@ -78,11 +102,12 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 }
 .sidebar-appname{
   font-family:'Bebas Neue',sans-serif;font-size:17px;
-  color:var(--gold);letter-spacing:2px;
+  color:#eef2f7;letter-spacing:2px;
   white-space:nowrap;opacity:0;
   transition:opacity .18s;pointer-events:none;
   flex:1;
 }
+.sidebar-appname .sa-264{color:var(--gold);}
 .sidebar.expanded .sidebar-appname{opacity:1;}
 .sidebar-close-btn{
   display:flex;align-items:center;justify-content:center;
@@ -211,9 +236,10 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .hamburger:hover{color:var(--text);background:rgba(255,255,255,0.05);}
 .top-bar-title{
   font-family:'Bebas Neue',sans-serif;font-size:20px;
-  color:var(--gold);letter-spacing:2px;flex:1;
+  color:#eef2f7;letter-spacing:2px;flex:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+.top-bar-title .tb-264{color:var(--gold);}
 /* Mobile profile avatar button */
 .top-bar-profile-btn{
   display:flex;align-items:center;justify-content:center;
@@ -243,10 +269,6 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
   opacity:0;transition:opacity .12s;
   display:none;
 }
-
-/* NAV — hidden, sidebar replaces it */
-.nav{display:none}
-.nav-fade{display:none}
 
 /* PAGES */
 .page{display:none;max-width:980px;margin:0 auto;padding:1.5rem 1.5rem 2.5rem}
@@ -418,6 +440,12 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 
 /* SECTION */
 .section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.ach-section-header{justify-content:space-between;cursor:pointer;user-select:none}
+.ach-summary-count{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--muted);margin-left:6px;text-transform:none}
+.ach-section-arrow{font-size:13px;color:var(--muted);transition:transform .2s}
+.ach-section-body{display:none;margin-top:.25rem}
+.ach-section-body.open{display:block}
+.ach-section-header.open .ach-section-arrow{transform:rotate(180deg)}
 .section-title span{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;color:var(--muted);font-weight:400;padding:2px 8px;border:0.5px solid var(--border);border-radius:8px}
 .card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -432,6 +460,10 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .formula-hint b{color:var(--muted)}
 .tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
 .tag{padding:4px 11px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;border:0.5px solid;cursor:pointer;transition:opacity .15s,filter .15s;user-select:none;opacity:.3;filter:saturate(.3)}
+.tag-grind{background:#1a1005;border-color:#7a4a10;color:#f5a442}
+.tag-locked{background:#0a1a05;border-color:#2a6a10;color:#6ad442}
+.tag-low{background:#0a0a1a;border-color:#2a2a6a;color:#6a8af5}
+.tag-sick{background:#1a0a0a;border-color:#6a2a2a;color:#f58080}
 .tag.on{opacity:1;filter:none}
 .t-water{background:#0d1e30;border-color:#2a6aaa;color:#6ab4f5}.t-plan{background:#251a05;border-color:#9a6510;color:#f5b942}
 .t-work{background:#0f2010;border-color:#2a6a2a;color:#6ad46a}.t-cal{background:#0a1a08;border-color:#3a7a1a;color:#96d456}
@@ -469,7 +501,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.875rem 1rem;position:relative;overflow:hidden}
 .stat-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);margin-bottom:3px}
 .stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;line-height:1}
-.stat-val.gold{color:var(--gold)}.stat-val.green{color:var(--green)}.stat-val.fire{color:var(--fire2)}.stat-val.blue{color:var(--blue)}.stat-val.purple{color:var(--purple)}
+.stat-val.gold{color:var(--gold)}.stat-val.green{color:var(--green)}.stat-val.fire{color:var(--text)}.stat-val.blue{color:var(--text)}.stat-val.purple{color:var(--text)}
 .stat-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-top:2px}
 
 /* WEEK CHART */
@@ -938,6 +970,13 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 /* GOAL TRACKER */
 .goal-card{background:linear-gradient(135deg,#0a0f1a,#0f1825);border:0.5px solid var(--border2);border-radius:12px;padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.home-teaser-link{display:block;width:100%;text-align:left;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:10px;padding:.75rem .9rem;margin-bottom:1rem;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.6px;color:var(--muted);cursor:pointer;transition:background .15s,color .15s}
+.home-teaser-link:hover{background:rgba(255,255,255,0.06);color:var(--text)}
+.goal-card-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem}
+.goal-card-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.goal-card-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-top:1px;letter-spacing:.5px}
+.goal-card-edit-btn{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);background:rgba(245,200,66,0.08);border:0.5px solid rgba(245,200,66,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.goal-card-edit-btn:hover{background:rgba(245,200,66,0.15)}
 .goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--fire),var(--gold));border-radius:12px 12px 0 0;opacity:.7;pointer-events:none}
 .goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.625rem;margin-top:1rem}
 .goal-stat{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:8px;padding:.625rem .75rem;text-align:center}
@@ -1176,348 +1215,274 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
      SPLASH  +  SIGN-IN  OVERLAY
 ══════════════════════════════════════════════ -->
 <style>
-#g264-splash,#g264-signin{position:fixed;inset:0;z-index:9000;}
-
-/* ── SPLASH ── */
-#g264-splash{
-  background:#0b0f18;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+/* ── OPENING GATE (split-screen: sign-in + animated growth graphic) ── */
+#g264-gate{
+  position:fixed;inset:0;z-index:9000;
+  background:#0a0c11;
+  opacity:1;pointer-events:auto;
+  transition:opacity .45s ease;
   overflow:hidden;
 }
-#g264-splash::before{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle, rgba(245,200,66,0.06) 1px, transparent 1px);
-  background-size:36px 36px;
-  animation:g-grid-in 1.4s ease 0.1s both;
-}
-@keyframes g-grid-in{from{opacity:0;transform:scale(1.1)}to{opacity:1;transform:scale(1)}}
+html.g264-session #g264-gate{display:none;}
 
-#g-glow{
-  position:absolute;width:460px;height:460px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(245,200,66,0.11) 0%,rgba(224,92,42,0.05) 45%,transparent 70%);
-  animation:g-glow-pop 1s ease 0.3s both,g-glow-breathe 4s ease-in-out 1.5s infinite;
+/* ── SPLASH (returning visitor only): quick branded flash, then fades into the app on its own ── */
+#g264-splash{
+  position:fixed;inset:0;z-index:9500;
+  background:#0a0c11;
+  display:none;align-items:center;justify-content:center;
+  opacity:1;transition:opacity .4s ease;
 }
-@keyframes g-glow-pop{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
-@keyframes g-glow-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+html.g264-session #g264-splash{display:flex;}
+#g264-splash .g264-wordmark{font-size:clamp(34px,6vw,48px);}
 
-#g-logo{
-  position:relative;z-index:2;
-  animation:g-logo-drop 0.75s cubic-bezier(.34,1.5,.64,1) 0.55s both;
-}
-@keyframes g-logo-drop{
-  0%  {opacity:0;transform:translateY(-28px) scale(0.7)}
-  70% {opacity:1;transform:translateY(4px) scale(1.04)}
-  100%{opacity:1;transform:translateY(0) scale(1)}
-}
+#g264-gate .g264-wordmark, #g264-splash .g264-wordmark{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;line-height:1;white-space:nowrap;opacity:0;transition:opacity .6s ease;}
+#g264-gate .g-goal, #g264-splash .g-goal{color:#eef2f7}
+#g264-gate .g-264, #g264-splash .g-264{color:var(--gold,#f5c842)}
+html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-splash .g264-wordmark{opacity:1;}
 
-#g-study-innings{
-  position:relative;z-index:2;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:18px;letter-spacing:8px;
-  color:rgba(238,242,247,0.8);
-  margin-top:16px;
-  animation:g-fade-up 0.5s ease 1.05s both;
-}
-#g-goal264{
-  position:relative;z-index:2;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:54px;letter-spacing:4px;line-height:1;
-  animation:g-fade-up 0.5s ease 1.15s both;
-}
-#g-tagline1{
-  position:relative;z-index:2;
-  font-family:'DM Mono',monospace;
-  font-size:9.5px;letter-spacing:4px;
-  color:rgba(160,175,200,0.65);text-transform:uppercase;
-  margin-top:6px;animation:g-fade-up 0.4s ease 1.28s both;
-}
-#g-tagline2{
-  position:relative;z-index:2;
-  font-family:'DM Mono',monospace;
-  font-size:7.5px;letter-spacing:3px;
-  color:rgba(106,128,160,0.42);text-transform:uppercase;
-  margin-top:3px;animation:g-fade-up 0.4s ease 1.38s both;
-}
-@keyframes g-fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+#g264-gate .opening{position:relative;height:100vh;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
 
-#g-loader-track{
-  position:relative;z-index:2;
-  margin-top:46px;width:110px;height:1.5px;
-  background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;
-  animation:g-fade-up 0.3s ease 1.4s both;
-}
-#g-loader-fill{
-  height:100%;width:0;
-  background:linear-gradient(90deg,#e05c2a,#f5c842,#e05c2a);
-  background-size:200% 100%;
-  animation:g-load-fill 1.1s cubic-bezier(.4,0,.2,1) 1.5s forwards,
-            g-shimmer 1.4s linear 1.5s infinite;
-}
-@keyframes g-load-fill{to{width:100%}}
-@keyframes g-shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+/* ── LEFT: sign-in ── */
+#g264-gate .opening-left{display:flex;flex-direction:column;justify-content:center;padding:0 clamp(32px,7vw,96px);position:relative;z-index:2;}
 
-#g264-splash.exit{animation:g-splash-exit 0.7s ease forwards;}
-@keyframes g-splash-exit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.03)}}
+#g264-gate .opening-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(238,242,247,0.45);margin-bottom:20px;display:flex;align-items:center;}
+#g264-gate .opening-eyebrow::before{content:'';display:inline-block;width:22px;height:1px;background:var(--gold,#f5c842);margin-right:12px;}
+#g264-gate .opening-eyebrow b{color:var(--gold,#f5c842);font-weight:500;margin-left:6px;}
 
-/* ── SIGN-IN ── */
-#g264-signin{
-  background:#0b0f18;
-  display:flex;         /* always in layout */
-  opacity:0;            /* but invisible */
-  pointer-events:none;  /* not interactive yet */
-  align-items:center;justify-content:center;
-  transition:opacity 0.65s ease;
+#g264-gate .opening-hero{font-size:clamp(48px,7vw,86px);margin-bottom:14px;}
+
+#g264-gate .opening-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:clamp(15px,1.6vw,18px);color:rgba(238,242,247,0.45);max-width:360px;line-height:1.5;margin-top:14px;margin-bottom:48px;}
+
+#g264-gate .opening-actions{max-width:320px;opacity:0;transition:opacity .35s ease;}
+#g264-gate .opening-actions.g264-visible{opacity:1;}
+
+#g264-gate #g-google-btn{width:100%;padding:14px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);border-radius:10px;color:#eef2f7;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,border-color .2s,transform .15s;}
+#g264-gate #g-google-btn:hover:not(:disabled){background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.28);transform:translateY(-1px);}
+#g264-gate #g-google-btn:active:not(:disabled){transform:translateY(0)}
+#g264-gate #g-google-btn:focus-visible{outline:1px solid var(--gold,#f5c842);outline-offset:3px;}
+
+#g264-gate #g-skip-link{display:block;text-align:center;margin-top:18px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;color:rgba(238,242,247,0.28);cursor:pointer;text-transform:uppercase;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;}
+#g264-gate #g-skip-link:hover{color:rgba(238,242,247,0.45);border-color:rgba(238,242,247,0.28);}
+#g264-gate #g-skip-link:focus-visible{outline:1px solid var(--gold,#f5c842);outline-offset:3px;color:rgba(238,242,247,0.45);}
+
+/* ── RIGHT: animated growth graphic ── */
+#g264-gate .opening-right{
+  position:relative;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(circle at 76% 20%, rgba(245,200,66,0.11) 0%, rgba(245,200,66,0.05) 32%, rgba(245,200,66,0) 62%), #0a0c11;
 }
-#g264-signin.visible{
-  opacity:1;
-  pointer-events:auto;
+#g264-gate .opening-right svg{width:100%;height:100%;max-width:640px;max-height:100%;aspect-ratio:640/700;object-fit:contain;}
+
+#g264-gate .growth-path{
+  fill:none;stroke:var(--gold,#f5c842);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1300;stroke-dashoffset:1300;animation:g264-draw-line 4.6s linear .15s forwards;
+}
+@keyframes g264-draw-line{ to{ stroke-dashoffset:0; } }
+
+#g264-gate .gnode{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:g264-node-pop .3s cubic-bezier(.34,1.56,.64,1) forwards;}
+#g264-gate .gnode circle{ fill:var(--gold,#f5c842); }
+@keyframes g264-node-pop{
+  0%{opacity:0;transform:scale(0);}
+  55%{opacity:1;transform:scale(1.15);}
+  100%{opacity:1;transform:scale(1);}
+}
+#g264-gate .gnode.start circle{ opacity:0.65; }
+
+#g264-gate .gnode.final circle.glow{ fill:var(--gold,#f5c842); opacity:0.09; }
+#g264-gate .gnode.final circle.core{ fill:var(--gold,#f5c842); }
+
+#g264-gate .pulse-ring{
+  fill:none;stroke:var(--gold,#f5c842);stroke-width:1;opacity:0;
+  transform-box:fill-box;transform-origin:center;animation:g264-pulse-once .6s ease-out 5.05s forwards;
+}
+@keyframes g264-pulse-once{
+  0%{opacity:0.4;transform:scale(1);}
+  100%{opacity:0;transform:scale(2.2);}
 }
 
-#g-orb1,#g-orb2{position:absolute;border-radius:50%;pointer-events:none;}
-#g-orb1{width:600px;height:600px;top:-180px;right:-150px;
-  background:radial-gradient(ellipse,rgba(245,200,66,0.07) 0%,transparent 60%);
-  animation:g-orb 9s ease-in-out infinite alternate;}
-#g-orb2{width:450px;height:450px;bottom:-140px;left:-100px;
-  background:radial-gradient(ellipse,rgba(224,92,42,0.06) 0%,transparent 60%);
-  animation:g-orb 11s ease-in-out 2s infinite alternate-reverse;}
-@keyframes g-orb{from{transform:translate(0,0)}to{transform:translate(25px,18px)}}
-
-#g-ticker{
-  position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,#e05c2a 30%,#f5c842 50%,#e05c2a 70%,transparent);
-  background-size:200% 100%;animation:g-ticker 2.8s linear infinite;opacity:0.5;
+#g264-gate .ripple-ring{
+  fill:none;stroke:var(--gold,#f5c842);stroke-width:0.75;opacity:0;
+  transform-box:fill-box;transform-origin:center;animation:g264-ripple-once .9s ease-out 5.35s forwards;
 }
-@keyframes g-ticker{0%{background-position:100% 0}100%{background-position:-100% 0}}
-
-#g-card{
-  position:relative;z-index:2;width:min(420px,93vw);
-  background:linear-gradient(160deg,#0c1120 0%,#101825 60%,#0c1120 100%);
-  border:1px solid rgba(245,200,66,0.14);border-radius:24px;
-  padding:2.5rem 2.25rem 2rem;text-align:center;
-  animation:g-card-in 0.6s cubic-bezier(.34,1.3,.64,1) both;
-  animation-play-state:paused;
-  box-shadow:0 50px 100px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.025) inset;
-}
-#g-card.animate{animation-play-state:running;}
-@keyframes g-card-in{
-  from{opacity:0;transform:translateY(38px) scale(0.95)}
-  to  {opacity:1;transform:translateY(0) scale(1)}
-}
-#g-card::before{
-  content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(245,200,66,0.65),transparent);
+@keyframes g264-ripple-once{
+  0%{opacity:0.18;transform:scale(1);}
+  100%{opacity:0;transform:scale(3.4);}
 }
 
-#g-card-study{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:6px;color:rgba(238,242,247,0.6);margin-bottom:1px;margin-top:.25rem;}
-#g-card-goal{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;margin-bottom:4px;}
-#g-card-sub1{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:3.5px;color:rgba(160,175,200,0.55);text-transform:uppercase;margin-bottom:2px;}
-#g-card-sub2{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:2.5px;color:rgba(106,128,160,0.38);text-transform:uppercase;margin-bottom:1.6rem;}
-#g-card-desc{font-family:'Crimson Pro',serif;font-size:15px;color:rgba(238,242,247,0.42);line-height:1.7;margin-bottom:1.6rem;}
-
-#g-google-btn{
-  width:100%;padding:13px 18px;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.11);
-  border-radius:12px;color:#eef2f7;
-  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-  transition:background .2s,border-color .2s,transform .15s;
-  text-transform:uppercase;margin-bottom:10px;
+#g264-gate .glabel{
+  font-family:'DM Mono',monospace;font-style:italic;font-weight:400;font-size:12px;letter-spacing:0.4px;
+  fill:rgba(238,242,247,0.28);opacity:0;transform-box:fill-box;transform-origin:left center;
+  animation-name:g264-label-in-muted;animation-duration:.4s;animation-timing-function:ease-out;animation-fill-mode:forwards;
 }
-#g-google-btn:hover:not(:disabled){background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.22);transform:translateY(-1px);}
-#g-google-btn:active:not(:disabled){transform:translateY(0)}
-
-#g-skip-btn{
-  width:100%;padding:11px 18px;background:transparent;
-  border:1px solid rgba(106,128,160,0.13);border-radius:12px;
-  color:rgba(106,128,160,0.48);
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
-  cursor:pointer;transition:color .2s,border-color .2s,transform .15s;text-transform:uppercase;
+#g264-gate .glabel.final{
+  font-weight:500;font-size:14px;letter-spacing:0.5px;fill:var(--gold,#f5c842);opacity:0;
+  animation-name:g264-label-in;
 }
-#g-skip-btn:hover{color:rgba(160,185,220,0.75);border-color:rgba(106,128,160,0.28);transform:translateY(-1px);}
+@keyframes g264-label-in{
+  0%{opacity:0;transform:translateY(5px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+@keyframes g264-label-in-muted{
+  0%{opacity:0;transform:translateY(5px);}
+  100%{opacity:0.62;transform:translateY(0);}
+}
 
-#g-card-footer{margin-top:1.1rem;font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:1px;color:rgba(58,80,112,0.5);}
+@media (max-width:860px){
+  #g264-gate{overflow-y:auto;}
+  #g264-gate .opening{grid-template-columns:1fr;height:auto;min-height:100vh;}
+  #g264-gate .opening-right{order:-1;height:auto;padding:32px 0 22px;}
+  #g264-gate .opening-right svg{width:100%;height:auto;max-width:300px;max-height:none;aspect-ratio:auto;object-fit:initial;}
+  #g264-gate .opening-left{padding:8px 28px 48px;align-items:center;text-align:center;}
+  #g264-gate .opening-sub{max-width:none;}
+}
 </style>
 
-<!-- ── SPLASH ── -->
+<!-- ── OPENING GATE ── -->
 <div id="sidebar-tooltip"></div>
-<div id="g264-splash">
-  <div id="g-glow"></div>
+<div id="g264-gate">
+  <div class="opening">
+    <div class="opening-left">
+      <div class="opening-eyebrow">ODIfication<b>Academics</b></div>
+      <div class="opening-hero g264-wordmark">
+        <span class="g-goal">GOAL</span><span class="g-264">264</span>
+      </div>
+      <div class="opening-sub">Track your prep like an innings.</div>
 
-  <div id="g-logo">
-    <!-- Shield logo: S monogram + bat + ball -->
-    <svg width="130" height="140" viewBox="0 0 130 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1a2540"/>
-          <stop offset="100%" stop-color="#0c1220"/>
-        </linearGradient>
-        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#fad96a"/>
-          <stop offset="100%" stop-color="#e05c2a"/>
-        </linearGradient>
-        <linearGradient id="batGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#f5c842"/>
-          <stop offset="100%" stop-color="#d4962a"/>
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
+      <div class="opening-actions">
+        <button id="g-google-btn" onclick="g264SignIn()">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+            <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+        <div id="g-skip-link" onclick="g264Skip()">Continue without an account</div>
+      </div>
+    </div>
 
-      <!-- Shield body -->
-      <path d="M65 6 L112 22 L112 72 Q112 108 65 132 Q18 108 18 72 L18 22 Z"
-            fill="url(#shieldGrad)" stroke="url(#goldGrad)" stroke-width="2.2"/>
-      <!-- Shield inner highlight line -->
-      <path d="M65 13 L106 27 L106 72 Q106 104 65 125 Q24 104 24 72 L24 27 Z"
-            fill="none" stroke="rgba(245,200,66,0.08)" stroke-width="1"/>
+    <div class="opening-right">
+      <svg viewBox="0 0 640 700" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="g264softGlow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="1.2" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <radialGradient id="g264finalGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f5c842" stop-opacity="0.16"/>
+            <stop offset="60%" stop-color="#f5c842" stop-opacity="0.04"/>
+            <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
 
-      <!-- Top gold accent bar -->
-      <rect x="18" y="22" width="94" height="3" rx="1.5" fill="url(#goldGrad)" opacity="0.5"/>
+        <text x="320" y="480" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="460" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.4">264</text>
 
-      <!-- Cricket bat (diagonal, center-left of shield) -->
-      <!-- Handle -->
-      <rect x="47" y="22" width="7" height="18" rx="3.5" fill="#e05c2a" transform="rotate(-8 50 31)"/>
-      <line x1="48.5" y1="26" x2="53.5" y2="25.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-      <line x1="48.5" y1="30" x2="53.5" y2="29.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-      <line x1="48.5" y1="34" x2="53.5" y2="33.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-      <!-- Blade -->
-      <path d="M43 39 L35 95 Q38 100 43 96 L57 39 Q52 34 43 39Z" fill="url(#batGrad)" transform="rotate(-5 46 67)"/>
-      <path d="M57 39 L43 96 Q46 99 48 96 L60 41 Q59 36 57 39Z" fill="#c47b1a" opacity="0.7" transform="rotate(-5 46 67)"/>
-      <!-- Blade face sheen -->
-      <path d="M44 44 L38 88 Q40 91 43 88 L51 44 Q48 41 44 44Z" fill="rgba(255,235,130,0.13)" transform="rotate(-5 46 67)"/>
+        <g transform="translate(0,-48)">
 
-      <!-- Cricket ball (top right of shield) -->
-      <circle cx="88" cy="42" r="18" fill="#c8402a"/>
-      <circle cx="88" cy="42" r="18" fill="none" stroke="#8b1a0a" stroke-width="1.5"/>
-      <!-- Ball seam -->
-      <path d="M76 36 Q88 31 100 36" fill="none" stroke="rgba(255,200,180,0.55)" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M76 48 Q88 53 100 48" fill="none" stroke="rgba(255,200,180,0.55)" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M82 30 Q78 42 82 54"  fill="none" stroke="rgba(255,200,180,0.45)" stroke-width="1.4" stroke-linecap="round"/>
-      <path d="M94 30 Q98 42 94 54"  fill="none" stroke="rgba(255,200,180,0.45)" stroke-width="1.4" stroke-linecap="round"/>
-      <!-- Ball shine -->
-      <circle cx="81" cy="36" r="4" fill="rgba(255,255,255,0.22)"/>
-      <circle cx="83" cy="34" r="1.5" fill="rgba(255,255,255,0.18)"/>
+        <path class="growth-path"
+              d="M 4 685
+                 C 15 680, 52.33 667.5, 70 655
+                 C 87.67 642.5, 98.33 611.67, 110 610
+                 C 121.67 608.33, 129.17 631.67, 140 645
+                 C 150.83 658.33, 162.5 692.5, 175 690
+                 C 187.5 687.5, 202.5 646.67, 215 630
+                 C 227.5 613.33, 236.67 612.5, 250 590
+                 C 263.33 567.5, 281.67 502.5, 295 495
+                 C 308.33 487.5, 316.67 526.67, 330 545
+                 C 343.33 563.33, 361.67 598.33, 375 605
+                 C 388.33 611.67, 400.83 584.17, 410 585
+                 C 419.17 585.83, 421.67 614.17, 430 610
+                 C 438.33 605.83, 448.33 583.33, 460 560
+                 C 471.67 536.67, 485.83 505, 500 470
+                 C 514.17 435, 525.83 410, 545 350
+                 C 564.17 290, 603.33 150, 615 110"
+        />
 
-      <!-- "S" monogram — bold, centered lower shield -->
-      <text x="65" y="108" text-anchor="middle"
-            font-family="'Bebas Neue',sans-serif" font-size="38" letter-spacing="2"
-            fill="url(#goldGrad)" filter="url(#glow)" opacity="0.92">S</text>
+        <text x="320" y="528" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="460" fill="none" stroke="#0a0c11" stroke-width="2.2">264</text>
+        <text x="320" y="528" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="460" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.2">264</text>
 
-      <!-- Bottom shield point accent dots -->
-      <circle cx="65" cy="126" r="2.5" fill="url(#goldGrad)" opacity="0.7"/>
-      <circle cx="59" cy="122" r="1.5" fill="rgba(245,200,66,0.3)"/>
-      <circle cx="71" cy="122" r="1.5" fill="rgba(245,200,66,0.3)"/>
-    </svg>
+        <circle cx="615" cy="110" r="42" fill="url(#g264finalGlow)"/>
+
+        <g class="gnode start" style="animation-delay:.15s">
+          <circle cx="4" cy="685" r="2.3"/>
+        </g>
+
+        <g class="gnode" style="animation-delay:.59s">
+          <circle cx="110" cy="610" r="3"/>
+        </g>
+        <g class="gnode" style="animation-delay:.99s">
+          <circle cx="175" cy="690" r="3"/>
+        </g>
+        <g class="gnode" style="animation-delay:1.88s">
+          <circle cx="295" cy="495" r="3.2"/>
+        </g>
+        <g class="gnode" style="animation-delay:2.41s">
+          <circle cx="375" cy="605" r="3"/>
+        </g>
+
+        <g class="gnode final" style="animation-delay:4.75s">
+          <circle class="glow" cx="615" cy="110" r="8" filter="url(#g264softGlow)"/>
+          <circle class="core" cx="615" cy="110" r="4.5"/>
+        </g>
+        <circle class="pulse-ring" cx="615" cy="110" r="7"/>
+        <circle class="ripple-ring" cx="615" cy="110" r="7"/>
+
+        <text class="glabel" x="88" y="588" text-anchor="end" style="animation-delay:.71s">doubt</text>
+        <text class="glabel" x="205" y="678" text-anchor="start" style="animation-delay:1.11s">burnout</text>
+        <text class="glabel" x="295" y="468" text-anchor="middle" style="animation-delay:2.0s">small&#160;win</text>
+        <text class="glabel" x="400" y="632" text-anchor="start" style="animation-delay:2.53s">restart</text>
+        <text class="glabel final" x="562" y="92" text-anchor="end" style="animation-delay:4.95s">breakthrough</text>
+
+        </g>
+      </svg>
+    </div>
   </div>
-
-  <div id="g-study-innings">SHIVA PRESENTS</div>
-  <div id="g-goal264">
-    <span style="color:#eef2f7">GOAL</span><span style="color:#f5c842">264</span>
-  </div>
-  <div id="g-tagline1">A Gamification Tracker</div>
-  <div id="g-tagline2">Turn every study session into a cricket innings</div>
-
-  <div id="g-loader-track"><div id="g-loader-fill"></div></div>
 </div>
 
-<!-- ── SIGN-IN ── -->
-<div id="g264-signin">
-  <div id="g-orb1"></div><div id="g-orb2"></div>
-  <div id="g-ticker"></div>
-
-  <div id="g-card">
-    <!-- Card logo (smaller) -->
-    <div style="margin:0 auto .9rem;display:inline-block;">
-      <svg width="64" height="70" viewBox="0 0 130 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="shieldGrad2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#1a2540"/>
-            <stop offset="100%" stop-color="#0c1220"/>
-          </linearGradient>
-          <linearGradient id="goldGrad2" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#fad96a"/>
-            <stop offset="100%" stop-color="#e05c2a"/>
-          </linearGradient>
-          <linearGradient id="batGrad2" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#f5c842"/>
-            <stop offset="100%" stop-color="#d4962a"/>
-          </linearGradient>
-          <filter id="glow2">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <path d="M65 6 L112 22 L112 72 Q112 108 65 132 Q18 108 18 72 L18 22 Z" fill="url(#shieldGrad2)" stroke="url(#goldGrad2)" stroke-width="2.2"/>
-        <rect x="18" y="22" width="94" height="3" rx="1.5" fill="url(#goldGrad2)" opacity="0.5"/>
-        <rect x="47" y="22" width="7" height="18" rx="3.5" fill="#e05c2a" transform="rotate(-8 50 31)"/>
-        <line x1="48.5" y1="26" x2="53.5" y2="25.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-        <line x1="48.5" y1="30" x2="53.5" y2="29.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-        <line x1="48.5" y1="34" x2="53.5" y2="33.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-        <path d="M43 39 L35 95 Q38 100 43 96 L57 39 Q52 34 43 39Z" fill="url(#batGrad2)" transform="rotate(-5 46 67)"/>
-        <path d="M57 39 L43 96 Q46 99 48 96 L60 41 Q59 36 57 39Z" fill="#c47b1a" opacity="0.7" transform="rotate(-5 46 67)"/>
-        <circle cx="88" cy="42" r="18" fill="#c8402a"/>
-        <circle cx="88" cy="42" r="18" fill="none" stroke="#8b1a0a" stroke-width="1.5"/>
-        <path d="M76 36 Q88 31 100 36" fill="none" stroke="rgba(255,200,180,0.55)" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M76 48 Q88 53 100 48" fill="none" stroke="rgba(255,200,180,0.55)" stroke-width="1.8" stroke-linecap="round"/>
-        <circle cx="81" cy="36" r="4" fill="rgba(255,255,255,0.22)"/>
-        <text x="65" y="108" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="38" letter-spacing="2" fill="url(#goldGrad2)" filter="url(#glow2)" opacity="0.92">S</text>
-        <circle cx="65" cy="126" r="2.5" fill="url(#goldGrad2)" opacity="0.7"/>
-      </svg>
-    </div>
-
-    <div id="g-card-study">SHIVA PRESENTS</div>
-    <div id="g-card-goal">
-      <span style="color:#eef2f7">GOAL</span><span style="color:#f5c842">264</span>
-    </div>
-    <div id="g-card-sub1">A Gamification Tracker</div>
-    <div id="g-card-sub2">Turn every study session into a cricket innings</div>
-
-    <div id="g-card-desc">
-      Sign in to sync your innings,<br>
-      track your career &amp; climb the leaderboard.
-    </div>
-
-    <button id="g-google-btn" onclick="g264SignIn()">
-      <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
-        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
-        <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
-        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z" fill="#EA4335"/>
-      </svg>
-      Continue with Google
-    </button>
-
-    <button id="g-skip-btn" onclick="g264Skip()">Skip for now</button>
-
-    <div id="g-card-footer">Your data is saved securely to your account</div>
+<!-- ── SPLASH (shown only on a refresh within the same tab) ── -->
+<div id="g264-splash">
+  <div class="g264-wordmark">
+    <span class="g-goal">GOAL</span><span class="g-264">264</span>
   </div>
 </div>
 
 <script>
 (function(){
+  var gate=document.getElementById('g264-gate');
   var splash=document.getElementById('g264-splash');
-  var signin=document.getElementById('g264-signin');
-  var card=document.getElementById('g-card');
-  function dismissSplash(cb){
-    // Start fading out splash
-    splash.classList.add('exit');
-    // Halfway through splash exit, start fading in signin (smooth crossfade)
-    setTimeout(function(){ if(cb) cb(); }, 320);
-    // Remove splash from layout after it's gone
-    setTimeout(function(){ splash.style.display='none'; }, 720);
+  var actions=gate ? gate.querySelector('.opening-actions') : null;
+
+  // ── SPLASH: shown only on a refresh within the same tab (see html.g264-session).
+  //    Holds briefly like a normal app splash, then fades into the app on its own. ──
+  if (splash) {
+    var splashDone=false;
+    function hideSplash(){
+      if(splashDone)return; splashDone=true;
+      splash.style.opacity='0';
+      setTimeout(function(){ splash.style.display='none'; }, 400);
+    }
+    function armSplashTimer(){ setTimeout(hideSplash, 650); }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(armSplashTimer);
+      setTimeout(armSplashTimer, 1200); // safety net
+    } else {
+      armSplashTimer();
+    }
   }
-  function showSignIn(){
-    signin.classList.add('visible');
-    // Animate card slightly after signin bg appears
-    setTimeout(function(){ card.classList.add('animate'); }, 120);
-  }
+
   function dismissAll(){
-    signin.style.transition='opacity .4s ease';
-    signin.style.opacity='0';
-    signin.style.pointerEvents='none';
-    setTimeout(function(){ signin.style.display='none'; }, 420);
+    gate.style.opacity='0';
+    gate.style.pointerEvents='none';
+    setTimeout(function(){ gate.style.display='none'; }, 420);
+  }
+  var autoArmed=false;
+  function autoDismissWhenReady(){
+    if(autoArmed)return; autoArmed=true;
+    // let the opening graphic play out, then continue on its own — no click needed
+    setTimeout(dismissAll, 6200);
   }
   var t=setInterval(function(){
     if(!window._fb)return;clearInterval(t);
@@ -1525,10 +1490,12 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
     fb.onAuthStateChanged(fb.auth,function(user){
       if(user){
-        splash.style.display='none';
-        signin.style.display='none';
-      } else {
-        setTimeout(function(){ dismissSplash(showSignIn); }, 2700);
+        // already signed in — don't show the sign-in buttons, just let the
+        // opening finish playing, then continue automatically
+        autoDismissWhenReady();
+      } else if(actions){
+        // not signed in — reveal the sign-in options
+        actions.classList.add('g264-visible');
       }
     });
   },50);
@@ -1549,9 +1516,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     },50);
   };
   window.g264Skip=function(){
-    card.style.transition='opacity .28s ease,transform .28s ease';
-    card.style.opacity='0';card.style.transform='scale(0.97) translateY(8px)';
-    setTimeout(dismissAll,280);
+    dismissAll();
   };
 })();
 </script>
@@ -1565,7 +1530,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <rect x="2" y="12.5" width="14" height="1.5" rx=".75" fill="currentColor"/>
     </svg>
   </button>
-  <div class="top-bar-title" id="top-bar-player-name">GOAL<span style="color:var(--fire)">264</span></div>
+  <div class="top-bar-title" id="top-bar-player-name">GOAL<span class="tb-264">264</span></div>
   <div class="top-bar-profile-btn" id="top-bar-avatar" onclick="toggleProfileModal()" title="Profile">P</div>
 </div>
 
@@ -1575,7 +1540,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 <aside class="sidebar" id="sidebar">
   <!-- App name header -->
   <div class="sidebar-header">
-    <span class="sidebar-appname">GOAL<span style="color:var(--fire)">264</span></span>
+    <span class="sidebar-appname">GOAL<span class="sa-264">264</span></span>
     <button class="sidebar-close-btn" id="sidebar-toggle-btn" onclick="toggleExpand()" title="Toggle sidebar">
       <!-- icon swaps via JS -->
       <svg id="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -1606,11 +1571,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <button class="sidebar-item" id="si-career" onclick="showPage('career',this)" data-tooltip="Career">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 3.5l.9 1.8 2 .3-1.45 1.4.34 2-1.79-.94L14.2 9l.34-2L13.1 5.6l2-.3z"/></svg></span><span class="si-label">Career</span>
     </button>
-    <button class="sidebar-item" id="si-race" onclick="showPage('race',this)" data-tooltip="Race Board">
-      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><span class="si-label">Race Board</span>
-    </button>
-    <button class="sidebar-item" id="si-leaderboard" onclick="showPage('leaderboard',this)" data-tooltip="Leaderboard">
-      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></span><span class="si-label">Leaderboard</span>
+    <button class="sidebar-item" id="si-race" onclick="showPage('race',this)" data-tooltip="Compete">
+      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><span class="si-label">Compete</span>
     </button>
     <button class="sidebar-item" id="si-best" onclick="showPage('best',this)" data-tooltip="Records">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 01-2-2V5h4"/><path d="M18 9h2a2 2 0 002-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 5h12v6a6 6 0 01-12 0V5z"/></svg></span><span class="si-label">Records</span>
@@ -1637,7 +1599,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <button class="profile-row-btn" onclick="showTab('profile',null)">
         <div class="auth-avatar" id="auth-avatar-icon-exp">👤</div>
         <div style="flex:1;min-width:0">
-          <div class="auth-user-name" id="auth-user-name">GOAL264</div>
+          <div class="auth-user-name" id="auth-user-name"><span style="font-family:'Bebas Neue',sans-serif;letter-spacing:1px;color:#eef2f7">GOAL<span style="color:var(--gold)">264</span></span></div>
           <div class="auth-user-sub" id="auth-user-sub">Tap to manage profile</div>
         </div>
       </button>
@@ -1647,12 +1609,6 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 <!-- ══ MAIN WRAP ══ -->
 <div class="main-wrap">
-
-<!-- Hidden legacy nav for compatibility -->
-<nav class="nav" id="main-nav" style="display:none">
-  <div class="nav-logo">SHIVA<span>45</span></div>
-</nav>
-<div class="nav-fade" id="nav-fade" style="display:none"></div>
 
 <!-- ══ PAGE: SCOREBOARD ══ -->
 <div class="page active" id="page-scoreboard">
@@ -1742,26 +1698,24 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div class="stat-card"><div class="stat-label">Career Average</div><div class="stat-val gold" id="sb-avg">—</div><div class="stat-sub">runs per match</div></div>
     <div class="stat-card"><div class="stat-label">Career Runs</div><div class="stat-val fire" id="sb-runs">0</div><div class="stat-sub">total</div></div>
     <div class="stat-card"><div class="stat-label">Centuries</div><div class="stat-val green" id="sb-tons">0</div><div class="stat-sub">100+ days</div></div>
-    <div class="stat-card"><div class="stat-label">🔥 Streak</div><div class="stat-val purple" id="sb-streak">0</div><div class="stat-sub">century streak</div></div>
+    <div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val purple" id="sb-streak">0</div><div class="stat-sub">century streak</div></div>
   </div>
 
   <!-- CAREER GOAL — HOME -->
   <div class="goal-card" id="goal-card-home" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem">
+    <div class="goal-card-head">
       <div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:6px">
-          <span style="font-size:16px">🎯</span> Career Goal
-        </div>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-top:1px;letter-spacing:.5px">Career Run Target</div>
+        <div class="goal-card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg> Career Goal</div>
+        <div class="goal-card-sub">Career Run Target</div>
       </div>
-      <button onclick="showTab('graphs',null)" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);background:rgba(245,200,66,0.08);border:0.5px solid rgba(245,200,66,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;letter-spacing:.5px;transition:all .15s" onmouseover="this.style.background='rgba(245,200,66,0.15)'" onmouseout="this.style.background='rgba(245,200,66,0.08)'">EDIT GOAL ›</button>
+      <button class="goal-card-edit-btn" onclick="showTab('graphs',null)">EDIT GOAL ›</button>
     </div>
     <div class="goal-progress"><div class="goal-progress-fill" id="goal-progress-fill-home" style="width:0%"></div></div>
     <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:5px" id="goal-progress-label-home"></div>
     <div class="goal-stats" style="margin-top:.75rem">
-      <div class="goal-stat"><div class="goal-stat-val" id="goal-runs-left-home" style="color:var(--fire)">—</div><div class="goal-stat-label">Runs Left</div></div>
+      <div class="goal-stat"><div class="goal-stat-val" id="goal-runs-left-home">—</div><div class="goal-stat-label">Runs Left</div></div>
       <div class="goal-stat"><div class="goal-stat-val" id="goal-days-left-home" style="color:var(--gold)">—</div><div class="goal-stat-label">Days Left</div></div>
-      <div class="goal-stat"><div class="goal-stat-val" id="goal-daily-need-home" style="color:var(--cyan)">—</div><div class="goal-stat-label">Need/Day</div></div>
+      <div class="goal-stat"><div class="goal-stat-val" id="goal-daily-need-home">—</div><div class="goal-stat-label">Need/Day</div></div>
     </div>
     <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:.625rem;padding:.4rem .625rem;background:rgba(255,255,255,0.03);border-radius:6px" id="goal-on-pace-home"></div>
   </div>
@@ -1780,7 +1734,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 <!-- ══ PAGE: MATCH ENTRY ══ -->
 <div class="page" id="page-entry">
-  <div class="section-title">🏏 Log Today's Match</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Today's Match</div>
   <div class="card">
     <div class="two-col">
       <div class="field"><label class="flabel">Match No.</label><input class="finput" id="match-no" placeholder="Auto" readonly style="opacity:.6;cursor:default"></div>
@@ -1809,10 +1763,10 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     <div class="field">
       <label class="flabel">⚡ Match Energy <span style="color:var(--muted2);font-size:9px">(how did today feel?)</span></label>
       <div class="tags-wrap" id="mood-tags">
-        <span class="tag" id="mood-grind"  data-mood="grind"   onclick="selectMood(this)" style="background:#1a1005;border-color:#7a4a10;color:#f5a442">😤 Grind</span>
-        <span class="tag" id="mood-locked" data-mood="locked"  onclick="selectMood(this)" style="background:#0a1a05;border-color:#2a6a10;color:#6ad442">🔥 Locked In</span>
-        <span class="tag" id="mood-low"    data-mood="low"     onclick="selectMood(this)" style="background:#0a0a1a;border-color:#2a2a6a;color:#6a8af5">😴 Low Energy</span>
-        <span class="tag" id="mood-sick"   data-mood="sick"    onclick="selectMood(this)" style="background:#1a0a0a;border-color:#6a2a2a;color:#f58080">😷 Sick</span>
+        <span class="tag tag-grind" id="mood-grind"  data-mood="grind"   onclick="selectMood(this)">😤 Grind</span>
+        <span class="tag tag-locked" id="mood-locked" data-mood="locked"  onclick="selectMood(this)">🔥 Locked In</span>
+        <span class="tag tag-low" id="mood-low"    data-mood="low"     onclick="selectMood(this)">😴 Low Energy</span>
+        <span class="tag tag-sick" id="mood-sick"   data-mood="sick"    onclick="selectMood(this)">😷 Sick</span>
       </div>
     </div>
     <div class="field">
@@ -1880,121 +1834,114 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
     </div>
   </div>
 
-  <!-- RIVAL CARD - CAREER -->
-  <div id="rival-card-career"></div>
-
-  <!-- CAREER GOAL — CAREER PAGE -->
-  <div class="goal-card" id="goal-card-career" style="display:none;margin-top:.5rem">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem">
-      <div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:6px">
-          <span style="font-size:16px">🎯</span> Career Goal
-        </div>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-top:1px;letter-spacing:.5px">Career Run Target</div>
-      </div>
-      <button onclick="showTab('graphs',null)" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);background:rgba(245,200,66,0.08);border:0.5px solid rgba(245,200,66,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;letter-spacing:.5px;transition:all .15s" onmouseover="this.style.background='rgba(245,200,66,0.15)'" onmouseout="this.style.background='rgba(245,200,66,0.08)'">EDIT GOAL ›</button>
-    </div>
-    <div class="goal-progress"><div class="goal-progress-fill" id="goal-progress-fill-career" style="width:0%"></div></div>
-    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:5px" id="goal-progress-label-career"></div>
-    <div class="goal-stats" style="margin-top:.75rem">
-      <div class="goal-stat"><div class="goal-stat-val" id="goal-runs-left-career" style="color:var(--fire)">—</div><div class="goal-stat-label">Runs Left</div></div>
-      <div class="goal-stat"><div class="goal-stat-val" id="goal-days-left-career" style="color:var(--gold)">—</div><div class="goal-stat-label">Days Left</div></div>
-      <div class="goal-stat"><div class="goal-stat-val" id="goal-daily-need-career" style="color:var(--cyan)">—</div><div class="goal-stat-label">Need/Day</div></div>
-    </div>
-    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:.625rem;padding:.4rem .625rem;background:rgba(255,255,255,0.03);border-radius:6px" id="goal-on-pace-career"></div>
-  </div>
+  <!-- Goal + Rival tracking now live on Home only, to avoid showing the same card twice -->
+  <button class="home-teaser-link" onclick="goHome()">See your Goal &amp; Rival progress on Home ›</button>
 
   <!-- PEAK WINDOW INSIGHT -->
   <div id="peak-insight-wrap" style="margin-top:1rem"></div>
 
-  <!-- ACHIEVEMENTS -->
-  <div class="section-title" style="margin-top:1.25rem">🏅 Achievements</div>
-  <div id="ach-unlocked-wrap" class="ach-unlocked-section">
-    <div class="ach-grid" id="achievements-grid"></div>
+  <!-- ACHIEVEMENTS (collapsed by default) -->
+  <div class="section-title ach-section-header" style="margin-top:1.25rem" onclick="toggleAchievementsSection()">
+    <span>Achievements <span id="ach-summary-count" class="ach-summary-count"></span></span>
+    <span id="ach-section-arrow" class="ach-section-arrow">▾</span>
   </div>
-  <button class="ach-locked-toggle" id="ach-locked-toggle" onclick="toggleLockedAch()">
-    <span id="ach-locked-label">Show locked achievements</span>
-    <span id="ach-locked-arrow">▾</span>
-  </button>
-  <div class="ach-locked-section" id="ach-locked-section">
-    <div class="ach-grid" id="achievements-locked-grid"></div>
+  <div id="ach-section-body" class="ach-section-body">
+    <div id="ach-unlocked-wrap" class="ach-unlocked-section">
+      <div class="ach-grid" id="achievements-grid"></div>
+    </div>
+    <button class="ach-locked-toggle" id="ach-locked-toggle" onclick="toggleLockedAch()">
+      <span id="ach-locked-label">Show locked achievements</span>
+      <span id="ach-locked-arrow">▾</span>
+    </button>
+    <div class="ach-locked-section" id="ach-locked-section">
+      <div class="ach-grid" id="achievements-locked-grid"></div>
+    </div>
   </div>
 
 </div>
 
-<!-- ══ PAGE: RACE BOARD ══ -->
+<!-- ══ PAGE: COMPETE (Race Board + Leaderboard merged) ══ -->
 <div class="page" id="page-race">
-  <div class="section-title">🏁 Career ODI Runs Race</div>
-  <div class="race-board">
-    <div class="race-title">CAREER RUNS RACE</div>
-    <div class="race-sub">Your total vs ODI legends — updated every match</div>
-    <div id="race-rows"></div>
-  </div>
-  <div class="card">
-    <div class="section-title" style="font-size:18px;margin-bottom:.75rem">📊 Career Average Race</div>
-    <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your average vs their career average (min 5 matches to show yours)</div>
-    <div id="avg-race-rows"></div>
-  </div>
-  <div class="card">
-    <div class="section-title" style="font-size:18px;margin-bottom:.75rem">🎯 Highest Score Race</div>
-    <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your personal best vs legends' highest ODI scores</div>
-    <div id="best-race-rows"></div>
-  </div>
-</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Compete</div>
 
-<!-- ══ PAGE: LEADERBOARD ══ -->
-<div class="page" id="page-leaderboard">
-  <div class="lb-header">
-    <div class="lb-title">🌍 GLOBAL LEADERBOARD</div>
-    <div class="lb-sub">Real players competing against ODI legends — who reigns supreme?</div>
-    <div class="lb-meta">
-      <span class="lb-meta-pill lb-meta-users" id="lb-user-count">👤 — players</span>
-      <span class="lb-meta-pill lb-meta-legends">🏏 10 legends</span>
-      <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2)" id="lb-last-updated"></span>
-      <button class="lb-refresh-btn" onclick="renderLeaderboard()">↻ REFRESH</button>
+  <div class="pill-toggle" id="compete-toggle">
+    <button class="pill-btn active" id="compete-toggle-legends" onclick="setCompeteView('legends',this)">vs Legends</button>
+    <button class="pill-btn" id="compete-toggle-global" onclick="setCompeteView('global',this)">Global</button>
+  </div>
+
+  <!-- vs LEGENDS VIEW -->
+  <div id="compete-view-legends">
+    <div class="race-board">
+      <div class="race-title">CAREER RUNS RACE</div>
+      <div class="race-sub">Your total vs ODI legends — updated every match</div>
+      <div id="race-rows"></div>
     </div>
-    <!-- Toggle -->
-    <div class="pill-toggle" style="margin-top:1rem;margin-bottom:0">
-      <button class="pill-btn active" id="lb-toggle-combined" onclick="setLbMode('combined',this)">Players + Legends</button>
-      <button class="pill-btn" id="lb-toggle-players" onclick="setLbMode('players',this)">Players Only</button>
+    <div class="card">
+      <div class="section-title" style="font-size:18px;margin-bottom:.75rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="18" y1="20" x2="18" y2="14"/></svg>Career Average Race</div>
+      <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your average vs their career average (min 5 matches to show yours)</div>
+      <div id="avg-race-rows"></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="font-size:18px;margin-bottom:.75rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>Highest Score Race</div>
+      <div class="race-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:1rem">Your personal best vs legends' highest ODI scores</div>
+      <div id="best-race-rows"></div>
     </div>
   </div>
 
-  <!-- Full leaderboard table -->
-  <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem">
-  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-    <table class="lb-table" style="min-width:380px">
-      <thead>
-        <tr>
-          <th style="width:36px">#</th>
-          <th style="width:36px"></th>
-          <th>Player</th>
-          <th>Runs</th>
-          <th>Avg</th>
-          <th>100s</th>
-          <th>Best</th>
-          <th>M</th>
-          <th style="min-width:80px"></th>
-        </tr>
-      </thead>
-      <tbody id="lb-tbody">
-        <tr><td colspan="9"><div class="lb-loading"><div class="lb-spinner"></div><br>Loading leaderboard…</div></td></tr>
-      </tbody>
-    </table>
-  </div>
-  </div>
+  <!-- GLOBAL LEADERBOARD VIEW -->
+  <div id="compete-view-global" style="display:none">
+    <div class="lb-header">
+      <div class="lb-title">Global Leaderboard</div>
+      <div class="lb-sub">Real players competing against ODI legends — who reigns supreme?</div>
+      <div class="lb-meta">
+        <span class="lb-meta-pill lb-meta-users" id="lb-user-count">👤 — players</span>
+        <span class="lb-meta-pill lb-meta-legends">🏏 10 legends</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2)" id="lb-last-updated"></span>
+        <button class="lb-refresh-btn" onclick="renderLeaderboard()">↻ REFRESH</button>
+      </div>
+      <!-- Toggle -->
+      <div class="pill-toggle" style="margin-top:1rem;margin-bottom:0">
+        <button class="pill-btn active" id="lb-toggle-combined" onclick="setLbMode('combined',this)">Players + Legends</button>
+        <button class="pill-btn" id="lb-toggle-players" onclick="setLbMode('players',this)">Players Only</button>
+      </div>
+    </div>
 
-  <!-- Legend key -->
-  <div style="display:flex;gap:1rem;flex-wrap:wrap;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px;padding:.5rem 0">
-    <span>👤 Real player</span>
-    <span>🏏 ODI Legend (historical)</span>
-    <span style="color:var(--gold)">★ You</span>
+    <!-- Full leaderboard table -->
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.25rem">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+      <table class="lb-table" style="min-width:380px">
+        <thead>
+          <tr>
+            <th style="width:36px">#</th>
+            <th style="width:36px"></th>
+            <th>Player</th>
+            <th>Runs</th>
+            <th>Avg</th>
+            <th>100s</th>
+            <th>Best</th>
+            <th>M</th>
+            <th style="min-width:80px"></th>
+          </tr>
+        </thead>
+        <tbody id="lb-tbody">
+          <tr><td colspan="9"><div class="lb-loading"><div class="lb-spinner"></div><br>Loading leaderboard…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <!-- Legend key -->
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:1px;padding:.5rem 0">
+      <span>👤 Real player</span>
+      <span>🏏 ODI Legend (historical)</span>
+      <span style="color:var(--gold)">★ You</span>
+    </div>
   </div>
 </div>
 
 <!-- ══ PAGE: RECORDS ══ -->
 <div class="page" id="page-best">
-  <div class="section-title">🏆 Hall of Fame</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 01-2-2V5h4"/><path d="M18 9h2a2 2 0 002-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 5h12v6a6 6 0 01-12 0V5z"/></svg>Hall of Fame</div>
   <div class="podium" id="podium">
     <div class="podium-card second"><div class="podium-rank">2</div><div class="podium-medal">🥈</div><div class="podium-runs" id="p2-runs">—</div><div class="podium-runs-label">Runs</div><div class="podium-date" id="p2-date">No match yet</div></div>
     <div class="podium-card first"><div class="podium-rank">1</div><div class="podium-medal">🥇</div><div class="podium-runs" id="p1-runs">—</div><div class="podium-runs-label">Runs</div><div class="podium-date" id="p1-date">No match yet</div></div>
@@ -2257,7 +2204,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 <!-- ══ PAGE: WEEKLY ══ -->
 <div class="page" id="page-weekly">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
-    <div class="section-title" style="margin-bottom:0">📅 Weekly Analysis</div>
+    <div class="section-title" style="margin-bottom:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>Weekly Analysis</div>
     <div id="week-of-year-badge" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted2);background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:6px;padding:3px 8px"></div>
   </div>
 
@@ -2316,7 +2263,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 <!-- ══ PAGE: MONTHLY ══ -->
 <div class="page" id="page-monthly">
-  <div class="section-title">📆 Monthly Analysis</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M7 15l3 3 7-7"/></svg>Monthly Analysis</div>
   <div class="month-nav" style="margin-bottom:1rem">
     <button class="month-btn" onclick="changeMonthPage(-1)">‹ Prev</button>
     <div class="month-title" id="month-title-pg"></div>
@@ -2360,7 +2307,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 <!-- ══ PAGE: GRAPHS ══ (Career Goal only) -->
 <div class="page" id="page-graphs">
-  <div class="section-title">🎯 Career Goal</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>Career Goal</div>
   <div class="goal-card" id="goal-card-graphs">
     <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
       <div style="flex:1;min-width:160px">
@@ -2376,9 +2323,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
       <div class="goal-progress"><div class="goal-progress-fill" id="goal-progress-fill" style="width:0%"></div></div>
       <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:5px" id="goal-progress-label"></div>
       <div class="goal-stats">
-        <div class="goal-stat"><div class="goal-stat-val" id="goal-runs-left" style="color:var(--fire)">—</div><div class="goal-stat-label">Runs Left</div></div>
+        <div class="goal-stat"><div class="goal-stat-val" id="goal-runs-left">—</div><div class="goal-stat-label">Runs Left</div></div>
         <div class="goal-stat"><div class="goal-stat-val" id="goal-days-left" style="color:var(--gold)">—</div><div class="goal-stat-label">Days Left</div></div>
-        <div class="goal-stat"><div class="goal-stat-val" id="goal-daily-need" style="color:var(--cyan)">—</div><div class="goal-stat-label">Need/Day</div></div>
+        <div class="goal-stat"><div class="goal-stat-val" id="goal-daily-need">—</div><div class="goal-stat-label">Need/Day</div></div>
       </div>
       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:.75rem;padding:.5rem .75rem;background:rgba(255,255,255,0.03);border-radius:6px" id="goal-on-pace"></div>
     </div>
@@ -2575,11 +2522,17 @@ function showAuthUI(user) {
   const subEl  = document.getElementById('auth-user-sub');
   const mobileNameEl = document.getElementById('top-bar-player-name');
 
-  if (nameEl) nameEl.textContent = displayName;
+  if (nameEl) {
+    if (displayName === 'GOAL264') {
+      nameEl.innerHTML = '<span style="font-family:\'Bebas Neue\',sans-serif;letter-spacing:1px;color:#eef2f7">GOAL<span style="color:var(--gold)">264</span></span>';
+    } else {
+      nameEl.textContent = displayName;
+    }
+  }
   if (subEl)  subEl.textContent  = user ? 'Tap to manage profile' : 'Tap to sign in';
   if (mobileNameEl) {
     if (displayName === 'GOAL264') {
-      mobileNameEl.innerHTML = 'GOAL<span style="color:var(--fire)">264</span>';
+      mobileNameEl.innerHTML = 'GOAL<span class="tb-264">264</span>';
     } else {
       mobileNameEl.textContent = displayName;
     }
@@ -3525,9 +3478,9 @@ function renderCapCards() {
     ${dateStr ? `<div class="cap-date">Achieved · ${dateStr}</div>` : ''}
     <div class="cap-stats-row">
       <div class="cap-stat"><div class="cap-stat-val" style="color:${cap.colour}">${capAvg}</div><div class="cap-stat-label">Avg at cap</div></div>
-      <div class="cap-stat"><div class="cap-stat-val" style="color:var(--fire)">${capBest}</div><div class="cap-stat-label">Best score</div></div>
-      <div class="cap-stat"><div class="cap-stat-val" style="color:var(--gold)">${capTons}</div><div class="cap-stat-label">Centuries</div></div>
-      <div class="cap-stat"><div class="cap-stat-val" style="color:var(--green)">${capRuns}</div><div class="cap-stat-label">Total runs</div></div>
+      <div class="cap-stat"><div class="cap-stat-val">${capBest}</div><div class="cap-stat-label">Best score</div></div>
+      <div class="cap-stat"><div class="cap-stat-val">${capTons}</div><div class="cap-stat-label">Centuries</div></div>
+      <div class="cap-stat"><div class="cap-stat-val">${capRuns}</div><div class="cap-stat-label">Total runs</div></div>
     </div>
     ${nextLine}
   </div>`;
@@ -4822,8 +4775,7 @@ function showPage(id,btn){
   if(id==='career')      { renderCareer(); renderCapCards(); renderPeakInsight(); }
   if(id==='best')        renderBest();
   if(id==='tracker')     renderTracker();
-  if(id==='race')        renderRaceBoard();
-  if(id==='leaderboard') renderLeaderboard();
+  if(id==='race')        { renderRaceBoard(); if(competeView==='global') renderLeaderboard(); }
   if(id==='test')        { buildTestFilters(); renderTestSchedule(); }
 }
 
@@ -5315,19 +5267,6 @@ updateMatchNoDisplay();
   }
 })();
 
-// FIX 3: nav scroll fade indicator
-(function initNavFade(){
-  const nav  = document.getElementById('main-nav');
-  const fade = document.getElementById('nav-fade');
-  if(!nav||!fade) return;
-  function updateFade(){
-    const atEnd = nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 4;
-    fade.classList.toggle('hidden', atEnd);
-  }
-  nav.addEventListener('scroll', updateFade);
-  updateFade();
-})();
-
 // Close confirm overlay on backdrop click
 document.getElementById('confirm-overlay').addEventListener('click', function(e){
   if(e.target===this) closeConfirm();
@@ -5363,6 +5302,16 @@ const LEGEND_LB = [
   { name:'Brian Lara',       flag:'🇹🇹', runs:10405, avg:40.48, hundreds:19, best:169, matches:299, isLegend:true },
   { name:'Sourav Ganguly',   flag:'🇮🇳', runs:11363, avg:41.02, hundreds:22, best:183, matches:311, isLegend:true },
 ];
+
+let competeView = 'legends'; // 'legends' | 'global'
+function setCompeteView(view, btn) {
+  competeView = view;
+  document.getElementById('compete-view-legends').style.display = view === 'legends' ? 'block' : 'none';
+  document.getElementById('compete-view-global').style.display  = view === 'global'  ? 'block' : 'none';
+  document.querySelectorAll('#compete-toggle .pill-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (view === 'global') renderLeaderboard();
+}
 
 let lbMode = 'combined'; // 'combined' | 'players'
 
@@ -5445,11 +5394,11 @@ async function renderLeaderboard() {
           <div class="lb-detail" id="${detailId}">
             <div class="lb-detail-grid">
               <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--gold)">${p.runs.toLocaleString()}</div><div class="lb-detail-label">Career Runs</div></div>
-              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--green)">${p.avg}</div><div class="lb-detail-label">Average</div></div>
-              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--purple)">${p.hundreds}</div><div class="lb-detail-label">Centuries</div></div>
-              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--cyan)">${p.best}</div><div class="lb-detail-label">Best Score</div></div>
-              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--blue)">${p.matches}</div><div class="lb-detail-label">Matches</div></div>
-              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--fire)">${p.matches>0?(p.hundreds/p.matches*100).toFixed(0)+'%':'—'}</div><div class="lb-detail-label">Century Rate</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--gold)">${p.avg}</div><div class="lb-detail-label">Average</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--green)">${p.hundreds}</div><div class="lb-detail-label">Centuries</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val">${p.best}</div><div class="lb-detail-label">Best Score</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val">${p.matches}</div><div class="lb-detail-label">Matches</div></div>
+              <div class="lb-detail-stat"><div class="lb-detail-val" style="color:var(--green)">${p.matches>0?(p.hundreds/p.matches*100).toFixed(0)+'%':'—'}</div><div class="lb-detail-label">Century Rate</div></div>
             </div>
           </div>
         </td></tr>`;
@@ -5942,7 +5891,7 @@ function renderRivalCards() {
 
     el.innerHTML = `<div class="rival-section">
       <div class="rival-section-header">
-        <div class="rival-section-title">\u2694\uFE0F Rivals</div>
+        <div class="rival-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px"><line x1="4" y1="20" x2="20" y2="4"/><line x1="4" y1="4" x2="20" y2="20"/></svg>Rivals</div>
         <button class="rival-pick-btn" onclick="openRivalModal()">${rivals.length ? 'Manage' : 'Pick Rival'}</button>
       </div>
       ${!rivals.length
@@ -6135,12 +6084,27 @@ const ACHIEVEMENTS_V2 = [
   { id:'p10_clean',      icon:'🌟', name:'Clean Decade',          desc:'10 matches with zero penalties',                 threshold: ms=>ms.filter(m=>m.penTotal===0&&m.total>0).length/10, check: ms=>ms.filter(m=>m.penTotal===0&&m.total>0).length>=10 },
 ];
 
+function toggleAchievementsSection() {
+  const body   = document.getElementById('ach-section-body');
+  const header = document.querySelector('.ach-section-header');
+  const arrow  = document.getElementById('ach-section-arrow');
+  const isOpen = body.classList.toggle('open');
+  if (header) header.classList.toggle('open', isOpen);
+  if (arrow)  arrow.textContent = isOpen ? '▴' : '▾';
+}
+
 function renderAchievements() {
   const unlockedGrid = document.getElementById('achievements-grid');
   const lockedGrid   = document.getElementById('achievements-locked-grid');
   const toggle       = document.getElementById('ach-locked-toggle');
   const label        = document.getElementById('ach-locked-label');
+  const summaryCount = document.getElementById('ach-summary-count');
   if (!unlockedGrid) return;
+
+  if (summaryCount) {
+    const unlockedCount = ACHIEVEMENTS_V2.filter(a => a.check(matches)).length;
+    summaryCount.textContent = `(${unlockedCount}/${ACHIEVEMENTS_V2.length} unlocked)`;
+  }
 
   const unlocked = [], nearLocked = [], farLocked = [];
 
