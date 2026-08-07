@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1755,7 +1756,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .nt-wrap{max-width:460px;margin:0 auto}
 @media(min-width:900px){ .nt-wrap{max-width:860px} }
 button{font-family:inherit}
-button,.nt-cal-cell,.nt-check-box,.nt-type-btn,.nt-pri-btn,.nt-cat-chip,.nt-today-btn,.nt-nav-arrow,.nt-rem-item,.nt-today-check-item .nt-check-box{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button,.nt-cal-cell,.nt-check-box,.nt-type-btn,.nt-pri-btn,.nt-today-btn,.nt-nav-arrow,.nt-rem-item,.nt-today-check-item .nt-check-box{touch-action:manipulation;-webkit-user-select:none;user-select:none}
 
 @keyframes ntTodayPulse{
   0%{box-shadow:inset 0 0 0 1px var(--gold)}
@@ -1863,12 +1864,6 @@ button,.nt-cal-cell,.nt-check-box,.nt-type-btn,.nt-pri-btn,.nt-cat-chip,.nt-toda
 .nt-pri-btn.sel-important{background:rgba(245,200,66,0.13);border:1px solid var(--gold);color:var(--gold);font-weight:600}
 .nt-pri-btn.sel-urgent{background:rgba(224,80,80,0.13);border:1px solid var(--red);color:var(--red);font-weight:600}
 
-.nt-cat-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.nt-cat-chip{padding:6px 12px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:0.5px solid var(--border2);color:var(--muted);background:var(--card);transition:background .18s ease,color .18s ease,border-color .18s ease}
-.nt-cat-chip.sel{color:var(--bg);font-weight:600;border-color:transparent}
-.nt-cat-chip:active{transform:scale(.96)}
-.nt-cat-row-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
-.nt-cat-manage-link{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);text-decoration:underline;cursor:pointer;background:none;border:none}
 
 .nt-desc-box{background:var(--card);border:0.5px solid var(--border2);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--text);min-height:52px;width:100%;font-family:'Crimson Pro',serif;resize:vertical}
 .nt-desc-box:focus{outline:none;border-color:var(--gold)}
@@ -2911,18 +2906,6 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
       </div>
     </div>
 
-    <!-- ── CUSTOMIZE NOTES ── -->
-    <div class="profile-page-card" style="margin-top:1rem">
-      <div class="profile-page-header" style="padding:1.25rem 1.5rem;text-align:left;background:none;min-height:unset">
-        <div class="profile-page-name" style="font-size:16px;letter-spacing:1.5px">📝 NOTES</div>
-        <div class="profile-page-email" style="margin-top:2px">Rename categories</div>
-      </div>
-      <div class="profile-page-body">
-        <div class="profile-page-section-label">Categories</div>
-        <div id="customize-notes-cats"></div>
-        <button class="profile-page-save-btn" style="margin-top:1.25rem" onclick="saveNotesCustomize()">SAVE NOTES SETTINGS</button>
-      </div>
-    </div>
   </div>
 
   <!-- Logged Out State -->
@@ -3281,12 +3264,8 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
           <div class="nt-pri-btn" data-pri="important" onclick="setNotesPriority('important')">Important</div>
           <div class="nt-pri-btn" data-pri="urgent" onclick="setNotesPriority('urgent')">Urgent</div>
         </div>
-        <div class="nt-cat-row-head">
-          <div class="nt-sub-label" style="margin-bottom:0">Category</div>
-          <button class="nt-cat-manage-link" onclick="showPage('profile');showToast('Rename categories in 📝 NOTES below',true)">Rename</button>
-        </div>
-        <div class="nt-cat-row" id="ntCatRow"></div>
         <textarea class="nt-desc-box" id="ntDescBox" placeholder="What's this day about..." oninput="onNotesDescInput()"></textarea>
+        <button class="save-btn" onclick="saveNotesDay()"><span class="save-btn-inner">SAVE</span></button>
       </div>
 
       <div class="nt-checklist-wrap" id="ntChecklistWrap">
@@ -3758,7 +3737,6 @@ function resetAppState() {
   Object.keys(moneyTxMap).forEach(k => delete moneyTxMap[k]);
   moneySeenAll = false; lastDeletedMoney = null; currentMoneyDetailId = null; editingMoneyTxId = null;
   notesDayData = {};
-  NOTES_CATEGORIES.forEach((c,i) => { c.label = NOTES_DEFAULT_LABELS[i]; });
   renderEntryTags();
 }
 
@@ -3921,9 +3899,6 @@ async function loadFromFirestore(uid) {
       // Notes — same "don't clobber real cloud-backed data with nothing" rule as Money.
       if (data.notesDayData && typeof data.notesDayData === 'object') {
         notesDayData = data.notesDayData;
-      }
-      if (Array.isArray(data.notesCatLabels)) {
-        data.notesCatLabels.forEach((label, i) => { if (label && NOTES_CATEGORIES[i]) NOTES_CATEGORIES[i].label = label; });
       }
       if (document.getElementById('page-notes')?.classList.contains('active')) renderNotesPage();
 
@@ -7355,7 +7330,6 @@ function renderProfilePage() {
 
     renderCustomizeUI();
     renderMoneyCustomizeCats();
-    renderNotesCustomizeCats();
 
   } else if (currentUser === null) {
     loadingEl.style.display = 'none';
@@ -8572,14 +8546,7 @@ var notesViewYear=2026, notesViewMonth=7;
 var NT_TODAY = new Date();
 var notesSelectedKey=null;
 
-var NOTES_CATEGORIES=[
-  {id:'study', label:'Study', color:'var(--cat-study)'},
-  {id:'exam', label:'Exam', color:'var(--cat-exam)'},
-  {id:'personal', label:'Personal', color:'var(--cat-personal)'},
-  {id:'admin', label:'Admin', color:'var(--cat-admin)'}
-];
 var NOTES_PRI_COLOR={normal:'var(--muted2)', important:'var(--gold)', urgent:'var(--red)'};
-var NOTES_DEFAULT_LABELS = NOTES_CATEGORIES.map(c=>c.label);
 
 var notesDayData={};
 
@@ -8604,7 +8571,6 @@ function renderNotesReminders(){
   upcoming.forEach(function(u){
     var whenText = u.diff===0?'Today':(u.diff===1?'Tomorrow':'In '+u.diff+'d');
     var whenColor = u.info.priority==='urgent' ? 'var(--red)':'var(--gold)';
-    var cat = NOTES_CATEGORIES.find(function(c){return c.id===u.info.category;});
     var row=document.createElement('div');
     row.className='nt-rem-item';
     row.onclick=(function(kk){ return function(){
@@ -8614,7 +8580,7 @@ function renderNotesReminders(){
       '<div class="nt-rem-dot" style="background:'+NOTES_PRI_COLOR[u.info.priority]+'"></div>'+
       '<div class="nt-rem-body">'+
         '<div class="nt-rem-title">'+(u.info.desc||'Untitled')+'</div>'+
-        '<div class="nt-rem-sub">'+(u.info.type==='day'?'Day':'To-do list')+(cat?' · '+cat.label:'')+'</div>'+
+        '<div class="nt-rem-sub">'+(u.info.type==='day'?'Day':'To-do list')+'</div>'+
       '</div>'+
       '<div class="nt-rem-when" style="color:'+whenColor+';background:rgba(255,255,255,0.04)">'+whenText+'</div>';
     wrap.appendChild(row);
@@ -8707,28 +8673,10 @@ function jumpNotesToday(){
   notesViewYear=NT_TODAY.getFullYear(); notesViewMonth=NT_TODAY.getMonth(); renderNotesCalendar();
 }
 
-function renderNotesCategoryChips(){
-  var wrap=document.getElementById('ntCatRow');
-  wrap.innerHTML='';
-  NOTES_CATEGORIES.forEach(function(c){
-    var chip=document.createElement('div');
-    var sel = notesDayData[notesSelectedKey].category===c.id;
-    chip.className='nt-cat-chip'+(sel?' sel':'');
-    chip.style.cssText = sel ? 'background:'+c.color : '';
-    chip.textContent=c.label;
-    chip.onclick=function(id){ return function(){
-      notesDayData[notesSelectedKey].category = (notesDayData[notesSelectedKey].category===id) ? null : id;
-      renderNotesCategoryChips();
-      saveNotesToFirestore();
-    };}(c.id);
-    wrap.appendChild(chip);
-  });
-}
-
 function openNotesDay(d){
   notesSelectedKey = notesKeyFor(notesViewYear, notesViewMonth, d);
   if(!notesDayData[notesSelectedKey]){
-    notesDayData[notesSelectedKey] = { type:'day', priority:'normal', category:null, desc:'', items:[] };
+    notesDayData[notesSelectedKey] = { type:'day', priority:'normal', desc:'', items:[] };
   }
   document.getElementById('ntDayNum').textContent = d;
   var dow = new Date(notesViewYear, notesViewMonth, d).toLocaleDateString('en-US',{weekday:'long'});
@@ -8736,7 +8684,6 @@ function openNotesDay(d){
   document.getElementById('ntDescBox').value = notesDayData[notesSelectedKey].desc;
   renderNotesType();
   renderNotesPriority();
-  renderNotesCategoryChips();
   renderNotesChecklist();
   document.getElementById('ntScreenCal').classList.remove('active');
   document.getElementById('ntScreenDay').classList.add('active');
@@ -8809,41 +8756,23 @@ function saveNotesToFirestore(){
   const fb = window._fb;
   if(!fb || !currentUser) return; // not signed in — nothing persists past this visit
   fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), {
-    notesDayData   : notesDayData,
-    notesCatLabels : NOTES_CATEGORIES.map(c=>c.label)
+    notesDayData : notesDayData
   }, { merge:true }).catch(()=>{});
 }
 
-// ── Settings page: rename Notes categories (colors stay fixed) ──
-function renderNotesCustomizeCats(){
-  const wrap = document.getElementById('customize-notes-cats');
-  if(!wrap) return;
-  wrap.innerHTML = NOTES_CATEGORIES.map((c,i)=>`
-    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.625rem">
-      <span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:${c.color}"></span>
-      <input
-        value="${moneyEsc(c.label)}"
-        data-notes-cat-index="${i}"
-        placeholder="Category name"
-        maxlength="18"
-        style="flex:1;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);font-family:'DM Mono',monospace;outline:none;transition:border-color .15s"
-        onfocus="this.style.borderColor='var(--gold)'"
-        onblur="this.style.borderColor='var(--border)'"
-      >
-    </div>`).join('');
+// ── Explicit SAVE button on the notes day tab ──
+function saveNotesDay(){
+  notesDayData[notesSelectedKey].desc = document.getElementById('ntDescBox').value;
+  clearTimeout(_notesDescSaveTimer);
+  const fb = window._fb;
+  if(!fb || !currentUser){ showToast('Sign in to save your notes',false); return; }
+  fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), {
+    notesDayData : notesDayData
+  }, { merge:true })
+    .then(()=>showToast('Day saved!',true))
+    .catch(()=>showToast('Save failed — try again',false));
 }
 
-function saveNotesCustomize(){
-  document.querySelectorAll('[data-notes-cat-index]').forEach(el=>{
-    const i = parseInt(el.dataset.notesCatIndex);
-    const v = el.value.trim();
-    if(v) NOTES_CATEGORIES[i].label = v;
-  });
-  saveNotesToFirestore();
-  renderNotesCustomizeCats();
-  if(document.getElementById('page-notes')?.classList.contains('active')) renderNotesCalendar();
-  showToast('Notes settings saved! ✓', true);
-}
 </script>
 </body>
 </html>
