@@ -1,8 +1,4 @@
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3850,6 +3846,11 @@ async function loadFromFirestore(uid) {
       weekTargets = data.weekTargets || {};
       goalData    = data.goalData    || null;
       lastCommentary = data.commentary || '';
+      // The initial renderCountdown() at boot runs before this async load
+      // finishes, so examData is still null at that point and the widget
+      // is left showing "SET YOUR EXAM" even when a date is saved. Re-render
+      // now that examData has actually arrived from the cloud.
+      renderCountdown();
 
       if (data.appProfile && data.appProfile.name) {
         _appProfile = { name: data.appProfile.name, avatar: '' };
