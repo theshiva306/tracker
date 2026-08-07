@@ -171,7 +171,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
   backdrop-filter:blur(28px);
   border-right:1px solid rgba(255,255,255,0.055);
   z-index:210;display:flex;flex-direction:column;
-  transition:width var(--sidebar-transition);
+  transition:width var(--sidebar-transition),transform var(--sidebar-transition);
   overflow:visible;
 }
 .sidebar.expanded{ width:var(--sidebar-expanded);overflow:hidden; }
@@ -204,7 +204,9 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 .sidebar:not(.expanded) .sidebar-header{justify-content:center;padding:0;}
 .sidebar:not(.expanded) .sidebar-appname{display:none;}
 .sidebar:not(.expanded) .sidebar-close-btn{color:var(--muted2);}
-/* Expanded state: close btn becomes X */
+/* Expanded state: chevron smoothly flips to point the opposite way */
+#sidebar-toggle-icon{transition:transform var(--sidebar-transition);}
+.sidebar.expanded #sidebar-toggle-icon{transform:rotate(180deg);}
 
 /* (sidebar-toggle removed — replaced by sidebar-close-btn) */
 
@@ -299,8 +301,8 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-
 }
 
 /* Overlay */
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:205;backdrop-filter:blur(3px);}
-.sidebar-overlay.show{display:block;}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:205;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity var(--sidebar-transition);}
+.sidebar-overlay.show{opacity:1;pointer-events:auto;}
 
 /* Mobile top bar + hamburger */
 .top-bar{
@@ -1052,6 +1054,28 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted2);cursor:pointer;font-size:18px;line-height:1;padding:4px;border-radius:6px;transition:color .15s}
 .modal-close:hover{color:var(--text)}
 
+/* CONSISTENT POPUP BEHAVIOR — phone: bottom sheet · laptop: centered card.
+   This single override makes every .modal-overlay/.modal-box instance
+   (test add/edit, career goal edit, scoring guide, rival picker, profile,
+   set-balance onboarding) match the Money sheet's mobile behavior. */
+@media(max-width:700px){
+  .modal-overlay{align-items:flex-end;padding:0}
+  .modal-box{
+    width:100%;max-width:100% !important;
+    border-radius:20px 20px 0 0;
+    max-height:88vh;
+    padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
+    transform:translateY(100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+  }
+  .modal-overlay.show .modal-box{transform:translateY(0)}
+  .modal-box::before{
+    content:'';display:block;width:36px;height:4px;background:var(--border2);
+    border-radius:2px;margin:0 auto 1.1rem;
+  }
+  .modal-close{top:1rem}
+}
+
 /* PROFILE MODAL */
 .profile-modal-box{max-width:360px}
 .profile-avatar-big{width:64px;height:64px;border-radius:50%;background:rgba(245,200,66,0.12);border:2px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin:0 auto 1rem;overflow:hidden;transition:border-color .15s}
@@ -1568,6 +1592,150 @@ html.perf-lite .cap-card::before{animation:none;display:none;}
 html.perf-lite .target-crushed-banner{animation:none;}
 html.perf-lite .tcd-card.urgent,
 html.perf-lite .htr-card.urgent{animation:none;box-shadow:0 0 0 4px rgba(224,80,80,0.2);}
+
+/* ══════════════════════════════════════
+   MONEY PAGE — every class below is money-
+   prefixed on purpose: the app already has
+   .toast/.finput/.flabel/.field/.save-btn
+   with different rules, so these must never
+   collide with them.
+   ══════════════════════════════════════ */
+.money-page-head{display:flex;align-items:center;gap:9px;margin-bottom:1.5rem}
+.money-page-head svg{stroke:var(--gold);flex-shrink:0}
+.money-page-head h1{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1.5px;font-weight:400;margin:0;color:var(--text)}
+
+.money-balance-card{background:var(--card-grad);border:0.5px solid var(--border2);border-radius:18px;padding:2.1rem 1.5rem;text-align:center;position:relative;overflow:hidden;margin-bottom:1.75rem}
+.money-balance-card::before{content:'';position:absolute;top:-45%;left:50%;transform:translateX(-50%);width:560px;height:380px;background:radial-gradient(ellipse,rgba(245,200,66,0.06) 0%,transparent 65%);pointer-events:none}
+.money-bc-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;position:relative}
+.money-bc-amount{font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--text);letter-spacing:1px;line-height:1.2;margin-top:8px;position:relative}
+.money-bc-line{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.4px;margin-top:10px;position:relative}
+.money-bc-line.spent{color:var(--red)}
+.money-bc-line.gained{color:var(--green)}
+.money-bc-line.flat{color:var(--muted2)}
+
+.money-cat-breakdown{margin-top:16px;padding-top:14px;border-top:0.5px solid var(--border);display:flex;flex-direction:column;gap:9px;position:relative}
+.money-cb-row{display:flex;align-items:center;gap:9px}
+.money-cb-row svg{width:12px;height:12px;stroke-width:2;flex-shrink:0;color:var(--muted2)}
+.money-cb-name{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;width:44px;text-align:left;flex-shrink:0}
+.money-cb-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.money-cb-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .35s ease}
+.money-cb-amt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text);min-width:56px;text-align:right;flex-shrink:0}
+
+.money-th-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.9rem}
+.money-th-head h2{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.8px;font-weight:400;margin:0;color:var(--text)}
+.money-th-head small{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;border:0.5px solid var(--border);border-radius:8px;padding:2px 8px}
+
+.money-t-list{background:var(--card);border:0.5px solid var(--border);border-radius:14px;overflow:hidden}
+.money-t-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:0.5px solid rgba(255,255,255,0.04);cursor:pointer;transition:background .15s}
+.money-t-item:last-child{border-bottom:none}
+.money-t-item:hover{background:rgba(255,255,255,0.02)}
+.money-t-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.money-t-icon.spent{background:var(--red-dim);color:var(--red)}
+.money-t-icon.gained{background:var(--green-dim);color:var(--green)}
+.money-t-icon svg{width:16px;height:16px;stroke-width:2}
+.money-t-body{flex:1;min-width:0}
+.money-t-desc{font-size:14.5px;color:var(--text);line-height:1.3}
+.money-t-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.4px;margin-top:2px}
+.money-t-amt{font-family:'DM Mono',monospace;font-size:14px;flex-shrink:0}
+.money-t-amt.spent{color:var(--red)}
+.money-t-amt.gained{color:var(--green)}
+.money-t-month{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted2);text-transform:uppercase;padding:10px 14px 4px}
+
+.money-expand-wrap{max-height:0;opacity:0;overflow:hidden;margin-top:0;transition:max-height .35s ease,opacity .25s ease,margin-top .35s ease}
+.money-expand-wrap.open{max-height:4000px;opacity:1;margin-top:.25rem}
+#money-older-wrap.open{background:var(--card);border:0.5px solid var(--border);border-radius:14px}
+
+.money-see-all{display:block;width:100%;background:none;border:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:12px;cursor:pointer;text-align:center;transition:color .15s}
+.money-see-all:hover{color:var(--gold)}
+
+.money-footnote{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted2);text-align:center;margin-top:2rem;letter-spacing:.3px}
+
+.money-fab{position:fixed;bottom:26px;right:26px;width:54px;height:54px;border-radius:50%;background:var(--gold);color:#06090d;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(245,200,66,0.35);display:flex;align-items:center;justify-content:center;transition:transform .15s;z-index:40}
+.money-fab:hover{transform:scale(1.06)}
+.money-fab svg{width:22px;height:22px;stroke-width:2.2}
+@media(max-width:700px){.money-fab{bottom:76px;right:18px}}
+
+/* CONSISTENT POPUP BEHAVIOR — phone: bottom sheet · laptop: centered card.
+   Mobile keeps the original slide-up sheet; desktop gets the same
+   centered-card treatment as every other modal in the app. */
+.money-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(2px);z-index:590}
+.money-overlay.open{display:block}
+.money-sheet{position:fixed;left:0;right:0;bottom:0;background:var(--card2);border-top:0.5px solid var(--border2);border-radius:20px 20px 0 0;padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .28s ease;z-index:591;max-width:640px;margin:0 auto;opacity:0;pointer-events:none}
+.money-sheet.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.money-sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 1.1rem}
+
+@media(min-width:701px){
+  .money-sheet{
+    position:fixed;left:50%;top:50%;right:auto;bottom:auto;
+    border:0.5px solid var(--border2);
+    border-radius:16px;
+    max-width:420px;width:100%;margin:0;
+    padding:1.5rem;
+    transform:translate(-50%,-50%) scale(.93);
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),opacity .22s ease;
+  }
+  .money-sheet.open{transform:translate(-50%,-50%) scale(1)}
+  .money-sheet-handle{display:none}
+}
+.money-sheet-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:1.1rem;color:var(--text)}
+
+.money-modal-icon{width:44px;height:44px;border-radius:50%;background:rgba(245,200,66,0.1);border:0.5px solid rgba(245,200,66,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:var(--gold)}
+
+.money-field{margin-bottom:1rem}
+.money-flabel{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+.money-finput{width:100%;background:rgba(255,255,255,0.03);border:0.5px solid var(--border2);border-radius:9px;padding:11px 13px;font-size:15px;color:var(--text);font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.money-finput:focus{border-color:var(--gold)}
+.money-finput::placeholder{color:var(--muted2)}
+.money-finput.center{text-align:center;font-family:'DM Mono',monospace}
+@keyframes moneyShake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+.money-finput.err{border-color:var(--red);animation:moneyShake .4s}
+
+.money-save-btn{width:100%;padding:12px;background:var(--gold);border:none;border-radius:9px;color:#06090d;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2.5px;cursor:pointer;transition:background .2s}
+.money-save-btn:hover{background:var(--gold2,#fad96a)}
+.money-save-btn[disabled]{opacity:.4;pointer-events:none}
+
+.money-seg{display:flex;gap:8px;margin-bottom:1rem}
+.money-seg button{flex:1;padding:11px;border-radius:9px;border:0.5px solid var(--border2);background:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.money-seg button svg{width:14px;height:14px;stroke-width:2.2}
+.money-seg button.on-spent{border-color:var(--red);color:var(--red);background:var(--red-dim)}
+.money-seg button.on-gained{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+
+.money-cat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.money-cat-edit-link{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted2);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.money-cat-edit-link:hover{color:var(--gold)}
+.money-chips{display:flex;gap:8px;flex-wrap:wrap}
+.money-chip{padding:8px 14px;border-radius:20px;font-size:11.5px;font-family:'DM Mono',monospace;border:0.5px solid var(--border2);background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.money-chip svg{width:13px;height:13px;stroke-width:2;flex-shrink:0}
+.money-chip.on{background:rgba(245,200,66,0.1);border-color:rgba(245,200,66,0.5);color:var(--gold)}
+
+.money-cat-block{max-height:400px;opacity:1;overflow:hidden;transition:max-height .3s ease,opacity .25s ease,margin-bottom .3s ease;margin-bottom:1rem}
+.money-cat-block.collapsed{max-height:0;opacity:0;margin-bottom:0}
+
+.money-detail-head{display:flex;align-items:center;gap:14px;margin-bottom:1.25rem}
+.money-detail-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.money-detail-icon.spent{background:var(--red-dim);color:var(--red)}
+.money-detail-icon.gained{background:var(--green-dim);color:var(--green)}
+.money-detail-icon svg{width:19px;height:19px;stroke-width:2}
+.money-detail-amt{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.5px}
+.money-detail-amt.spent{color:var(--red)}
+.money-detail-amt.gained{color:var(--green)}
+.money-detail-desc{font-size:14px;color:var(--muted);margin-top:2px}
+
+.money-detail-actions{display:flex;gap:10px;margin-top:1.25rem}
+.money-icon-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border-radius:9px;border:0.5px solid var(--border2);background:rgba(255,255,255,0.02);font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:.15s}
+.money-icon-btn svg{width:14px;height:14px;stroke-width:2}
+.money-icon-btn.edit:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,0.08)}
+.money-icon-btn.delete:hover{border-color:var(--red);color:var(--red);background:var(--red-dim)}
+.money-icon-btn.delete.confirm{border-color:var(--red);color:#fff;background:var(--red)}
+
+/* dedicated toast — the app's own #toast has a different (msg,ok) signature, so
+   Money's undo-capable toast gets its own element entirely */
+.money-toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,12px);background:var(--card2);border:0.5px solid var(--border2);border-radius:10px;padding:10px 12px 10px 18px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;color:var(--text);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:595;white-space:nowrap;display:flex;align-items:center;gap:14px}
+.money-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.money-toast-undo{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;padding:4px 6px}
+.money-toast-undo:hover{color:var(--gold2,#fad96a)}
+
+.money-empty-state{padding:2.4rem 1rem;text-align:center;color:var(--muted2);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px}
 </style>
 </head>
 <body>
@@ -1986,8 +2154,8 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
   <!-- App name header -->
   <div class="sidebar-header">
     <span class="sidebar-appname">GOAL<span class="sa-264">264</span></span>
-    <button class="sidebar-close-btn" id="sidebar-toggle-btn" onclick="toggleExpand()" title="Toggle sidebar">
-      <!-- icon swaps via JS -->
+    <button class="sidebar-close-btn" id="sidebar-toggle-btn" onclick="handleSidebarHeaderBtn()" title="Toggle sidebar">
+      <!-- single chevron, rotated 180° via CSS when .sidebar.expanded -->
       <svg id="sidebar-toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -2010,7 +2178,6 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M7 15l3 3 7-7"/></svg></span><span class="si-label">Monthly</span>
     </button>
 
-
     <div class="sidebar-divider" style="margin:6px 10px;"></div>
 
     <button class="sidebar-item" id="si-career" onclick="showPage('career',this)" data-tooltip="Career">
@@ -2025,8 +2192,14 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
     <button class="sidebar-item" id="si-tracker" onclick="showPage('tracker',this)" data-tooltip="Tracker">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><span class="si-label">Tracker</span>
     </button>
+
+    <div class="sidebar-divider" style="margin:6px 10px;"></div>
+
     <button class="sidebar-item" id="si-test" onclick="showPage('test',this)" data-tooltip="Test">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span><span class="si-label">Test</span>
+    </button>
+    <button class="sidebar-item" id="si-money" onclick="showPage('money',this)" data-tooltip="Money">
+      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 9h18"/><path d="M16 15h2"/></svg></span><span class="si-label">Money</span>
     </button>
   </nav>
 
@@ -2559,6 +2732,28 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
         <button onclick="resetCustomizeConfig()" style="margin-top:.625rem;width:100%;padding:9px;background:transparent;border:0.5px solid var(--border);border-radius:8px;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">RESET TO DEFAULTS</button>
       </div>
     </div>
+
+    <!-- ── CUSTOMIZE MONEY ── -->
+    <div class="profile-page-card" style="margin-top:1rem">
+      <div class="profile-page-header" style="padding:1.25rem 1.5rem;text-align:left;background:none;min-height:unset">
+        <div class="profile-page-name" style="font-size:16px;letter-spacing:1.5px">💰 MONEY</div>
+        <div class="profile-page-email" style="margin-top:2px">Rename categories & adjust balance</div>
+      </div>
+      <div class="profile-page-body">
+        <div class="profile-page-section-label">Categories</div>
+        <div id="customize-money-cats"></div>
+
+        <div class="profile-page-section-label" style="margin-top:1.25rem">Balance</div>
+        <div class="money-field">
+          <div class="profile-page-field-label">Current: ₹<span id="settings-current-balance">0</span></div>
+          <input class="profile-page-input" id="settings-balance-input" type="number" placeholder="New balance">
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin:.5rem 0 1rem">
+          This adds a correction entry to your Money history — it won't erase past transactions.
+        </div>
+        <button class="profile-page-save-btn" onclick="saveMoneyCustomize()">SAVE MONEY SETTINGS</button>
+      </div>
+    </div>
   </div>
 
   <!-- Logged Out State -->
@@ -2731,6 +2926,117 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
   </div>
 </div>
 
+<!-- ══ PAGE: MONEY ══ -->
+<div class="page" id="page-money">
+
+  <div class="money-page-head">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+      <path d="M3 9h18"/>
+      <path d="M16 15h2"/>
+    </svg>
+    <h1>Money</h1>
+  </div>
+
+  <!-- ══ BALANCE CARD ══ -->
+  <div class="money-balance-card">
+    <div class="money-bc-eyebrow">Current Balance</div>
+    <div class="money-bc-amount">₹<span id="money-bc-amount">0</span></div>
+    <div class="money-bc-line flat" id="money-bc-line">No activity this month</div>
+    <div class="money-cat-breakdown" id="money-cat-breakdown" style="display:none"></div>
+  </div>
+
+  <!-- ══ TRANSACTION HISTORY ══ -->
+  <div class="money-th-head">
+    <h2>Transaction History</h2>
+    <small>This Month</small>
+  </div>
+  <div class="money-t-list" id="money-t-list"></div>
+  <div class="money-expand-wrap" id="money-older-wrap"></div>
+  <button class="money-see-all" id="money-see-all-btn" onclick="seeAllMoney()">See All</button>
+
+  <div class="money-footnote" id="money-footnote" style="display:none">You can change your balance in Settings</div>
+
+  <!-- FAB lives inside the page so it auto-hides/shows with .page.active, same as .test-fab -->
+  <button class="money-fab" onclick="openMoneyAdd()" title="Add transaction">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#06090d" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+</div>
+
+<!-- ══ ADD TRANSACTION SHEET (bottom sheet, per product decision) ══ -->
+<div class="money-overlay" id="money-add-overlay" onclick="closeMoneyAdd()"></div>
+<div class="money-sheet" id="money-add-sheet">
+  <div class="money-sheet-handle"></div>
+  <div class="money-sheet-title" id="money-sheet-title-add">Add Transaction</div>
+
+  <div class="money-seg">
+    <button id="money-seg-spent" onclick="pickMoneyType('spent')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M18 13l-6 6-6-6"/></svg>
+      Money Spent
+    </button>
+    <button id="money-seg-gained" onclick="pickMoneyType('gained')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+      Money Gained
+    </button>
+  </div>
+
+  <div class="money-field">
+    <label class="money-flabel" id="money-desc-label">Description</label>
+    <input class="money-finput" id="money-add-desc" placeholder="Coaching fee, protein, taxi...">
+  </div>
+
+  <div class="money-cat-block" id="money-cat-block">
+    <div class="money-cat-row">
+      <label class="money-flabel" style="margin:0">Category</label>
+      <button class="money-cat-edit-link" onclick="showPage('profile');showToast('Rename categories in ⚙️ MONEY below',true)">Rename</button>
+    </div>
+    <div class="money-chips" id="money-chip-row"></div>
+  </div>
+
+  <div class="money-field">
+    <label class="money-flabel">Amount</label>
+    <input class="money-finput" id="money-add-amt" type="number" placeholder="0">
+  </div>
+
+  <button class="money-save-btn" onclick="saveMoneyTransaction()"><span id="money-save-btn-label">Save Transaction</span></button>
+</div>
+
+<!-- ══ TRANSACTION DETAIL SHEET ══ -->
+<div class="money-overlay" id="money-detail-overlay" onclick="closeMoneyDetail()"></div>
+<div class="money-sheet" id="money-detail-sheet">
+  <div class="money-sheet-handle"></div>
+  <div class="money-detail-head">
+    <div class="money-detail-icon" id="money-detail-icon"></div>
+    <div>
+      <div class="money-detail-amt" id="money-detail-amt"></div>
+      <div class="money-detail-desc" id="money-detail-desc"></div>
+    </div>
+  </div>
+  <div class="money-detail-actions">
+    <button class="money-icon-btn edit" onclick="editMoneyTx()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+      Edit
+    </button>
+    <button class="money-icon-btn delete" id="money-delete-btn" onclick="deleteMoneyTx()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      <span id="money-delete-btn-label">Delete</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ FIRST-VISIT: SET BALANCE MODAL — app's shared centered-modal pattern ══ -->
+<div class="modal-overlay" id="money-onboard-modal">
+  <div class="modal-box" style="max-width:340px;text-align:center;position:relative">
+    <div class="money-modal-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 9h18"/><path d="M16 15h2"/></svg>
+    </div>
+    <div class="modal-title" style="font-size:19px">Set Your Balance</div>
+    <div class="modal-sub">This is what your Money page will track from</div>
+    <input class="money-finput center" id="money-onboard-input" type="number" placeholder="₹ 0" autofocus>
+    <button class="money-save-btn" style="margin-top:1rem" onclick="setInitialMoneyBalance()">Done</button>
+  </div>
+</div>
+
 <!-- ══ PAGE: WEEKLY ══ -->
 <div class="page" id="page-weekly">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
@@ -2888,6 +3194,7 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
   <div class="ms-sub" id="ms-sub">100+ runs today</div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="money-toast" id="money-toast"></div>
 
 <!-- ══ SCORING GUIDE MODAL ══ -->
 <div class="modal-overlay" id="scoring-guide-modal" onclick="if(event.target===this)closeScoringGuide()">
@@ -3032,6 +3339,7 @@ const DEFAULT_PENALTIES = [
   { emoji:'🌙', name:'Slept Late',    pts:3  },
   { emoji:'⚠️', name:'Skipped Study', pts:8  },
 ];
+const DEFAULT_MONEY_CATEGORIES = ['Gear','Food','Extra'];
 
 let _customHabitConfig = null; // in-memory only — populated from Firestore on login
 function getHabitConfig() {
@@ -3064,6 +3372,22 @@ function saveHabitConfig(cfg) {
   }
 }
 
+// ── Money: dedicated small save, same pattern as saveHabitConfig — a
+// transaction shouldn't have to re-upload the whole matches array. Without
+// an account this silently no-ops: Money still works, just in-memory only
+// for this visit (same "no data survives without sign-in" rule as the rest
+// of the app).
+function saveMoneyToFirestore() {
+  const fb = window._fb;
+  if (!fb || !currentUser) return;
+  fb.setDoc(fb.doc(fb.db, 'users', currentUser.uid), {
+    moneyBalance    : moneyBalance,
+    moneyOnboarded  : moneyOnboarded,
+    moneyCategories : moneyCategories,
+    moneyTx         : moneyTx
+  }, { merge: true }).catch(()=>{});
+}
+
 let matches        = [];
 let currentFilter  = 'all';
 let viewMonth      = new Date();
@@ -3078,6 +3402,27 @@ let testCountdownId = null;
 let editingTestId  = null;
 let testFilter     = 'All';
 let activeTestSub  = 'schedule';
+
+// ── Money page state ──
+// moneyOnboarded gates the "Set Your Balance" first-visit modal — it flips
+// to true the moment a balance is actually set (anonymously or signed in)
+// and then never prompts again for that session/account. No account =
+// nothing loaded from Firestore, so this starts false/empty on every fresh
+// anonymous visit, exactly like the rest of the app.
+let moneyBalance      = 0;
+let moneyOnboarded    = false;
+let moneyCategories   = null;   // null = use DEFAULT_MONEY_CATEGORIES
+let moneyTx           = [];     // flat array, ALL transactions, real ISO dates
+let moneyTxSeq        = 0;
+const moneyTxMap      = {};     // id -> tx
+let editingMoneyTxId  = null;   // add-sheet in edit mode for this tx id, else null
+let currentMoneyDetailId = null;
+let selectedMoneyCat  = 0;
+let selectedMoneyType = 'spent';
+let moneySeenAll      = false;
+let lastDeletedMoney  = null;   // {tx, index} for undo
+let moneyDeleteConfirmPending = false;
+let moneyDeleteConfirmTimer   = null;
 
 // ══════════════════════════════════════
 // FIREBASE AUTH + FIRESTORE
@@ -3143,6 +3488,9 @@ function resetAppState() {
   rivals = []; currentRival = null;
   _customHabitConfig = null;
   testEntries = {}; testCustom = []; testOverrides = {}; testCountdownId = null;
+  moneyBalance = 0; moneyOnboarded = false; moneyCategories = null; moneyTx = [];
+  Object.keys(moneyTxMap).forEach(k => delete moneyTxMap[k]);
+  moneySeenAll = false; lastDeletedMoney = null; currentMoneyDetailId = null; editingMoneyTxId = null;
   renderEntryTags();
 }
 
@@ -3282,6 +3630,26 @@ async function loadFromFirestore(uid) {
       testOverrides = data.testOverrides || {};
       testCountdownId = typeof data.testCountdownId !== 'undefined' ? data.testCountdownId : null;
 
+      // Money — only overwrite in-memory state if the cloud actually HAS
+      // money data. If it doesn't (this account never used Money before),
+      // leave whatever's already in memory alone — e.g. balance the person
+      // set anonymously earlier in this same visit — so signing in never
+      // re-triggers the "Set Your Balance" prompt for someone who already
+      // answered it.
+      if (typeof data.moneyBalance === 'number' || data.moneyOnboarded) {
+        moneyBalance    = typeof data.moneyBalance === 'number' ? data.moneyBalance : 0;
+        moneyOnboarded  = !!data.moneyOnboarded;
+        moneyCategories = Array.isArray(data.moneyCategories) ? data.moneyCategories : null;
+        moneyTx         = Array.isArray(data.moneyTx) ? data.moneyTx : [];
+        Object.keys(moneyTxMap).forEach(k => delete moneyTxMap[k]);
+        moneyTx.forEach(t => { moneyTxMap[t.id] = t; moneyTxSeq = Math.max(moneyTxSeq, t.id || 0); });
+      } else if (moneyOnboarded) {
+        // Signed in with no cloud money data yet, but already set a balance
+        // anonymously this visit — adopt it into this account permanently.
+        saveMoneyToFirestore();
+      }
+      if (document.getElementById('page-money')?.classList.contains('active')) renderMoneyPage();
+
       if (document.getElementById('page-test') && document.getElementById('page-test').classList.contains('active')) {
         renderTestSchedule(); renderTestPerformance();
       }
@@ -3295,6 +3663,7 @@ async function loadFromFirestore(uid) {
       // currently in memory for this fresh session (empty defaults, or
       // whatever was filled in before signing in during this same visit).
       await saveToFirestore();
+      if (moneyOnboarded) saveMoneyToFirestore();
       showToast('☁️ Welcome! Saving to the cloud from now on.', true);
     }
   } catch (e) {
@@ -5503,11 +5872,16 @@ function showPage(id,btn){
   else if(btn && btn.classList) btn.classList.add('active');
   activeTab = null; // not a tab
   closeSidebar();
+  // The Money onboarding modal is a global overlay (not scoped inside
+  // page-money), so leaving Money without finishing it must hide it —
+  // otherwise it would keep blocking the whole app on every other page.
+  if(id!=='money'){ const mom = document.getElementById('money-onboard-modal'); if(mom) mom.classList.remove('show'); }
   if(id==='career')      { renderCareer(); renderCapCards(); renderPeakInsight(); }
   if(id==='best')        renderBest();
   if(id==='tracker')     renderTracker();
   if(id==='race')        { renderRaceBoard(); if(competeView==='global') renderLeaderboard(); }
   if(id==='test')        { buildTestFilters(); renderTestSchedule(); }
+  if(id==='money')       renderMoneyPage();
 }
 
 function showMilestone(icon,title,sub,tier){
@@ -5537,6 +5911,404 @@ function refreshAll(){
   renderPeakInsight();
   renderHomeTestReminder();
   if(document.getElementById('page-test')){ buildTestFilters(); renderTestSchedule(); renderTestPerformance(); renderTestCountdown(); }
+  if(document.getElementById('page-money')?.classList.contains('active')) renderMoneyPage();
+}
+
+// ══════════════════════════════════════
+// MONEY PAGE
+// ══════════════════════════════════════
+function moneyEsc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function mkMoneyTx(t){ t.id = ++moneyTxSeq; moneyTxMap[t.id] = t; return t; }
+
+function moneyIconFor(type){
+  return type === 'spent'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M18 13l-6 6-6-6"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
+}
+
+/* fixed icon per chip position — stays put even if the category name is renamed */
+const moneyCatIcons = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M4 12h16"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v7a2 2 0 002 2h0a2 2 0 002-2V2"/><path d="M8 11v11"/><path d="M17 2v7c0 1.5-1 2-2 2h0"/><path d="M17 11v11"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3z"/></svg>'
+];
+
+function showMoneyToast(msg, undoFn){
+  const t = document.getElementById('money-toast');
+  if(!t) return;
+  t.innerHTML = undoFn
+    ? `<span>${moneyEsc(msg)}</span><button class="money-toast-undo" onclick="(${undoFn.name})();document.getElementById('money-toast').classList.remove('on')">Undo</button>`
+    : `<span>${moneyEsc(msg)}</span>`;
+  t.classList.add('on');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('on'), undoFn ? 4000 : 1800);
+}
+
+function renderMoneyChips(){
+  const row = document.getElementById('money-chip-row');
+  if(!row) return;
+  const cats = moneyCategories || DEFAULT_MONEY_CATEGORIES;
+  row.innerHTML = cats.map((c,i)=>
+    `<span class="money-chip ${i===selectedMoneyCat?'on':''}" onclick="selectedMoneyCat=${i};renderMoneyChips()">${moneyCatIcons[i]}${moneyEsc(c)}</span>`
+  ).join('');
+}
+
+/* real day label computed from the tx's actual ISO date, not a stored string */
+function moneyDayLabel(dateStr){
+  const d = new Date(dateStr);
+  if(isNaN(d)) return '';
+  const now = new Date();
+  const startOfDay = x => new Date(x.getFullYear(), x.getMonth(), x.getDate());
+  const diffDays = Math.round((startOfDay(now) - startOfDay(d)) / 86400000);
+  if(diffDays === 0) return 'Today';
+  if(diffDays === 1) return 'Yesterday';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate() + (d.getFullYear() !== now.getFullYear() ? ', ' + d.getFullYear() : '');
+}
+
+function moneyTxRowHtml(t){
+  const dayLabel = moneyDayLabel(t.date);
+  const metaBits = t.cat ? `${t.cat.toUpperCase()} · ${dayLabel.toUpperCase()}` : dayLabel.toUpperCase();
+  return `
+    <div class="money-t-item" onclick="openMoneyDetail(${t.id})">
+      <div class="money-t-icon ${t.type}">${moneyIconFor(t.type)}</div>
+      <div class="money-t-body"><div class="money-t-desc">${moneyEsc(t.desc)}</div><div class="money-t-meta">${metaBits}</div></div>
+      <div class="money-t-amt ${t.type}">${t.type==='spent'?'−':'+'} ₹${t.amt.toLocaleString('en-IN')}</div>
+    </div>`;
+}
+
+function renderMoneyList(){
+  const list = document.getElementById('money-t-list');
+  if(!list) return;
+  const now = new Date();
+  const sorted = moneyTx.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+  const thisMonth = sorted.filter(t=>{
+    const d = new Date(t.date);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  });
+  const older = sorted.filter(t=>{
+    const d = new Date(t.date);
+    return !(d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth());
+  });
+
+  list.innerHTML = thisMonth.length
+    ? thisMonth.map(moneyTxRowHtml).join('')
+    : `<div class="money-empty-state">No transactions this month yet.<br>Tap the + button to add one.</div>`;
+
+  // group older txs by real calendar month, most recent month first
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const groups = [];
+  let lastKey = null;
+  older.forEach(t=>{
+    const d = new Date(t.date);
+    const key = d.getFullYear() + '-' + d.getMonth();
+    if(key !== lastKey){
+      const label = d.getFullYear() === now.getFullYear() ? monthNames[d.getMonth()] : monthNames[d.getMonth()] + ' ' + d.getFullYear();
+      groups.push({ label, items: [] });
+      lastKey = key;
+    }
+    groups[groups.length - 1].items.push(t);
+  });
+
+  const wrap = document.getElementById('money-older-wrap');
+  wrap.innerHTML = groups.map(g => `<div class="money-t-month">${g.label}</div>` + g.items.map(moneyTxRowHtml).join('')).join('');
+  wrap.classList.toggle('open', moneySeenAll && groups.length > 0);
+  document.getElementById('money-see-all-btn').style.display = (groups.length && !moneySeenAll) ? '' : 'none';
+}
+
+function seeAllMoney(){
+  moneySeenAll = true;
+  document.getElementById('money-see-all-btn').style.display = 'none';
+  document.getElementById('money-older-wrap').classList.add('open');
+}
+
+function renderMoneyCatBreakdown(totalSpent){
+  const box = document.getElementById('money-cat-breakdown');
+  if(!box) return;
+  if(!totalSpent){ box.style.display = 'none'; box.innerHTML = ''; return; }
+
+  const now = new Date();
+  const cats = moneyCategories || DEFAULT_MONEY_CATEGORIES;
+  const thisMonthSpent = moneyTx.filter(t=>{
+    const d = new Date(t.date);
+    return t.type === 'spent' && d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  });
+  const byCat = cats.map(c => thisMonthSpent.filter(t => t.cat === c).reduce((s,t)=>s+t.amt, 0));
+  const max = Math.max(...byCat, 1);
+
+  box.innerHTML = cats.map((c,i) => `
+    <div class="money-cb-row">
+      ${moneyCatIcons[i]}
+      <span class="money-cb-name">${moneyEsc(c)}</span>
+      <div class="money-cb-bar-wrap"><div class="money-cb-bar" style="width:${(byCat[i]/max*100).toFixed(0)}%"></div></div>
+      <span class="money-cb-amt">₹${byCat[i].toLocaleString('en-IN')}</span>
+    </div>`).join('');
+  box.style.display = 'flex';
+}
+
+function updateMoneyBalanceCard(){
+  const amtEl = document.getElementById('money-bc-amount');
+  if(!amtEl) return;
+  amtEl.textContent = moneyBalance.toLocaleString('en-IN');
+
+  const now = new Date();
+  const thisMonth = moneyTx.filter(t=>{
+    const d = new Date(t.date);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  });
+  const spent  = thisMonth.filter(t=>t.type==='spent').reduce((s,t)=>s+t.amt,0);
+  const gained = thisMonth.filter(t=>t.type==='gained').reduce((s,t)=>s+t.amt,0);
+  const net = gained - spent;
+  const line = document.getElementById('money-bc-line');
+  if(net < 0){ line.textContent = `₹${Math.abs(net).toLocaleString('en-IN')} spent this month`; line.className = 'money-bc-line spent'; }
+  else if(net > 0){ line.textContent = `₹${net.toLocaleString('en-IN')} gained this month`; line.className = 'money-bc-line gained'; }
+  else { line.textContent = 'No activity this month'; line.className = 'money-bc-line flat'; }
+
+  renderMoneyCatBreakdown(spent);
+}
+
+function pickMoneyType(t){
+  selectedMoneyType = t;
+  document.getElementById('money-seg-spent').className = t==='spent' ? 'on-spent' : '';
+  document.getElementById('money-seg-gained').className = t==='gained' ? 'on-gained' : '';
+  const catBlock = document.getElementById('money-cat-block');
+  const descLabel = document.getElementById('money-desc-label');
+  const descInput = document.getElementById('money-add-desc');
+  if(t === 'gained'){
+    catBlock.classList.add('collapsed');
+    descLabel.textContent = 'Description';
+    descInput.placeholder = 'How did you earn it? e.g. tournament prize';
+  } else {
+    catBlock.classList.remove('collapsed');
+    descLabel.textContent = 'Description';
+    descInput.placeholder = 'Coaching fee, protein, taxi...';
+  }
+}
+
+function openMoneyAdd(editId){
+  editingMoneyTxId = editId || null;
+  const cats = moneyCategories || DEFAULT_MONEY_CATEGORIES;
+
+  if(editingMoneyTxId){
+    const t = moneyTxMap[editingMoneyTxId];
+    pickMoneyType(t.type);
+    if(t.cat){ const ci = cats.indexOf(t.cat); selectedMoneyCat = ci > -1 ? ci : 0; }
+    renderMoneyChips();
+    document.getElementById('money-add-desc').value = t.desc;
+    document.getElementById('money-add-amt').value = t.amt;
+    document.getElementById('money-sheet-title-add').textContent = 'Edit Transaction';
+    document.getElementById('money-save-btn-label').textContent = 'Save Changes';
+  } else {
+    pickMoneyType('spent');
+    renderMoneyChips();
+    document.getElementById('money-add-desc').value = '';
+    document.getElementById('money-add-amt').value = '';
+    document.getElementById('money-sheet-title-add').textContent = 'Add Transaction';
+    document.getElementById('money-save-btn-label').textContent = 'Save Transaction';
+  }
+
+  document.getElementById('money-add-overlay').classList.add('open');
+  document.getElementById('money-add-sheet').classList.add('open');
+}
+function closeMoneyAdd(){
+  editingMoneyTxId = null;
+  document.getElementById('money-add-overlay').classList.remove('open');
+  document.getElementById('money-add-sheet').classList.remove('open');
+}
+
+function saveMoneyTransaction(){
+  const descEl = document.getElementById('money-add-desc');
+  const amtEl = document.getElementById('money-add-amt');
+  const desc = descEl.value.trim();
+  const amt = parseFloat(amtEl.value);
+
+  descEl.classList.remove('err'); amtEl.classList.remove('err');
+  let bad = false;
+  if(!desc){ descEl.classList.add('err'); bad = true; }
+  if(!amt || amt <= 0){ amtEl.classList.add('err'); bad = true; }
+  if(bad) return;
+
+  const cats = moneyCategories || DEFAULT_MONEY_CATEGORIES;
+  const cat = selectedMoneyType === 'spent' ? cats[selectedMoneyCat] : null;
+
+  if(editingMoneyTxId){
+    const t = moneyTxMap[editingMoneyTxId];
+    moneyBalance -= t.type === 'gained' ? t.amt : -t.amt;
+    t.desc = desc; t.cat = cat; t.type = selectedMoneyType; t.amt = amt;
+    moneyBalance += t.type === 'gained' ? t.amt : -t.amt;
+    showMoneyToast('Transaction updated');
+  } else {
+    const tx = mkMoneyTx({ desc, cat, type: selectedMoneyType, amt, date: new Date().toISOString() });
+    moneyTx.unshift(tx);
+    moneyBalance += selectedMoneyType === 'gained' ? amt : -amt;
+    showMoneyToast('Transaction added');
+  }
+
+  saveMoneyToFirestore();
+  renderMoneyList();
+  updateMoneyBalanceCard();
+  descEl.value = '';
+  amtEl.value = '';
+  closeMoneyAdd();
+}
+
+function openMoneyDetail(id){
+  const t = moneyTxMap[id];
+  if(!t) return;
+  currentMoneyDetailId = id;
+  document.getElementById('money-detail-icon').className = 'money-detail-icon ' + t.type;
+  document.getElementById('money-detail-icon').innerHTML = moneyIconFor(t.type);
+  document.getElementById('money-detail-amt').className = 'money-detail-amt ' + t.type;
+  document.getElementById('money-detail-amt').textContent = (t.type==='spent'?'− ':'+ ') + '₹' + t.amt.toLocaleString('en-IN');
+  document.getElementById('money-detail-desc').textContent = t.desc;
+
+  document.getElementById('money-detail-overlay').classList.add('open');
+  document.getElementById('money-detail-sheet').classList.add('open');
+}
+function closeMoneyDetail(){
+  currentMoneyDetailId = null;
+  clearTimeout(moneyDeleteConfirmTimer);
+  moneyDeleteConfirmPending = false;
+  const btn = document.getElementById('money-delete-btn');
+  if(btn){ btn.classList.remove('confirm'); document.getElementById('money-delete-btn-label').textContent = 'Delete'; }
+  document.getElementById('money-detail-overlay').classList.remove('open');
+  document.getElementById('money-detail-sheet').classList.remove('open');
+}
+
+function editMoneyTx(){
+  if(!currentMoneyDetailId) return;
+  const id = currentMoneyDetailId;
+  closeMoneyDetail();
+  openMoneyAdd(id);
+}
+
+function deleteMoneyTx(){
+  if(!currentMoneyDetailId) return;
+  const btn = document.getElementById('money-delete-btn');
+  const label = document.getElementById('money-delete-btn-label');
+
+  if(!moneyDeleteConfirmPending){
+    moneyDeleteConfirmPending = true;
+    btn.classList.add('confirm');
+    label.textContent = 'Tap Again to Delete';
+    moneyDeleteConfirmTimer = setTimeout(()=>{
+      moneyDeleteConfirmPending = false;
+      btn.classList.remove('confirm');
+      label.textContent = 'Delete';
+    }, 3000);
+    return;
+  }
+
+  clearTimeout(moneyDeleteConfirmTimer);
+  moneyDeleteConfirmPending = false;
+  btn.classList.remove('confirm');
+  label.textContent = 'Delete';
+
+  const id = currentMoneyDetailId;
+  const t = moneyTxMap[id];
+  const i = moneyTx.findIndex(x=>x.id===id);
+  if(i > -1){
+    lastDeletedMoney = { tx: t, index: i };
+    moneyTx.splice(i, 1);
+  }
+  moneyBalance -= t.type === 'gained' ? t.amt : -t.amt;
+  closeMoneyDetail();
+  saveMoneyToFirestore();
+  renderMoneyList();
+  updateMoneyBalanceCard();
+  showMoneyToast('Transaction deleted', undoLastMoneyDelete);
+}
+
+function undoLastMoneyDelete(){
+  if(!lastDeletedMoney) return;
+  const { tx, index } = lastDeletedMoney;
+  moneyTx.splice(Math.min(index, moneyTx.length), 0, tx);
+  moneyTxMap[tx.id] = tx;
+  moneyBalance += tx.type === 'gained' ? tx.amt : -tx.amt;
+  lastDeletedMoney = null;
+  saveMoneyToFirestore();
+  renderMoneyList();
+  updateMoneyBalanceCard();
+}
+
+function setInitialMoneyBalance(){
+  const v = parseFloat(document.getElementById('money-onboard-input').value);
+  moneyBalance = isNaN(v) ? 0 : v;
+  moneyOnboarded = true;
+  saveMoneyToFirestore();
+  document.getElementById('money-onboard-modal').classList.remove('show');
+  document.getElementById('money-footnote').style.display = 'block';
+  updateMoneyBalanceCard();
+}
+
+/* ── Settings page: rename categories + correct balance ── */
+function renderMoneyCustomizeCats(){
+  const wrap = document.getElementById('customize-money-cats');
+  if(!wrap) return;
+  const cats = moneyCategories || DEFAULT_MONEY_CATEGORIES;
+  wrap.innerHTML = cats.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.625rem">
+      <input
+        value="${moneyEsc(c)}"
+        data-money-cat-index="${i}"
+        placeholder="Category name"
+        maxlength="18"
+        style="flex:1;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);font-family:'DM Mono',monospace;outline:none;transition:border-color .15s"
+        onfocus="this.style.borderColor='var(--gold)'"
+        onblur="this.style.borderColor='var(--border)'"
+      >
+    </div>`).join('');
+  const balDisp = document.getElementById('settings-current-balance');
+  if(balDisp) balDisp.textContent = moneyBalance.toLocaleString('en-IN');
+}
+
+function saveMoneyCustomize(){
+  const cats = (moneyCategories ? moneyCategories.slice() : DEFAULT_MONEY_CATEGORIES.slice());
+  document.querySelectorAll('[data-money-cat-index]').forEach(el=>{
+    const i = parseInt(el.dataset.moneyCatIndex);
+    const v = el.value.trim();
+    if(v) cats[i] = v;
+  });
+  moneyCategories = cats;
+
+  const balInput = document.getElementById('settings-balance-input');
+  const raw = balInput ? balInput.value.trim() : '';
+  if(raw !== ''){
+    const newBal = parseFloat(raw);
+    if(!isNaN(newBal)){
+      const diff = newBal - moneyBalance;
+      if(diff !== 0){
+        const tx = mkMoneyTx({ desc:'Balance adjustment', cat:null, type: diff>0?'gained':'spent', amt: Math.abs(diff), date: new Date().toISOString() });
+        moneyTx.unshift(tx);
+      }
+      moneyBalance = newBal;
+      moneyOnboarded = true;
+    }
+    balInput.value = '';
+  }
+
+  saveMoneyToFirestore();
+  renderMoneyCustomizeCats();
+  if(document.getElementById('page-money')?.classList.contains('active')) renderMoneyPage();
+  showToast('Money settings saved! ✓', true);
+}
+
+function renderMoneyPage(){
+  renderMoneyChips();
+  renderMoneyList();
+  updateMoneyBalanceCard();
+  const overlay = document.getElementById('money-onboard-modal');
+  const footnote = document.getElementById('money-footnote');
+  if(!moneyOnboarded){
+    if(overlay) overlay.classList.add('show');
+    if(footnote) footnote.style.display = 'none';
+  } else {
+    if(overlay) overlay.classList.remove('show');
+    if(footnote) footnote.style.display = 'block';
+  }
 }
 
 // ══════════════════════════════════════
@@ -5742,13 +6514,19 @@ let sidebarExpanded = false;
 function toggleExpand() {
   sidebarExpanded = !sidebarExpanded;
   const sb = document.getElementById('sidebar');
+  // Icon direction is handled purely in CSS (.sidebar.expanded #sidebar-toggle-icon)
+  // so it rotates smoothly instead of swapping shapes.
   sb.classList.toggle('expanded', sidebarExpanded);
-  // Swap icon: chevron-right when collapsed, X when expanded
-  const icon = document.getElementById('sidebar-toggle-icon');
-  if (icon) {
-    icon.innerHTML = sidebarExpanded
-      ? '<path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-      : '<path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+}
+
+function handleSidebarHeaderBtn() {
+  // On mobile the sidebar is a drawer opened by the hamburger — the header
+  // button here must CLOSE that drawer. On desktop the same button instead
+  // expands/collapses the fixed sidebar, so that behavior is untouched.
+  if (window.innerWidth <= 700) {
+    closeSidebar();
+  } else {
+    toggleExpand();
   }
 }
 
@@ -6298,6 +7076,7 @@ function renderProfilePage() {
     if (nameInput) nameInput.value = displayName;
 
     renderCustomizeUI();
+    renderMoneyCustomizeCats();
 
   } else if (currentUser === null) {
     loadingEl.style.display = 'none';
