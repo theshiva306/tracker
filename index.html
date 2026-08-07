@@ -1736,6 +1736,159 @@ html.perf-lite .htr-card.urgent{animation:none;box-shadow:0 0 0 4px rgba(224,80,
 .money-toast-undo:hover{color:var(--gold2,#fad96a)}
 
 .money-empty-state{padding:2.4rem 1rem;text-align:center;color:var(--muted2);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px}
+
+/* ══════════════════════════════════════
+   NOTES PAGE (day planner / calendar)
+   ══════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#06090d;--surface:#0a0e14;--card:#0f151d;--card2:#141c27;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --gold:#f5c842;--gold2:#fad96a;
+  --green:#2ecc8a;--green-dim:#0f3024;
+  --red:#e05050;--red-dim:#300f0f;
+  --text:#eef2f7;--muted:#6a80a0;--muted2:#3a5070;
+  --cat-study:#4DC3FF;--cat-exam:#FF7E74;--cat-personal:#2FE8A8;--cat-admin:#B48CFF;
+}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+.nt-wrap{max-width:460px;margin:0 auto}
+@media(min-width:900px){ .nt-wrap{max-width:860px} }
+button{font-family:inherit}
+button,.nt-cal-cell,.nt-check-box,.nt-type-btn,.nt-pri-btn,.nt-cat-chip,.nt-today-btn,.nt-nav-arrow,.nt-rem-item,.nt-today-check-item .nt-check-box{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+
+@keyframes ntTodayPulse{
+  0%{box-shadow:inset 0 0 0 1px var(--gold)}
+  45%{box-shadow:inset 0 0 0 1px var(--gold),0 0 0 5px rgba(245,200,66,0.16)}
+  100%{box-shadow:inset 0 0 0 1px var(--gold)}
+}
+.nt-cal-cell.pulse{animation:ntTodayPulse .55s ease}
+
+/* ── header ── */
+.nt-page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.nt-page-title-wrap{display:flex;align-items:center;gap:8px}
+.nt-page-title-wrap svg{stroke:var(--gold);flex-shrink:0}
+.nt-page-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1.5px;color:var(--text)}
+
+/* ── screens ── */
+.nt-screen{display:none;opacity:0;transition:opacity .18s}
+.nt-screen.active{display:block;opacity:1}
+
+.nt-desktop-grid{display:flex;flex-direction:column;gap:1rem}
+.nt-desktop-grid .nt-cal-card{order:2}
+.nt-desktop-grid .nt-side-col{order:1}
+@media(min-width:900px){
+  .nt-desktop-grid{display:grid;grid-template-columns:1fr 260px;gap:1rem;align-items:start}
+  .nt-desktop-grid .nt-cal-card{order:0}
+  .nt-desktop-grid .nt-side-col{order:0}
+}
+
+/* ── notion-style calendar ── */
+.nt-cal-card{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;padding:1rem;overflow:hidden}
+.nt-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.nt-cal-nav-left{display:flex;align-items:center;gap:10px}
+.nt-cal-month{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:var(--text);font-size:16px}
+.nt-cal-nav-btns{display:flex;align-items:center;gap:2px}
+.nt-nav-arrow{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px 6px;display:flex}
+.nt-nav-arrow:hover{color:var(--text)}
+.nt-today-btn{background:none;border:0.5px solid var(--border2);border-radius:7px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:5px 10px;cursor:pointer}
+.nt-today-btn:hover{color:var(--text);border-color:var(--muted)}
+
+.nt-cal-table{border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
+.nt-cal-dow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:0.5px solid var(--border)}
+.nt-cal-dow div{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;text-align:center;padding:7px 0}
+.nt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.nt-cal-cell{position:relative;min-height:56px;border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .18s ease,transform .12s ease}
+.nt-cal-cell:nth-child(7n){border-right:none}
+.nt-cal-cell:hover{background:rgba(255,255,255,0.02)}
+.nt-cal-cell:active{transform:scale(.96);background:rgba(255,255,255,0.05)}
+.nt-cal-cell.empty{cursor:default}
+.nt-cal-cell.empty:hover{background:none}
+.nt-cal-cell.empty:active{transform:none}
+.nt-cal-cell.today-cell{box-shadow:inset 0 0 0 1px var(--gold)}
+@media(min-width:900px){ .nt-cal-cell{min-height:76px} }
+
+.nt-cell-num{position:absolute;top:5px;right:6px;font-size:11px;color:var(--muted);transition:color .15s ease}
+.nt-cell-num.today{color:var(--text);font-weight:600}
+.nt-cell-badge{position:absolute;top:3px;right:3px;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:var(--bg)}
+.nt-cell-plus{position:absolute;top:5px;left:6px;color:var(--muted2);font-size:13px;opacity:0;transition:opacity .12s ease;pointer-events:none;line-height:1}
+.nt-cal-cell:hover .nt-cell-plus{opacity:1}
+.nt-cell-bar-track{position:absolute;left:6px;right:6px;bottom:6px;height:3px;border-radius:2px;background:rgba(255,255,255,0.06);overflow:hidden}
+.nt-cell-bar-fill{height:100%;background:var(--green);transition:width .35s ease}
+
+.nt-cal-legend{display:flex;align-items:center;gap:10px 12px;margin-top:.9rem;font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);text-transform:uppercase;flex-wrap:wrap}
+.nt-cal-legend .nt-legend-hint{color:var(--muted2);padding-left:10px;border-left:0.5px solid var(--border2)}
+@media(max-width:480px){ .nt-cal-legend{gap:8px 10px;font-size:8px} }
+.nt-cal-legend .nt-dot{display:inline-flex;align-items:center;gap:5px}
+.nt-legend-swatch{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* ── sidebar ── */
+.nt-side-col{display:flex;flex-direction:column;gap:1rem}
+.nt-side-card{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;padding:1.1rem}
+.nt-side-head{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.nt-rem-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);cursor:pointer}
+.nt-rem-item:last-child{border-bottom:none}
+.nt-rem-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nt-rem-body{flex:1;min-width:0}
+.nt-rem-title{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nt-rem-sub{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.nt-rem-when{font-family:'DM Mono',monospace;font-size:10px;flex-shrink:0;padding:3px 8px;border-radius:6px}
+.nt-side-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:6px 0}
+
+.nt-today-check-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.nt-today-check-item:last-child{border-bottom:none}
+.nt-check-box{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--muted2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease,border-color .15s ease,transform .1s ease}
+.nt-check-box:active{transform:scale(.88)}
+.nt-check-box.done{background:var(--green);border-color:var(--green)}
+.nt-check-box.done::after{content:'';width:8px;height:5px;border-left:2px solid var(--green-dim);border-bottom:2px solid var(--green-dim);transform:rotate(-45deg) translate(1px,-1px)}
+.nt-today-check-text{font-size:12.5px;color:var(--text);flex:1;transition:color .15s ease}
+.nt-today-check-text.done{color:var(--muted);text-decoration:line-through}
+
+/* ── day view ── */
+.nt-day-page{background:var(--surface);border:0.5px solid var(--border2);border-radius:18px;padding:1.25rem}
+.nt-day-back{width:30px;height:30px;border-radius:8px;background:var(--card);border:0.5px solid var(--border2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:14px}
+.nt-day-back:hover{color:var(--text)}
+.nt-day-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--text);letter-spacing:.5px;line-height:1}
+.nt-day-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;margin-bottom:18px}
+
+.nt-type-row{display:flex;gap:6px;margin-bottom:18px;background:var(--card);border-radius:10px;padding:3px}
+.nt-type-btn{flex:1;text-align:center;padding:7px;border-radius:8px;font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:background .18s ease,color .18s ease}
+.nt-type-btn.sel{background:var(--card2);color:var(--text);font-weight:600}
+.nt-type-btn:active{transform:scale(.97)}
+
+.nt-sub-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.nt-pri-row{display:flex;gap:6px;margin-bottom:14px}
+.nt-pri-btn{flex:1;text-align:center;padding:7px;border-radius:9px;background:var(--card);border:0.5px solid var(--border2);font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s}
+.nt-pri-btn.sel-normal{background:rgba(106,128,160,0.15);border:1px solid var(--muted);color:var(--text)}
+.nt-pri-btn.sel-important{background:rgba(245,200,66,0.13);border:1px solid var(--gold);color:var(--gold);font-weight:600}
+.nt-pri-btn.sel-urgent{background:rgba(224,80,80,0.13);border:1px solid var(--red);color:var(--red);font-weight:600}
+
+.nt-cat-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.nt-cat-chip{padding:6px 12px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:0.5px solid var(--border2);color:var(--muted);background:var(--card);transition:background .18s ease,color .18s ease,border-color .18s ease}
+.nt-cat-chip.sel{color:var(--bg);font-weight:600;border-color:transparent}
+.nt-cat-chip:active{transform:scale(.96)}
+.nt-cat-row-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.nt-cat-manage-link{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);text-decoration:underline;cursor:pointer;background:none;border:none}
+
+.nt-desc-box{background:var(--card);border:0.5px solid var(--border2);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--text);min-height:52px;width:100%;font-family:'Crimson Pro',serif;resize:vertical}
+.nt-desc-box:focus{outline:none;border-color:var(--gold)}
+
+.nt-checklist-wrap.hidden{display:none}
+.nt-day-fields.hidden{display:none}
+.nt-day-fields{padding-top:2px}
+.nt-check-list{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.nt-check-item{display:flex;align-items:center;gap:9px;padding:8px 4px;border-bottom:0.5px solid var(--border)}
+.nt-check-item:last-child{border-bottom:none}
+.nt-check-text{font-size:13px;color:var(--text);flex:1}
+.nt-check-text.done{color:var(--muted);text-decoration:line-through}
+.nt-check-del{color:var(--muted2);cursor:pointer;font-size:13px;background:none;border:none;padding:2px 4px}
+.nt-check-del:hover{color:var(--red)}
+.nt-new-check-row{display:flex;gap:8px;margin-top:6px}
+.nt-new-check-input{flex:1;background:var(--card);border:0.5px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--text);font-family:'Crimson Pro',serif}
+.nt-new-check-input:focus{outline:none;border-color:var(--gold)}
+.nt-new-check-add{width:34px;height:34px;background:var(--gold);color:var(--bg);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+
 </style>
 </head>
 <body>
@@ -2200,6 +2353,9 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
     </button>
     <button class="sidebar-item" id="si-money" onclick="showPage('money',this)" data-tooltip="Money">
       <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 9h18"/><path d="M16 15h2"/></svg></span><span class="si-label">Money</span>
+    </button>
+    <button class="sidebar-item" id="si-notes" onclick="showPage('notes',this)" data-tooltip="Notes">
+      <span class="si-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span><span class="si-label">Notes</span>
     </button>
   </nav>
 
@@ -2754,6 +2910,19 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
         <button class="profile-page-save-btn" onclick="saveMoneyCustomize()">SAVE MONEY SETTINGS</button>
       </div>
     </div>
+
+    <!-- ── CUSTOMIZE NOTES ── -->
+    <div class="profile-page-card" style="margin-top:1rem">
+      <div class="profile-page-header" style="padding:1.25rem 1.5rem;text-align:left;background:none;min-height:unset">
+        <div class="profile-page-name" style="font-size:16px;letter-spacing:1.5px">📝 NOTES</div>
+        <div class="profile-page-email" style="margin-top:2px">Rename categories</div>
+      </div>
+      <div class="profile-page-body">
+        <div class="profile-page-section-label">Categories</div>
+        <div id="customize-notes-cats"></div>
+        <button class="profile-page-save-btn" style="margin-top:1.25rem" onclick="saveNotesCustomize()">SAVE NOTES SETTINGS</button>
+      </div>
+    </div>
   </div>
 
   <!-- Logged Out State -->
@@ -3035,6 +3204,103 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
     <input class="money-finput center" id="money-onboard-input" type="number" placeholder="₹ 0" autofocus>
     <button class="money-save-btn" style="margin-top:1rem" onclick="setInitialMoneyBalance()">Done</button>
   </div>
+</div>
+
+<!-- ══ PAGE: NOTES ══ -->
+<div class="page" id="page-notes">
+<div class="nt-wrap">
+
+  <div class="nt-page-head">
+    <div class="nt-page-title-wrap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      <div class="nt-page-title">NOTES</div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 1 — CALENDAR ══ -->
+  <div class="nt-screen active" id="ntScreenCal">
+    <div class="nt-desktop-grid">
+      <div class="nt-cal-card">
+        <div class="nt-cal-nav">
+          <div class="nt-cal-month" id="ntCalMonthLabel"></div>
+          <div class="nt-cal-nav-left">
+            <button class="nt-today-btn" onclick="jumpNotesToday()">Today</button>
+            <div class="nt-cal-nav-btns">
+              <button class="nt-nav-arrow" aria-label="Previous month" onclick="shiftNotesMonth(-1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="nt-nav-arrow" aria-label="Next month" onclick="shiftNotesMonth(1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="nt-cal-table">
+          <div class="nt-cal-dow"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+          <div class="nt-cal-grid" id="ntCalGrid"></div>
+        </div>
+        <div class="nt-cal-legend" id="ntCalLegend">
+          <div class="nt-dot"><span class="nt-legend-swatch" style="background:var(--gold)"></span>Important</div>
+          <div class="nt-dot"><span class="nt-legend-swatch" style="background:var(--red)"></span>Urgent</div>
+          <div class="nt-dot"><span class="nt-legend-swatch" style="background:var(--green)"></span>Progress</div>
+          <div class="nt-legend-hint">Tap to add</div>
+        </div>
+      </div>
+
+      <div class="nt-side-col">
+        <div class="nt-side-card">
+          <div class="nt-side-head">Coming up in 7 days</div>
+          <div id="ntRemList"></div>
+        </div>
+        <div class="nt-side-card" id="ntTodayCard">
+          <div class="nt-side-head">Today's to-do</div>
+          <div id="ntTodayList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2 — DAY VIEW ══ -->
+  <div class="nt-screen" id="ntScreenDay">
+    <div class="nt-day-page">
+      <button class="nt-day-back" aria-label="Back to calendar" onclick="goToNotesCalendar()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="nt-day-num" id="ntDayNum"></div>
+      <div class="nt-day-label" id="ntDayLabel"></div>
+
+      <div class="nt-type-row" id="ntTypeRow">
+        <div class="nt-type-btn" data-type="day" onclick="setNotesType('day')">Day</div>
+        <div class="nt-type-btn" data-type="todo" onclick="setNotesType('todo')">To-do list</div>
+      </div>
+
+      <div class="nt-day-fields" id="ntDayFields">
+        <div class="nt-sub-label">Priority</div>
+        <div class="nt-pri-row" id="ntPriRow">
+          <div class="nt-pri-btn" data-pri="normal" onclick="setNotesPriority('normal')">Normal</div>
+          <div class="nt-pri-btn" data-pri="important" onclick="setNotesPriority('important')">Important</div>
+          <div class="nt-pri-btn" data-pri="urgent" onclick="setNotesPriority('urgent')">Urgent</div>
+        </div>
+        <div class="nt-cat-row-head">
+          <div class="nt-sub-label" style="margin-bottom:0">Category</div>
+          <button class="nt-cat-manage-link" onclick="showPage('profile');showToast('Rename categories in 📝 NOTES below',true)">Rename</button>
+        </div>
+        <div class="nt-cat-row" id="ntCatRow"></div>
+        <textarea class="nt-desc-box" id="ntDescBox" placeholder="What's this day about..." oninput="onNotesDescInput()"></textarea>
+      </div>
+
+      <div class="nt-checklist-wrap" id="ntChecklistWrap">
+        <div class="nt-check-list" id="ntCheckList"></div>
+        <div class="nt-new-check-row">
+          <input class="nt-new-check-input" id="ntNewCheckInput" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addNotesCheckItem()">
+          <button class="nt-new-check-add" aria-label="Add task" onclick="addNotesCheckItem()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
 <!-- ══ PAGE: WEEKLY ══ -->
@@ -3491,6 +3757,8 @@ function resetAppState() {
   moneyBalance = 0; moneyOnboarded = false; moneyCategories = null; moneyTx = [];
   Object.keys(moneyTxMap).forEach(k => delete moneyTxMap[k]);
   moneySeenAll = false; lastDeletedMoney = null; currentMoneyDetailId = null; editingMoneyTxId = null;
+  notesDayData = {};
+  NOTES_CATEGORIES.forEach((c,i) => { c.label = NOTES_DEFAULT_LABELS[i]; });
   renderEntryTags();
 }
 
@@ -3649,6 +3917,15 @@ async function loadFromFirestore(uid) {
         saveMoneyToFirestore();
       }
       if (document.getElementById('page-money')?.classList.contains('active')) renderMoneyPage();
+
+      // Notes — same "don't clobber real cloud-backed data with nothing" rule as Money.
+      if (data.notesDayData && typeof data.notesDayData === 'object') {
+        notesDayData = data.notesDayData;
+      }
+      if (Array.isArray(data.notesCatLabels)) {
+        data.notesCatLabels.forEach((label, i) => { if (label && NOTES_CATEGORIES[i]) NOTES_CATEGORIES[i].label = label; });
+      }
+      if (document.getElementById('page-notes')?.classList.contains('active')) renderNotesPage();
 
       if (document.getElementById('page-test') && document.getElementById('page-test').classList.contains('active')) {
         renderTestSchedule(); renderTestPerformance();
@@ -5882,6 +6159,7 @@ function showPage(id,btn){
   if(id==='race')        { renderRaceBoard(); if(competeView==='global') renderLeaderboard(); }
   if(id==='test')        { buildTestFilters(); renderTestSchedule(); }
   if(id==='money')       renderMoneyPage();
+  if(id==='notes')       renderNotesPage();
 }
 
 function showMilestone(icon,title,sub,tier){
@@ -7077,6 +7355,7 @@ function renderProfilePage() {
 
     renderCustomizeUI();
     renderMoneyCustomizeCats();
+    renderNotesCustomizeCats();
 
   } else if (currentUser === null) {
     loadingEl.style.display = 'none';
@@ -8283,6 +8562,287 @@ function saveTestModal(){
     renderTestSchedule();
     showToast('Test added.', true);
   }
+}
+
+// ══════════════════════════════════════
+// NOTES PAGE (day planner / calendar)
+// ══════════════════════════════════════
+var NT_MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var notesViewYear=2026, notesViewMonth=7;
+var NT_TODAY = new Date();
+var notesSelectedKey=null;
+
+var NOTES_CATEGORIES=[
+  {id:'study', label:'Study', color:'var(--cat-study)'},
+  {id:'exam', label:'Exam', color:'var(--cat-exam)'},
+  {id:'personal', label:'Personal', color:'var(--cat-personal)'},
+  {id:'admin', label:'Admin', color:'var(--cat-admin)'}
+];
+var NOTES_PRI_COLOR={normal:'var(--muted2)', important:'var(--gold)', urgent:'var(--red)'};
+var NOTES_DEFAULT_LABELS = NOTES_CATEGORIES.map(c=>c.label);
+
+var notesDayData={};
+
+function notesKeyFor(y,m,d){ return y+'-'+m+'-'+d; }
+function notesDaysBetween(a,b){ return Math.round((b-a)/(1000*60*60*24)); }
+
+function renderNotesReminders(){
+  var upcoming=[];
+  Object.keys(notesDayData).forEach(function(k){
+    var info=notesDayData[k];
+    if(info.priority!=='important' && info.priority!=='urgent') return;
+    var parts=k.split('-'); var y=+parts[0], m=+parts[1], d=+parts[2];
+    var date=new Date(y,m,d);
+    var diff=notesDaysBetween(new Date(NT_TODAY.getFullYear(),NT_TODAY.getMonth(),NT_TODAY.getDate()), date);
+    if(diff<0 || diff>7) return;
+    upcoming.push({key:k, diff:diff, info:info});
+  });
+  upcoming.sort(function(a,b){ return a.diff-b.diff; });
+  var wrap=document.getElementById('ntRemList');
+  wrap.innerHTML='';
+  if(!upcoming.length){ wrap.innerHTML='<div class="nt-side-empty">Nothing urgent in the next 7 days.</div>'; return; }
+  upcoming.forEach(function(u){
+    var whenText = u.diff===0?'Today':(u.diff===1?'Tomorrow':'In '+u.diff+'d');
+    var whenColor = u.info.priority==='urgent' ? 'var(--red)':'var(--gold)';
+    var cat = NOTES_CATEGORIES.find(function(c){return c.id===u.info.category;});
+    var row=document.createElement('div');
+    row.className='nt-rem-item';
+    row.onclick=(function(kk){ return function(){
+      var parts=kk.split('-'); notesViewYear=+parts[0]; notesViewMonth=+parts[1]; openNotesDay(+parts[2]);
+    };})(u.key);
+    row.innerHTML =
+      '<div class="nt-rem-dot" style="background:'+NOTES_PRI_COLOR[u.info.priority]+'"></div>'+
+      '<div class="nt-rem-body">'+
+        '<div class="nt-rem-title">'+(u.info.desc||'Untitled')+'</div>'+
+        '<div class="nt-rem-sub">'+(u.info.type==='day'?'Day':'To-do list')+(cat?' · '+cat.label:'')+'</div>'+
+      '</div>'+
+      '<div class="nt-rem-when" style="color:'+whenColor+';background:rgba(255,255,255,0.04)">'+whenText+'</div>';
+    wrap.appendChild(row);
+  });
+}
+
+function notesIsWithinTodayWindow(){
+  var noonTomorrow = new Date(NT_TODAY.getFullYear(),NT_TODAY.getMonth(),NT_TODAY.getDate()+1,12,0,0);
+  return new Date() < noonTomorrow || true;
+}
+
+function renderNotesTodayCard(){
+  var card=document.getElementById('ntTodayCard');
+  var key=notesKeyFor(NT_TODAY.getFullYear(), NT_TODAY.getMonth(), NT_TODAY.getDate());
+  var info=notesDayData[key];
+  if(!info || !info.items || !info.items.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  var list=document.getElementById('ntTodayList');
+  list.innerHTML='';
+  info.items.forEach(function(item, idx){
+    var row=document.createElement('div');
+    row.className='nt-today-check-item';
+    row.innerHTML =
+      '<div class="nt-check-box'+(item.done?' done':'')+'" onclick="toggleNotesTodayCheck('+idx+')"></div>'+
+      '<div class="nt-today-check-text'+(item.done?' done':'')+'">'+item.t+'</div>';
+    list.appendChild(row);
+  });
+}
+function toggleNotesTodayCheck(idx){
+  var key=notesKeyFor(NT_TODAY.getFullYear(), NT_TODAY.getMonth(), NT_TODAY.getDate());
+  notesDayData[key].items[idx].done = !notesDayData[key].items[idx].done;
+  renderNotesTodayCard();
+  renderNotesCalendar();
+  saveNotesToFirestore();
+}
+
+function renderNotesCalendar(){
+  document.getElementById('ntCalMonthLabel').textContent = NT_MONTH_NAMES[notesViewMonth].toUpperCase()+' '+notesViewYear;
+  var grid=document.getElementById('ntCalGrid');
+  grid.innerHTML='';
+  var firstDow = new Date(notesViewYear, notesViewMonth, 1).getDay();
+  var daysInMonth = new Date(notesViewYear, notesViewMonth+1, 0).getDate();
+  for(var i=0;i<firstDow;i++){
+    var e=document.createElement('div'); e.className='nt-cal-cell empty'; grid.appendChild(e);
+  }
+  for(var d=1; d<=daysInMonth; d++){
+    var cell=document.createElement('div');
+    var key=notesKeyFor(notesViewYear,notesViewMonth,d);
+    var info=notesDayData[key];
+    var isToday = (notesViewYear===NT_TODAY.getFullYear() && notesViewMonth===NT_TODAY.getMonth() && d===NT_TODAY.getDate());
+    cell.className='nt-cal-cell'+(isToday?' today-cell':'');
+    cell.onclick=(function(dd){ return function(){ openNotesDay(dd); }; })(d);
+
+    var html='<span class="nt-cell-plus">+</span>';
+    var flagged = info && (info.priority==='important' || info.priority==='urgent');
+    if(flagged){
+      var bg = info.priority==='urgent' ? 'var(--red)':'var(--gold)';
+      html += '<span class="nt-cell-badge" style="background:'+bg+'">'+d+'</span>';
+    } else {
+      html += '<span class="nt-cell-num'+(isToday?' today':'')+'">'+d+'</span>';
+    }
+    if(info && info.items.length>0){
+      var doneCt=info.items.filter(function(x){return x.done;}).length;
+      var pct=Math.round((doneCt/info.items.length)*100);
+      html += '<div class="nt-cell-bar-track"><div class="nt-cell-bar-fill" style="width:'+pct+'%"></div></div>';
+    }
+    cell.innerHTML=html;
+    grid.appendChild(cell);
+  }
+  renderNotesReminders();
+  renderNotesTodayCard();
+}
+
+function shiftNotesMonth(delta){
+  notesViewMonth += delta;
+  if(notesViewMonth<0){ notesViewMonth=11; notesViewYear--; }
+  if(notesViewMonth>11){ notesViewMonth=0; notesViewYear++; }
+  renderNotesCalendar();
+}
+function jumpNotesToday(){
+  var alreadyThere = (notesViewYear===NT_TODAY.getFullYear() && notesViewMonth===NT_TODAY.getMonth());
+  if(alreadyThere){
+    var cell=document.querySelector('.nt-cal-cell.today-cell');
+    if(cell){
+      cell.classList.remove('pulse'); void cell.offsetWidth; cell.classList.add('pulse');
+      setTimeout(function(){ cell.classList.remove('pulse'); }, 550);
+    }
+    return;
+  }
+  notesViewYear=NT_TODAY.getFullYear(); notesViewMonth=NT_TODAY.getMonth(); renderNotesCalendar();
+}
+
+function renderNotesCategoryChips(){
+  var wrap=document.getElementById('ntCatRow');
+  wrap.innerHTML='';
+  NOTES_CATEGORIES.forEach(function(c){
+    var chip=document.createElement('div');
+    var sel = notesDayData[notesSelectedKey].category===c.id;
+    chip.className='nt-cat-chip'+(sel?' sel':'');
+    chip.style.cssText = sel ? 'background:'+c.color : '';
+    chip.textContent=c.label;
+    chip.onclick=function(id){ return function(){
+      notesDayData[notesSelectedKey].category = (notesDayData[notesSelectedKey].category===id) ? null : id;
+      renderNotesCategoryChips();
+      saveNotesToFirestore();
+    };}(c.id);
+    wrap.appendChild(chip);
+  });
+}
+
+function openNotesDay(d){
+  notesSelectedKey = notesKeyFor(notesViewYear, notesViewMonth, d);
+  if(!notesDayData[notesSelectedKey]){
+    notesDayData[notesSelectedKey] = { type:'day', priority:'normal', category:null, desc:'', items:[] };
+  }
+  document.getElementById('ntDayNum').textContent = d;
+  var dow = new Date(notesViewYear, notesViewMonth, d).toLocaleDateString('en-US',{weekday:'long'});
+  document.getElementById('ntDayLabel').textContent = dow+', '+NT_MONTH_NAMES[notesViewMonth];
+  document.getElementById('ntDescBox').value = notesDayData[notesSelectedKey].desc;
+  renderNotesType();
+  renderNotesPriority();
+  renderNotesCategoryChips();
+  renderNotesChecklist();
+  document.getElementById('ntScreenCal').classList.remove('active');
+  document.getElementById('ntScreenDay').classList.add('active');
+}
+function goToNotesCalendar(){
+  renderNotesCalendar();
+  document.getElementById('ntScreenDay').classList.remove('active');
+  document.getElementById('ntScreenCal').classList.add('active');
+}
+
+function renderNotesType(){
+  var t = notesDayData[notesSelectedKey].type;
+  document.querySelectorAll('.nt-type-btn').forEach(function(btn){ btn.classList.toggle('sel', btn.dataset.type===t); });
+  document.getElementById('ntDayFields').classList.toggle('hidden', t!=='day');
+  document.getElementById('ntChecklistWrap').classList.toggle('hidden', t!=='todo');
+}
+function setNotesType(t){ notesDayData[notesSelectedKey].type = t; renderNotesType(); saveNotesToFirestore(); }
+
+function renderNotesPriority(){
+  var pri = notesDayData[notesSelectedKey].priority;
+  document.querySelectorAll('.nt-pri-btn').forEach(function(btn){
+    btn.classList.remove('sel-normal','sel-important','sel-urgent');
+    if(btn.dataset.pri===pri) btn.classList.add('sel-'+pri);
+  });
+}
+function setNotesPriority(p){ notesDayData[notesSelectedKey].priority = p; renderNotesPriority(); saveNotesToFirestore(); }
+var _notesDescSaveTimer = null;
+function onNotesDescInput(){
+  notesDayData[notesSelectedKey].desc = document.getElementById('ntDescBox').value;
+  clearTimeout(_notesDescSaveTimer);
+  _notesDescSaveTimer = setTimeout(saveNotesToFirestore, 600);
+}
+
+function renderNotesChecklist(){
+  var items = notesDayData[notesSelectedKey].items;
+  var list=document.getElementById('ntCheckList');
+  list.innerHTML='';
+  items.forEach(function(item, idx){
+    var row=document.createElement('div');
+    row.className='nt-check-item';
+    row.innerHTML =
+      '<div class="nt-check-box'+(item.done?' done':'')+'" onclick="toggleNotesCheck('+idx+')"></div>'+
+      '<div class="nt-check-text'+(item.done?' done':'')+'">'+item.t+'</div>'+
+      '<button class="nt-check-del" onclick="deleteNotesCheck('+idx+')">×</button>';
+    list.appendChild(row);
+  });
+}
+function toggleNotesCheck(idx){ notesDayData[notesSelectedKey].items[idx].done = !notesDayData[notesSelectedKey].items[idx].done; renderNotesChecklist(); saveNotesToFirestore(); }
+function deleteNotesCheck(idx){ notesDayData[notesSelectedKey].items.splice(idx,1); renderNotesChecklist(); saveNotesToFirestore(); }
+function addNotesCheckItem(){
+  var input=document.getElementById('ntNewCheckInput');
+  var val=input.value.trim();
+  if(!val) return;
+  notesDayData[notesSelectedKey].items.push({t:val, done:false});
+  input.value='';
+  renderNotesChecklist();
+  saveNotesToFirestore();
+}
+
+
+// ── Entry point called from showPage('notes') ──
+function renderNotesPage(){
+  document.getElementById('ntScreenDay').classList.remove('active');
+  document.getElementById('ntScreenCal').classList.add('active');
+  renderNotesCalendar();
+}
+
+// ── Firebase: signed-in users sync to Firestore; guests stay in-memory only for this visit ──
+function saveNotesToFirestore(){
+  const fb = window._fb;
+  if(!fb || !currentUser) return; // not signed in — nothing persists past this visit
+  fb.setDoc(fb.doc(fb.db,'users',currentUser.uid), {
+    notesDayData   : notesDayData,
+    notesCatLabels : NOTES_CATEGORIES.map(c=>c.label)
+  }, { merge:true }).catch(()=>{});
+}
+
+// ── Settings page: rename Notes categories (colors stay fixed) ──
+function renderNotesCustomizeCats(){
+  const wrap = document.getElementById('customize-notes-cats');
+  if(!wrap) return;
+  wrap.innerHTML = NOTES_CATEGORIES.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.625rem">
+      <span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:${c.color}"></span>
+      <input
+        value="${moneyEsc(c.label)}"
+        data-notes-cat-index="${i}"
+        placeholder="Category name"
+        maxlength="18"
+        style="flex:1;background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);font-family:'DM Mono',monospace;outline:none;transition:border-color .15s"
+        onfocus="this.style.borderColor='var(--gold)'"
+        onblur="this.style.borderColor='var(--border)'"
+      >
+    </div>`).join('');
+}
+
+function saveNotesCustomize(){
+  document.querySelectorAll('[data-notes-cat-index]').forEach(el=>{
+    const i = parseInt(el.dataset.notesCatIndex);
+    const v = el.value.trim();
+    if(v) NOTES_CATEGORIES[i].label = v;
+  });
+  saveNotesToFirestore();
+  renderNotesCustomizeCats();
+  if(document.getElementById('page-notes')?.classList.contains('active')) renderNotesCalendar();
+  showToast('Notes settings saved! ✓', true);
 }
 </script>
 </body>
