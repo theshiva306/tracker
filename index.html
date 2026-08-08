@@ -1,3 +1,8 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -818,8 +823,9 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 
 /* MONTHLY CALENDAR */
 .month-nav{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
-.month-btn{background:none;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);padding:5px 12px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px;transition:border-color .15s,color .15s}
+.month-btn{background:none;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);width:32px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,color .15s}
 .month-btn:hover{border-color:var(--text);color:var(--text)}
+.month-btn:active{border-color:var(--gold);color:var(--gold)}
 .month-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:1.2rem}
 .month-cell{border-radius:6px;padding:.45rem .2rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);min-height:32px;display:flex;align-items:center;justify-content:center;cursor:default;border:0.5px solid transparent;transition:all .15s}
@@ -1049,6 +1055,42 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 .modal-item-stats{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;max-width:160px}
 .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted2);cursor:pointer;font-size:18px;line-height:1;padding:4px;border-radius:6px;transition:color .15s}
 .modal-close:hover{color:var(--text)}
+
+.ms-info-link{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);text-decoration:underline;cursor:pointer;background:none;border:none;flex-shrink:0}
+.ms-info-list{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.ms-info-row{display:flex;align-items:center;gap:12px;padding:8px;border:0.5px solid var(--border);border-radius:10px}
+.ms-info-mid{flex:1;min-width:0}
+.ms-info-name{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px}
+.ms-info-range{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.5px;margin-top:1px}
+.ms-info-badge{margin-top:0!important;font-size:9px!important;padding:5px 10px!important;flex-shrink:0;white-space:nowrap}
+@media(max-width:480px){.ms-info-row{flex-wrap:wrap}.ms-info-badge{margin-left:46px!important;order:3}}
+
+/* ── Monthly Analysis — unified card + milestone sidebar ── */
+.month-layout{display:flex;gap:1rem;align-items:flex-start;margin-top:1rem}
+.month-main{flex:1;min-width:0;background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1.35rem}
+.month-main-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.3rem}
+.month-hero-row{display:flex;align-items:flex-end;gap:1.8rem;flex-wrap:wrap}
+.month-hero-num{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;color:var(--gold)}
+.month-hero-num-sm{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1;color:var(--text)}
+.month-hero-num-sm.gold{color:var(--gold)}
+.month-hero-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-top:5px}
+.month-legend-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:1.1rem;padding-top:.85rem;border-top:0.5px solid var(--border)}
+.month-legend-txt{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase}
+
+.month-side{display:flex;flex-direction:column;gap:.55rem;width:150px;flex-shrink:0}
+.month-chip{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.65rem .8rem;display:flex;align-items:center;gap:9px}
+.month-chip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.month-chip-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1}
+.month-chip-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted2);margin-top:2px}
+
+@media(max-width:760px){
+  .month-layout{flex-direction:column}
+  .month-side{flex-direction:row;width:100%;overflow-x:auto;gap:.5rem;padding-bottom:2px}
+  .month-chip{flex-shrink:0;min-width:108px}
+  .month-hero-num{font-size:36px}
+  .month-hero-row{gap:1.3rem}
+  .month-main{padding:1.1rem}
+}
 
 /* CONSISTENT POPUP BEHAVIOR — phone: bottom sheet · laptop: centered card.
    This single override makes every .modal-overlay/.modal-box instance
@@ -3340,31 +3382,59 @@ html.g264-fonts-ready #g264-gate .g264-wordmark, html.g264-fonts-ready #g264-spl
 <!-- ══ PAGE: MONTHLY ══ -->
 <div class="page" id="page-monthly">
   <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M7 15l3 3 7-7"/></svg>Monthly Analysis</div>
-  <div class="month-nav" style="margin-bottom:1rem">
-    <button class="month-btn" onclick="changeMonthPage(-1)">‹ Prev</button>
-    <div class="month-title" id="month-title-pg"></div>
-    <button class="month-btn" onclick="changeMonthPage(1)">Next ›</button>
+
+  <div class="month-layout">
+    <div class="month-main">
+      <div class="month-main-top">
+        <div class="month-hero-row">
+          <div>
+            <div class="month-hero-num" id="m-total-pg">0</div>
+            <div class="month-hero-label">Month Total</div>
+          </div>
+          <div>
+            <div class="month-hero-num-sm" id="m-avg-pg">0.0</div>
+            <div class="month-hero-label">Avg</div>
+          </div>
+          <div>
+            <div class="month-hero-num-sm gold" id="m-cent-pg">0</div>
+            <div class="month-hero-label">Centuries</div>
+          </div>
+          <div>
+            <div class="month-hero-num-sm" id="m-played-pg">0</div>
+            <div class="month-hero-label">Matches</div>
+          </div>
+        </div>
+        <div class="month-nav" style="margin-bottom:0">
+          <button class="month-btn" onclick="changeMonthPage(-1)" aria-label="Previous month">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="month-title" id="month-title-pg"></div>
+          <button class="month-btn" onclick="changeMonthPage(1)" aria-label="Next month">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="month-grid" id="month-grid-pg"></div>
+
+      <div class="month-legend-row">
+        <span class="month-legend-txt">Ring color = milestone tier</span>
+        <button class="ms-info-link" onclick="openMilestonesInfo()">Know more about milestones</button>
+      </div>
+    </div>
+
+    <div class="month-side" id="month-breakdown-pg"></div>
   </div>
-  <div class="stats-grid" style="margin-bottom:1.2rem">
-    <div class="stat-card"><div class="stat-label">Month Total</div><div class="stat-val gold" id="m-total-pg">0</div></div>
-    <div class="stat-card"><div class="stat-label">Month Avg</div><div class="stat-val blue" id="m-avg-pg">0.0</div></div>
-    <div class="stat-card"><div class="stat-label">Centuries</div><div class="stat-val gold" id="m-cent-pg">0</div></div>
-    <div class="stat-card"><div class="stat-label">Matches</div><div class="stat-val fire" id="m-played-pg">0</div></div>
-  </div>
-  <div class="card" style="padding:1rem">
-    <div class="month-grid" id="month-grid-pg"></div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:.875rem;padding-top:.75rem;border-top:0.5px solid var(--border)">
-      <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted2);align-self:center;text-transform:uppercase;margin-right:4px">KEY:</span>
-      <span class="badge badge-legendary">Legendary 264+</span>
-      <span class="badge badge-double">Double 200+</span>
-      <span class="badge badge-bigknock">Big Knock 150+</span>
-      <span class="badge badge-century">Century 100+</span>
-      <span class="badge badge-half">Half 50+</span>
-      <span class="badge badge-average">Average 40+</span>
-      <span class="badge badge-poor">Poor &lt;40</span>
+
+  <!-- ══ MILESTONES INFO MODAL — full color-scheme sample ══ -->
+  <div class="modal-overlay" id="milestonesInfoModal" onclick="if(event.target===this)closeMilestonesInfo()">
+    <div class="modal-box" style="max-width:420px">
+      <button class="modal-close" onclick="closeMilestonesInfo()">✕</button>
+      <div class="modal-title" style="font-size:19px">Milestone Color Guide</div>
+      <div class="modal-sub">Same colors as the Recent Form circles and the badge under your runs on Home</div>
+      <div class="ms-info-list" id="milestonesInfoList"></div>
     </div>
   </div>
-  <div class="stats-grid" id="month-breakdown-pg" style="margin-top:1rem"></div>
 
   <!-- ── MONTHLY LINE GRAPH ── -->
   <div class="monthly-graph-wrap" id="monthly-graph-section">
@@ -4214,6 +4284,38 @@ function getGrade(runs) {
   if (runs >= 30)  return { label:'USEFUL KNOCK',      cls:'grade-average',   badge:'badge-average',   key:'average'   };
   if (runs >= 0)   return { label:'POOR INNINGS',      cls:'grade-poor',      badge:'badge-poor',      key:'poor'      };
   return                  { label:"ITS DONE BROO...",   cls:'grade-lost',      badge:'badge-lost',      key:'lost'      };
+}
+
+// ── Milestone color guide — one sample run value per tier, fed straight
+// through getGrade() so this can never drift out of sync with the actual
+// grading thresholds or labels. Reuses the exact same f-circ / grade-badge
+// classes as the Home page's Recent Form circles and main runs badge. ──
+var MILESTONE_SAMPLES = [
+  { runs:264, range:'264+ runs' },
+  { runs:200, range:'200–263 runs' },
+  { runs:150, range:'150–199 runs' },
+  { runs:100, range:'100–149 runs' },
+  { runs:50,  range:'50–99 runs' },
+  { runs:30,  range:'30–49 runs' },
+  { runs:0,   range:'0–29 runs' },
+  { runs:-1,  range:'Below 0' }
+];
+function openMilestonesInfo(){
+  document.getElementById('milestonesInfoList').innerHTML = MILESTONE_SAMPLES.map(function(s){
+    var g = getGrade(s.runs);
+    return '<div class="ms-info-row">'+
+      '<span class="f-circ '+g.key+'">'+s.runs+'</span>'+
+      '<div class="ms-info-mid">'+
+        '<div class="ms-info-name" style="color:var(--score-'+g.key+')">'+g.label+'</div>'+
+        '<div class="ms-info-range">'+s.range+'</div>'+
+      '</div>'+
+      '<span class="grade-badge '+g.cls+' ms-info-badge">'+g.label+'</span>'+
+    '</div>';
+  }).join('');
+  document.getElementById('milestonesInfoModal').classList.add('show');
+}
+function closeMilestonesInfo(){
+  document.getElementById('milestonesInfoModal').classList.remove('show');
 }
 
 // ══════════════════════════════════════
@@ -5618,14 +5720,13 @@ function renderMonthlyPage(){
   mm.forEach(x=>{if(grades[x.grade]!==undefined)grades[x.grade]++;});
   const bd=document.getElementById('month-breakdown-pg');
   if(bd) bd.innerHTML=[
-    {label:'Legendary',icon:'bolt',val:grades.legendary,cls:'purple'},
-    {label:'Double Centuries 200+',icon:'gem',val:grades.double,cls:'blue'},
-    {label:'Big Knocks 150+',icon:'target',val:grades.bigknock,cls:''},
-    {label:'Centuries',icon:'trophy',val:grades.century,cls:'gold'},
-    {label:'Half Centuries',icon:'bolt',val:grades.half,cls:'green'},
-    {label:'Average Days',icon:'chart',val:grades.average,cls:''},
-    {label:'Matches Played',icon:null,val:mm.length,cls:'fire'},
-  ].map(r=>`<div class="stat-card"><div class="stat-label" style="display:flex;align-items:center;gap:4px">${r.icon?`<span style="width:10px;height:10px;display:inline-flex">${iconSvg(r.icon)}</span>`:''}${r.label}</div><div class="stat-val ${r.cls}">${r.val}</div></div>`).join('');
+    {label:'Legendary',      key:'legendary', val:grades.legendary},
+    {label:'Double 200+',    key:'double',    val:grades.double},
+    {label:'Big Knock',      key:'bigknock',  val:grades.bigknock},
+    {label:'Century',        key:'century',   val:grades.century},
+    {label:'Half Cent.',     key:'half',      val:grades.half},
+    {label:'Useful',         key:'average',   val:grades.average},
+  ].map(r=>`<div class="month-chip"><span class="month-chip-dot" style="background:var(--score-${r.key})"></span><div><div class="month-chip-val" style="color:var(--score-${r.key})">${r.val}</div><div class="month-chip-label">${r.label}</div></div></div>`).join('');
 
   // ── Draw monthly line graph ───────────────────────────────────────────
   if (typeof renderMonthlyLineGraph === 'function') {
